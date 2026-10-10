@@ -605,8 +605,8 @@
     },
     {
       "path": "docs/development/contributing.md",
-      "sha256": "427d0e8f069edff3879a654b38054932654a4670a134b8dbf96da56f94f060f2",
-      "bytes": 4088
+      "sha256": "dff64043939e4b070497277bc103dc6e7208c1570d4d89a1d6db7d9651b48780",
+      "bytes": 4373
     },
     {
       "path": "docs/development/dev-container.md",

@@ -10,9 +10,11 @@
 git --version
 git config --global user.name "你的名字"
 git config --global user.email "你的GitHub邮箱"
-git clone https://github.com/CRAZY-NEO/tju-mas-experiments.git
-cd tju-mas-experiments
+git clone --branch snapshot/2026-10-10-multimodal-reader https://github.com/idvxlab/InfoDesign.git
+cd InfoDesign
 ```
+
+当前公开阶段分支为 `snapshot/2026-10-10-multimodal-reader`，尚未建立 `main`。下文 `main` 是正式协作流程示例；主分支建立前，应从已克隆的阶段分支创建自己的任务分支，不直接执行切换或拉取 `main` 的示例。
 
 已有本地仓库就进入项目目录，无需再次克隆或执行 `git init`。克隆、推送需要仓库访问权限及 GitHub 身份验证。以下 Git 命令都在 Mac 的项目根目录运行。
 
@@ -51,7 +53,7 @@ git push -u origin feature/任务名
 
 ## 发起 PR 与合并
 
-1. 打开 [项目仓库](https://github.com/CRAZY-NEO/tju-mas-experiments)，点击 **Compare & pull request**。
+1. 打开 [项目仓库](https://github.com/idvxlab/InfoDesign)，点击 **Compare & pull request**。
 2. 检查方向：base 为 `main`，compare 为自己的任务分支。
 3. 写清改动原因、结果、验证方法和限制，检查差异后创建 PR。界面操作见 [GitHub 官方说明](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request)。
 4. 等待管理员审查。需要修正时在原分支提交并推送，PR 会自动更新。
