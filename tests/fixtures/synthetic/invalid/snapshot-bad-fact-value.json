@@ -1,0 +1,39 @@
+{
+  "protocolVersion": "1.0",
+  "snapshotId": "snap_negative",
+  "snapshotVersionId": "snapv_negative_1",
+  "projectId": "project_tju_demo",
+  "taskId": "task_facts_001",
+  "attemptId": "attempt_facts_001",
+  "entities": [],
+  "claims": [
+    {
+      "claimId": "claim_x",
+      "claimVersionId": "claimv_x_1",
+      "entityId": "ent_x",
+      "predicate": "headcount",
+      "value": {
+        "type": "quantity",
+        "normalized": "60",
+        "unit": "人"
+      },
+      "supportStatus": "supported",
+      "reviewStatus": "pending",
+      "evidenceRefs": [
+        "ev_x"
+      ]
+    }
+  ],
+  "evidence": [],
+  "conflicts": [],
+  "missing": [],
+  "coverage": {
+    "documentsProcessed": []
+  },
+  "reviewStatus": "pending",
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0"
+  },
+  "createdAt": "2025-01-10T08:00:00Z"
+}

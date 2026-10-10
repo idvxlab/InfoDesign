@@ -1,0 +1,93 @@
+{
+  "protocolVersion": "1.0",
+  "reportId": "report_facts_001",
+  "reportVersionId": "reportv_facts_001",
+  "projectId": "project_tju_demo",
+  "taskId": "task_facts_001",
+  "attemptId": "attempt_facts_001",
+  "reviewMode": "fact",
+  "subject": {
+    "subjectType": "evidence_snapshot",
+    "snapshotId": "snap_facts_001",
+    "snapshotVersionId": "snapv_facts_001",
+    "contentHash": "sha256:bf1ca7018cdd08a76e727e3d7742f54ea7578e87cf1f103d528f3bfc6308628f"
+  },
+  "verdict": "pass",
+  "checks": [
+    {
+      "checkId": "check_support",
+      "checkType": "support",
+      "status": "pass",
+      "finding": "已按 support 规则核对候选快照与原始资料。",
+      "severity": "info",
+      "claimRefs": [
+        "claim_founded"
+      ],
+      "evidenceRefs": [
+        "ev_founded"
+      ]
+    },
+    {
+      "checkId": "check_entity_match",
+      "checkType": "entity_match",
+      "status": "pass",
+      "finding": "已按 entity_match 规则核对候选快照与原始资料。",
+      "severity": "info"
+    },
+    {
+      "checkId": "check_value",
+      "checkType": "value",
+      "status": "pass",
+      "finding": "已按 value 规则核对候选快照与原始资料。",
+      "severity": "info"
+    },
+    {
+      "checkId": "check_source_locator",
+      "checkType": "source_locator",
+      "status": "pass",
+      "finding": "已按 source_locator 规则核对候选快照与原始资料。",
+      "severity": "info"
+    },
+    {
+      "checkId": "check_conflict",
+      "checkType": "conflict",
+      "status": "pass",
+      "finding": "已按 conflict 规则核对候选快照与原始资料。",
+      "severity": "info"
+    },
+    {
+      "checkId": "check_missing",
+      "checkType": "missing",
+      "status": "pass",
+      "finding": "已按 missing 规则核对候选快照与原始资料。",
+      "severity": "info"
+    },
+    {
+      "checkId": "check_traceability",
+      "checkType": "traceability",
+      "status": "pass",
+      "finding": "已按 traceability 规则核对候选快照与原始资料。",
+      "severity": "info"
+    }
+  ],
+  "issues": [
+    {
+      "issueId": "issue_conflict_rd",
+      "severity": "warning",
+      "category": "conflict",
+      "description": "研发人员数存在 60 人与 55 人两种口径，已登记为未解决冲突。",
+      "expected": "同一口径下唯一人数",
+      "actual": "60 人（截至2025年）与 55 人（年末在册）",
+      "suggestedStage": "needs_input"
+    }
+  ],
+  "summary": "候选快照与原始资料逐条核对，冲突与缺失均已登记；提取阶段通过，业务口径待人工确认。",
+  "executionStatus": "completed",
+  "reviewedBy": {
+    "role": "review",
+    "model": "synthetic-fixture",
+    "sessionId": "session_review_fixture",
+    "protocolVersion": "1.0"
+  },
+  "createdAt": "2025-01-10T08:00:00Z"
+}

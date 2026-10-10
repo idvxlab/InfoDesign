@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:page-version",
+  "title": "PageVersion",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。信息快照、计划、规格、组件目录、渲染结果和审查报告的同版本绑定。",
+  "not": {}
+}

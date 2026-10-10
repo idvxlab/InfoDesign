@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:information-plan",
+  "title": "InformationPlan",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。受众、目标、内容选择、分组、优先级、层级、浏览路径及事实引用。",
+  "not": {}
+}

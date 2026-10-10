@@ -1,0 +1,26 @@
+FROM node:24.11.1-bookworm-slim@sha256:48abc13a19400ca3985071e287bd405a1d99306770eb81d61202fb6b65cf0b57
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends bash ca-certificates fd-find git ripgrep \
+    && rm -rf /var/lib/apt/lists/* \
+    && npm install --global --ignore-scripts --no-audit --no-fund pnpm@11.3.0
+
+RUN mkdir -p /workspace /home/node/.pi/agent /opt/pnpm-store \
+    && chown -R node:node /workspace /home/node /opt/pnpm-store \
+    && git config --system --add safe.directory /workspace
+COPY deploy/dev-entrypoint.sh /usr/local/bin/dev-entrypoint
+RUN chmod 755 /usr/local/bin/dev-entrypoint
+COPY --chown=node:node . /workspace/
+
+USER node
+WORKDIR /workspace
+# 联网只发生于构建阶段；按已有锁文件安装 Linux 依赖，不复用 Mac node_modules。
+RUN pnpm install --frozen-lockfile --store-dir /opt/pnpm-store \
+    && mkdir -p node_modules apps/server/node_modules apps/web/node_modules \
+       packages/contracts/node_modules packages/page-renderer/node_modules \
+       packages/ui-components/node_modules .local-data
+
+ENV PATH="/workspace/apps/server/node_modules/.bin:${PATH}"
+WORKDIR /workspace
+ENTRYPOINT ["/usr/local/bin/dev-entrypoint"]
+CMD ["sleep", "infinity"]

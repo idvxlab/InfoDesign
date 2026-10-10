@@ -1,0 +1,9 @@
+# 工作区范围；在根目录使用 pnpm 安装各包依赖。
+packages:
+  - 'apps/*'
+  - 'packages/*'
+# 已核对锁文件版本的安装脚本：空操作、平台二进制准备和版本兼容提示。
+allowBuilds:
+  '@google/genai': true
+  esbuild: true
+  protobufjs: true

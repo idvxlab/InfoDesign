@@ -1,0 +1,31 @@
+{
+  "protocolVersion": "1.0",
+  "snapshotId": "snap_negative",
+  "snapshotVersionId": "snapv_negative_1",
+  "projectId": "project_tju_demo",
+  "taskId": "task_facts_001",
+  "attemptId": "attempt_facts_001",
+  "entities": [
+    {
+      "entityId": "ent_x",
+      "entityType": "organization",
+      "label": "X",
+      "permissions": [
+        "admin"
+      ]
+    }
+  ],
+  "claims": [],
+  "evidence": [],
+  "conflicts": [],
+  "missing": [],
+  "coverage": {
+    "documentsProcessed": []
+  },
+  "reviewStatus": "pending",
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0"
+  },
+  "createdAt": "2025-01-10T08:00:00Z"
+}

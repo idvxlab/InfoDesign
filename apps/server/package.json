@@ -1,0 +1,12 @@
+{
+  "name": "@tju-mas/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript 后端：B2 真实工具验收通过，B3 首次候选提取通过本地回归；HTTP、独立审查及持久存储待实现。",
+  "scripts": {},
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.99.1",
+    "undici": "8.10.2"
+  }
+}

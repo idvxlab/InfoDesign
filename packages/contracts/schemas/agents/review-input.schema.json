@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:review-input",
+  "title": "独立审查 Agent输入",
+  "description": "事实审查模式、待审成果确切版本与指纹、任务范围、原始证据入口与必须执行的检查。首轮只支持事实审查，其他审查模式未实现必须拒绝。",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "taskId",
+    "attemptId",
+    "projectId",
+    "reviewMode",
+    "scope",
+    "subject",
+    "documents",
+    "checksRequired"
+  ],
+  "properties": {
+    "protocolVersion": { "$ref": "urn:tju-mas:contracts:common#/$defs/protocolVersion" },
+    "taskId": { "$ref": "urn:tju-mas:contracts:common#/$defs/taskId" },
+    "attemptId": { "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId" },
+    "projectId": { "$ref": "urn:tju-mas:contracts:common#/$defs/projectId" },
+    "reviewMode": { "$ref": "urn:tju-mas:contracts:common#/$defs/reviewMode" },
+    "scope": { "$ref": "urn:tju-mas:contracts:common#/$defs/scope" },
+    "subject": { "$ref": "urn:tju-mas:contracts:review-report#/$defs/reportSubject" },
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "urn:tju-mas:contracts:document-ir" }
+    },
+    "checksRequired": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "urn:tju-mas:contracts:common#/$defs/checkType" }
+    },
+    "executionPolicyRef": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+    "extensions": { "$ref": "urn:tju-mas:contracts:common#/$defs/extensionBag" }
+  },
+  "additionalProperties": false
+}

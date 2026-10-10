@@ -1,0 +1,381 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:common",
+  "title": "公共协议定义（首轮事实阶段）",
+  "description": "被各协议通过 $ref 复用的公共定义。字段结构、类型、枚举、模式与引用规则固定；企业事实内容通过通用结构与扩展区域表达。协议版本见 protocolVersion。",
+  "$defs": {
+    "protocolVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "协议版本，形如 1.0。新增不兼容结构时递增。"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,127}$",
+      "description": "小写字母开头的稳定业务编号。"
+    },
+    "predicate": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$",
+      "description": "事实属性名。属性内容可扩展，但不得使用任意 JSON 对象绕过校验。"
+    },
+    "projectId": {
+      "type": "string",
+      "pattern": "^project_[a-z0-9][a-z0-9_]{0,120}$"
+    },
+    "taskId": {
+      "type": "string",
+      "pattern": "^task_[a-z0-9][a-z0-9_]{0,120}$"
+    },
+    "attemptId": {
+      "type": "string",
+      "pattern": "^attempt_[a-z0-9][a-z0-9_]{0,120}$"
+    },
+    "documentId": {
+      "type": "string",
+      "pattern": "^doc_[a-z0-9][a-z0-9_]{0,120}$"
+    },
+    "blockId": {
+      "type": "string",
+      "pattern": "^b[0-9]{3,6}$"
+    },
+    "snapshotId": {
+      "type": "string",
+      "pattern": "^snap_[a-z0-9][a-z0-9_]{0,120}$"
+    },
+    "reportId": {
+      "type": "string",
+      "pattern": "^report_[a-z0-9][a-z0-9_]{0,120}$"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "内容指纹，统一使用 sha256 十六进制。用于绑定确切版本。"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "taskType": {
+      "enum": ["generate", "revise", "update_facts"]
+    },
+    "stage": {
+      "enum": ["facts"],
+      "description": "首轮只实现事实阶段；设计、页面等阶段未实现，框架仍会拒绝。"
+    },
+    "supportStatus": {
+      "enum": ["supported", "conflicted", "missing_evidence", "pending"],
+      "description": "事实是否有资料支持。有资料支持不等于现实已被证明正确。"
+    },
+    "reviewStatus": {
+      "enum": ["pending", "passed", "needs_revision", "indeterminate"],
+      "description": "审查状态。与 supportStatus 分离。"
+    },
+    "agentOutputStatus": {
+      "enum": ["completed", "needs_information", "blocked", "failed"],
+      "description": "角色本次任务执行状态，不代表整个页面通过验收。"
+    },
+    "reviewMode": {
+      "enum": ["fact"],
+      "description": "首轮只实现事实审查。页面审查与修改审查模式未实现，必须拒绝。"
+    },
+    "reviewVerdict": {
+      "enum": ["pass", "revise", "needs_input"]
+    },
+    "checkType": {
+      "enum": [
+        "support",
+        "entity_match",
+        "value",
+        "unit",
+        "time",
+        "basis",
+        "source_locator",
+        "missing",
+        "conflict",
+        "traceability"
+      ]
+    },
+    "checkStatus": {
+      "enum": ["pass", "fail", "not_run", "not_applicable"],
+      "description": "未执行的检查必须标记 not_run，不能默认为通过。"
+    },
+    "severity": {
+      "enum": ["info", "warning", "error", "critical"]
+    },
+    "suggestedStage": {
+      "enum": ["facts_extraction", "facts_review", "needs_input", "abort"]
+    },
+    "allowedOperation": {
+      "enum": [
+        "read_document",
+        "read_evidence",
+        "submit_candidate",
+        "submit_report",
+        "check_source",
+        "compare_versions"
+      ]
+    },
+    "documentVersionRef": {
+      "type": "object",
+      "required": ["documentId", "documentVersionId"],
+      "properties": {
+        "documentId": { "$ref": "#/$defs/documentId" },
+        "documentVersionId": { "$ref": "#/$defs/identifier" }
+      },
+      "additionalProperties": false
+    },
+    "sourceLocation": {
+      "description": "原文位置。首轮以段落定位为主，其他格式的定位结构已登记但未接入真实解析。",
+      "oneOf": [
+        { "$ref": "#/$defs/paragraphLocation" },
+        { "$ref": "#/$defs/tableCellLocation" },
+        { "$ref": "#/$defs/pageRegionLocation" },
+        { "$ref": "#/$defs/slideLocation" },
+        { "$ref": "#/$defs/imageRegionLocation" },
+        { "$ref": "#/$defs/sheetCellLocation" }
+      ]
+    },
+    "paragraphLocation": {
+      "type": "object",
+      "required": ["kind", "paragraphIndex"],
+      "properties": {
+        "kind": { "const": "paragraph" },
+        "paragraphIndex": { "type": "integer", "minimum": 0 },
+        "charStart": { "type": "integer", "minimum": 0 },
+        "charEnd": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "tableCellLocation": {
+      "type": "object",
+      "required": ["kind", "tableId", "row", "column"],
+      "properties": {
+        "kind": { "const": "table_cell" },
+        "tableId": { "$ref": "#/$defs/identifier" },
+        "row": { "type": "integer", "minimum": 0 },
+        "column": { "type": "integer", "minimum": 0 },
+        "cellRef": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "pageRegionLocation": {
+      "type": "object",
+      "required": ["kind", "page", "bbox"],
+      "properties": {
+        "kind": { "const": "page_region" },
+        "page": { "type": "integer", "minimum": 1 },
+        "bbox": { "$ref": "#/$defs/boundingBox" }
+      },
+      "additionalProperties": false
+    },
+    "slideLocation": {
+      "type": "object",
+      "required": ["kind", "slideIndex"],
+      "properties": {
+        "kind": { "const": "slide" },
+        "slideIndex": { "type": "integer", "minimum": 0 },
+        "objectId": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "imageRegionLocation": {
+      "type": "object",
+      "required": ["kind", "page", "bbox"],
+      "properties": {
+        "kind": { "const": "image_region" },
+        "page": { "type": "integer", "minimum": 1 },
+        "bbox": { "$ref": "#/$defs/boundingBox" }
+      },
+      "additionalProperties": false
+    },
+    "sheetCellLocation": {
+      "type": "object",
+      "required": ["kind", "sheet", "cell"],
+      "properties": {
+        "kind": { "const": "sheet_cell" },
+        "sheet": { "type": "string", "minLength": 1 },
+        "cell": { "type": "string", "pattern": "^[A-Z]{1,3}[0-9]{1,7}$" },
+        "headerRange": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "boundingBox": {
+      "type": "object",
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0 },
+        "y": { "type": "number", "minimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "factValue": {
+      "description": "通用事实值。新增属性不必新增顶层字段；新增值类型需经过协议版本与兼容性处理。",
+      "oneOf": [
+        { "$ref": "#/$defs/numberValue" },
+        { "$ref": "#/$defs/quantityValue" },
+        { "$ref": "#/$defs/textValue" },
+        { "$ref": "#/$defs/booleanValue" },
+        { "$ref": "#/$defs/dateValue" },
+        { "$ref": "#/$defs/referenceValue" },
+        { "$ref": "#/$defs/enumValue" }
+      ]
+    },
+    "numberValue": {
+      "type": "object",
+      "required": ["type", "normalized"],
+      "properties": {
+        "type": { "const": "number" },
+        "normalized": { "type": "number" },
+        "unit": { "type": ["string", "null"] },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "quantityValue": {
+      "type": "object",
+      "required": ["type", "normalized", "unit"],
+      "properties": {
+        "type": { "const": "quantity" },
+        "normalized": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "textValue": {
+      "type": "object",
+      "required": ["type", "text"],
+      "properties": {
+        "type": { "const": "text" },
+        "text": { "type": "string", "minLength": 1 },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "booleanValue": {
+      "type": "object",
+      "required": ["type", "value"],
+      "properties": {
+        "type": { "const": "boolean" },
+        "value": { "type": "boolean" },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "dateValue": {
+      "type": "object",
+      "required": ["type", "date"],
+      "properties": {
+        "type": { "const": "date" },
+        "date": { "$ref": "#/$defs/date" },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "referenceValue": {
+      "type": "object",
+      "required": ["type", "refId", "refType"],
+      "properties": {
+        "type": { "const": "reference" },
+        "refId": { "$ref": "#/$defs/identifier" },
+        "refType": { "enum": ["entity", "product", "event", "document", "asset"] },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "enumValue": {
+      "type": "object",
+      "required": ["type", "option"],
+      "properties": {
+        "type": { "const": "enum" },
+        "option": { "type": "string", "minLength": 1 },
+        "raw": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "timeQualifier": {
+      "type": "object",
+      "properties": {
+        "year": { "type": "integer", "minimum": 1900, "maximum": 2200 },
+        "period": { "type": "string", "minLength": 1 },
+        "asOf": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    },
+    "qualifiers": {
+      "description": "限定条件：时间、统计口径、范围与计量方式。不同口径不得仅凭同主体同名就合并。",
+      "type": "object",
+      "properties": {
+        "time": { "$ref": "#/$defs/timeQualifier" },
+        "basis": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "measure": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "extensionBag": {
+      "description": "受限扩展区域：只允许标量值，键名受限，且禁止携带权限、采纳状态等保留名。禁止用任意对象绕过校验。",
+      "type": "object",
+      "maxProperties": 20,
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]{0,63}$",
+        "not": {
+          "enum": [
+            "permissions",
+            "reviewStatus",
+            "supportStatus",
+            "accepted",
+            "projectId",
+            "taskId",
+            "attemptId",
+            "toolAccess",
+            "role"
+          ]
+        }
+      },
+      "additionalProperties": {
+        "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }]
+      }
+    },
+    "agentProvenance": {
+      "type": "object",
+      "required": ["role", "protocolVersion"],
+      "properties": {
+        "role": { "enum": ["evidence", "review", "design", "component_engineer"] },
+        "model": { "type": "string", "minLength": 1 },
+        "sessionId": { "$ref": "#/$defs/identifier" },
+        "protocolVersion": { "$ref": "#/$defs/protocolVersion" },
+        "promptVersion": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "description": "由服务层授予的访问范围。模型提交的项目编号或权限字段不能扩大此范围。",
+      "type": "object",
+      "required": ["projectId", "documentRefs", "allowedOperations"],
+      "properties": {
+        "projectId": { "$ref": "#/$defs/projectId" },
+        "documentRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/documentVersionRef" }
+        },
+        "allowedOperations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/allowedOperation" }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

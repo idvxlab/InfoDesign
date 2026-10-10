@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:document-ir",
+  "title": "DocumentIR",
+  "description": "资料统一中间表示。保留固定资料版本、内容块编号、原文、实际位置与解析质量。原文与结构化结果可相互定位。",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "documentId",
+    "documentVersionId",
+    "projectId",
+    "version",
+    "contentHash",
+    "mimeType",
+    "sourceName",
+    "blocks"
+  ],
+  "properties": {
+    "protocolVersion": { "$ref": "urn:tju-mas:contracts:common#/$defs/protocolVersion" },
+    "documentId": { "$ref": "urn:tju-mas:contracts:common#/$defs/documentId" },
+    "documentVersionId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+    "projectId": { "$ref": "urn:tju-mas:contracts:common#/$defs/projectId" },
+    "version": { "type": "integer", "minimum": 1 },
+    "contentHash": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" },
+    "mimeType": { "type": "string", "minLength": 1 },
+    "sourceName": { "type": "string", "minLength": 1 },
+    "language": { "type": "string" },
+    "createdAt": { "$ref": "urn:tju-mas:contracts:common#/$defs/timestamp" },
+    "blocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/block" }
+    },
+    "parseInfo": { "$ref": "#/$defs/parseInfo" },
+    "extensions": { "$ref": "urn:tju-mas:contracts:common#/$defs/extensionBag" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "block": {
+      "type": "object",
+      "required": ["blockId", "index", "type", "text", "location"],
+      "properties": {
+        "blockId": { "$ref": "urn:tju-mas:contracts:common#/$defs/blockId" },
+        "index": { "type": "integer", "minimum": 0 },
+        "type": { "enum": ["heading", "paragraph", "list", "table", "caption", "image", "other"] },
+        "text": { "type": "string" },
+        "location": { "$ref": "urn:tju-mas:contracts:common#/$defs/sourceLocation" },
+        "parentBlockId": { "$ref": "urn:tju-mas:contracts:common#/$defs/blockId" },
+        "extensions": { "$ref": "urn:tju-mas:contracts:common#/$defs/extensionBag" }
+      },
+      "additionalProperties": false
+    },
+    "parseInfo": {
+      "type": "object",
+      "required": ["parser", "quality"],
+      "properties": {
+        "parser": { "type": "string", "minLength": 1 },
+        "quality": { "enum": ["complete", "partial", "low_confidence"] },
+        "unsupported": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/unsupportedContent" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "unsupportedContent": {
+      "type": "object",
+      "required": ["blockId", "reason"],
+      "properties": {
+        "blockId": { "$ref": "urn:tju-mas:contracts:common#/$defs/blockId" },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# A separate PDF runtime; never rebuild or restart the active Pi container.
+# Wheels are supplied by the named build context and installed offline with hashes.
+FROM python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c AS runtime
+COPY services/parser/requirements.lock /requirements.lock
+RUN --mount=type=bind,from=wheels,target=/wheels \
+    python -m pip install --no-cache-dir --no-index --find-links=/wheels --require-hashes -r /requirements.lock
+WORKDIR /parser
+COPY services/parser/src ./src
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+USER 65532:65532
+CMD ["python", "-m", "src.pipeline", "--help"]
+
+FROM runtime AS test
+USER root
+COPY services/parser/requirements-test.lock /requirements-test.lock
+RUN --mount=type=bind,from=wheels,target=/wheels \
+    python -m pip install --no-cache-dir --no-index --find-links=/wheels --require-hashes -r /requirements-test.lock
+COPY services/parser/tests ./tests
+USER 65532:65532
+CMD ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]

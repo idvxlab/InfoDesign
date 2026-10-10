@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ComponentDefinition",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。组件 ID/版本、输入参数、动作、适用边界、实现入口、证据接口与测试状态。",
+  "not": {}
+}

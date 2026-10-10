@@ -1,0 +1,87 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_quality_reconciliation",
+  "attemptId": "attempt_quality_reconciliation",
+  "projectId": "project_quality_synthetic",
+  "taskType": "generate",
+  "stage": "facts",
+  "scope": {
+    "projectId": "project_quality_synthetic",
+    "documentRefs": [
+      {
+        "documentId": "doc_r_a",
+        "documentVersionId": "docv_r_a_1"
+      },
+      {
+        "documentId": "doc_r_b",
+        "documentVersionId": "docv_r_b_1"
+      }
+    ],
+    "allowedOperations": [
+      "read_document",
+      "submit_candidate"
+    ]
+  },
+  "documents": [
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_r_a",
+      "documentVersionId": "docv_r_a_1",
+      "projectId": "project_quality_synthetic",
+      "version": 1,
+      "contentHash": "sha256:8ccc1f44b531e5a4e81bec1348cfe193edc1805e715abe6885261ee9fee87f13",
+      "mimeType": "text/plain",
+      "sourceName": "r_a-synthetic.txt",
+      "language": "zh-CN",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "paragraph",
+          "text": "全合成资料。北辰实验室统计：2025年末在册研发人员18人；2025全年参与项目的研发人员21人；2024年末在册研发人员16人。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "handwritten_synthetic_fixture",
+        "quality": "complete"
+      }
+    },
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_r_b",
+      "documentVersionId": "docv_r_b_1",
+      "projectId": "project_quality_synthetic",
+      "version": 1,
+      "contentHash": "sha256:fe8b4c4768b7da77d875c660a4875328883834261fbcf3082bec603365323d84",
+      "mimeType": "text/plain",
+      "sourceName": "r_b-synthetic.txt",
+      "language": "zh-CN",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "paragraph",
+          "text": "全合成资料。北辰实验室复核表：2025年末在册研发人员19人；2024年末在册研发人员16人。本表未说明差异原因，也未替代前表。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "handwritten_synthetic_fixture",
+        "quality": "complete"
+      }
+    }
+  ],
+  "constraints": {
+    "preserveFacts": true,
+    "forbiddenNewFacts": true,
+    "notes": "提取两份资料中的研发人数；保留年份与统计口径、重复事实的全部来源和未解决分歧，不自行选取一个数值覆盖另一份资料。"
+  },
+  "executionPolicyRef": "policy_quality_offline"
+}

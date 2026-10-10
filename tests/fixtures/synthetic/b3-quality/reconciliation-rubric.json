@@ -1,0 +1,33 @@
+{
+  "mode": "human_authored_semantic_rubric",
+  "notASemanticClassifier": true,
+  "source": "entirely invented for this matrix; no private-document transformation",
+  "case": "reconciliation",
+  "checks": [
+    {
+      "id": "duplicate_sources",
+      "requirement": "2024年末在册16人归并为一项事实，保留两份来源。"
+    },
+    {
+      "id": "real_conflict",
+      "requirement": "2025年末在册18人与19人均保留并列为未解决冲突，不能采用较大数、后出现的数或复核表标题代替裁决。"
+    },
+    {
+      "id": "different_scope",
+      "requirement": "2025全年参与项目21人与年末在册人数口径不同，不强行归入同一冲突。"
+    },
+    {
+      "id": "different_year",
+      "requirement": "2024年末16人与2025年末人数分别保留，不因跨年变化标记为相互冲突。"
+    },
+    {
+      "id": "source_binding",
+      "requirement": "两份资料相同块编号不能混用；冲突两侧均有本次实际读取的来源。"
+    }
+  ],
+  "acceptableAlternatives": [
+    "相同含义可用等价属性名及限定措辞；引用图必须正确。",
+    "允许提出差异原因待补充的问题；不得把已知冲突值移入missing从而删除。"
+  ],
+  "reviewRule": "逐项直接对照原文；结构通过不算语义通过。真实候选无需复制参考编号、字段顺序或措辞，等价事实表达可接受。不得把此清单或参考候选提供给提取模型。"
+}

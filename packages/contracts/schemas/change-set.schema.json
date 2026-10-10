@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:change-set",
+  "title": "ChangeSet",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。基础版本、允许范围、实际修改列表、受影响节点、不变量与事实引用变化。",
+  "not": {}
+}

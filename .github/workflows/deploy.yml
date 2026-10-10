@@ -1,0 +1,14 @@
+# 已验证软件版本的部署与恢复：仅占位，没有配置自动运行或真实操作。
+name: Deployment placeholder
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  not-implemented:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 明确提示尚未实现
+        run: |
+          echo "::error::尚未实现已验证软件版本的部署与恢复；本次没有完成测试或部署。"
+          exit 1

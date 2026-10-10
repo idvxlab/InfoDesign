@@ -1,0 +1,285 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_synthetic_replay",
+  "attemptId": "attempt_synthetic_replay",
+  "projectId": "project_synthetic_replay",
+  "status": "needs_information",
+  "stopReason": "已处理当前段落；由于解析为 partial，尚未读取的表格和图片仍待补充。",
+  "candidateSnapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_synthetic_replay",
+    "snapshotVersionId": "snapv_synthetic_replay_1",
+    "projectId": "project_synthetic_replay",
+    "taskId": "task_synthetic_replay",
+    "attemptId": "attempt_synthetic_replay",
+    "entities": [
+      {
+        "entityId": "entity_1",
+        "entityType": "organization",
+        "label": "海岚仪器有限公司"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_1",
+        "claimVersionId": "claimv_1",
+        "entityId": "entity_1",
+        "predicate": "legal_name",
+        "value": {
+          "type": "text",
+          "text": "海岚仪器有限公司",
+          "raw": "海岚仪器有限公司"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_1"
+        ]
+      },
+      {
+        "claimId": "claim_2",
+        "claimVersionId": "claimv_2",
+        "entityId": "entity_1",
+        "predicate": "core_technology",
+        "value": {
+          "type": "text",
+          "text": "光学检测技术",
+          "raw": "光学检测技术"
+        },
+        "qualifiers": {
+          "basis": "资料自述"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_2"
+        ]
+      },
+      {
+        "claimId": "claim_3",
+        "claimVersionId": "claimv_3",
+        "entityId": "entity_1",
+        "predicate": "business_domain",
+        "value": {
+          "type": "text",
+          "text": "工业测量",
+          "raw": "工业测量"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_3"
+        ]
+      },
+      {
+        "claimId": "claim_4",
+        "claimVersionId": "claimv_4",
+        "entityId": "entity_1",
+        "predicate": "service_scenario",
+        "value": {
+          "type": "text",
+          "text": "零件质量检查",
+          "raw": "零件质量检查"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_4"
+        ]
+      },
+      {
+        "claimId": "claim_5",
+        "claimVersionId": "claimv_5",
+        "entityId": "entity_1",
+        "predicate": "service_chain",
+        "value": {
+          "type": "text",
+          "text": "样品评估、仪器配置和操作培训",
+          "raw": "样品评估、仪器配置和操作培训"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_5"
+        ]
+      },
+      {
+        "claimId": "claim_6",
+        "claimVersionId": "claimv_6",
+        "entityId": "entity_1",
+        "predicate": "rd_team_background",
+        "value": {
+          "type": "text",
+          "text": "高校实验室",
+          "raw": "高校实验室"
+        },
+        "qualifiers": {
+          "scope": "研发成员",
+          "basis": "资料自述"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_7"
+        ],
+        "note": "资料自述，未独立核实。"
+      },
+      {
+        "claimId": "claim_7",
+        "claimVersionId": "claimv_7",
+        "entityId": "entity_1",
+        "predicate": "self_description",
+        "value": {
+          "type": "text",
+          "text": "技术服务企业",
+          "raw": "技术服务企业"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_6"
+        ],
+        "note": "资料自述，未独立核实。"
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_1",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "海岚仪器有限公司",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_2",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "光学检测技术",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_3",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "工业测量",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_4",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "零件质量检查",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_5",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "样品评估、仪器配置和操作培训",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_6",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "技术服务企业",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_7",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b101",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "高校实验室",
+        "confidence": "high"
+      }
+    ],
+    "relations": [],
+    "events": [],
+    "assets": [],
+    "conflicts": [],
+    "missing": [
+      {
+        "missingId": "missing_1",
+        "expectedPredicate": "founding_year",
+        "entityId": "entity_1",
+        "description": "授权段落没有提供此属性的可核实信息。",
+        "severity": "warning"
+      },
+      {
+        "missingId": "missing_2",
+        "expectedPredicate": "rd_headcount",
+        "entityId": "entity_1",
+        "description": "授权段落没有提供此属性的可核实信息。",
+        "severity": "warning"
+      }
+    ],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_profile",
+          "documentVersionId": "docv_profile_1",
+          "blockIds": [
+            "b101"
+          ]
+        }
+      ],
+      "unsupported": []
+    },
+    "reviewStatus": "pending",
+    "producedBy": {
+      "role": "evidence",
+      "protocolVersion": "1.0",
+      "model": "synthetic-model",
+      "sessionId": "session_synthetic_replay",
+      "promptVersion": "synthetic_replay"
+    },
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "extensions": {
+      "parser_quality": "partial",
+      "parser_name": "synthetic-fixture",
+      "coverage_note": "未提供的表格和图片尚待处理。"
+    }
+  },
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0",
+    "model": "synthetic-model",
+    "sessionId": "session_synthetic_replay",
+    "promptVersion": "synthetic_replay"
+  }
+}

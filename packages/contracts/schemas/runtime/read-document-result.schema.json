@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:read-document-result",
+  "title": "B2 受控读取结果与验证任务输出",
+  "description": "B2 只验证 paragraph 原文回查；并非候选事实或完整提取成果。验证任务须原样引用真实工具读取的结果。",
+  "type": "object",
+  "properties": {
+    "documentId": { "$ref": "urn:tju-mas:contracts:common#/$defs/documentId" },
+    "documentVersionId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+    "blockId": { "$ref": "urn:tju-mas:contracts:common#/$defs/blockId" },
+    "contentHash": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" },
+    "text": { "type": "string", "minLength": 1, "maxLength": 4000 },
+    "location": { "$ref": "urn:tju-mas:contracts:common#/$defs/paragraphLocation" }
+  },
+  "required": ["documentId", "documentVersionId", "blockId", "contentHash", "text", "location"],
+  "additionalProperties": false
+}

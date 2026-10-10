@@ -1,0 +1,8 @@
+{
+  "name": "@tju-mas/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "企业前端占位：尚未安装 React 或配置构建与运行脚本。",
+  "scripts": {}
+}

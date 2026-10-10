@@ -1,0 +1,8 @@
+{
+  "name": "@tju-mas/ui-components",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "信息表达组件占位，目录列出拟实现能力而非已可用组件。",
+  "scripts": {}
+}

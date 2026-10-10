@@ -1,0 +1,2 @@
+# Synthetic PDFs only; ReportLab is not in the runtime image.
+reportlab==5.0.1 --hash=sha256:1c36e6bb0e71780c72331eba60da7f602e8d4389a8723825af71342e49d791e8

@@ -1,0 +1,8 @@
+{
+  "name": "@tju-mas/page-renderer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "页面规格渲染器占位；未接入 A2UI 或其他实际渲染实现。",
+  "scripts": {}
+}

@@ -1,0 +1,56 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_synthetic_replay",
+  "attemptId": "attempt_synthetic_replay",
+  "projectId": "project_synthetic_replay",
+  "taskType": "generate",
+  "stage": "facts",
+  "scope": {
+    "projectId": "project_synthetic_replay",
+    "documentRefs": [
+      {
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1"
+      }
+    ],
+    "allowedOperations": [
+      "read_document",
+      "submit_candidate"
+    ]
+  },
+  "documents": [
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_profile",
+      "documentVersionId": "docv_profile_1",
+      "projectId": "project_synthetic_replay",
+      "version": 1,
+      "contentHash": "sha256:aa9c2747771a5cb7f302329af853e11b99c1416eab604b60a1add57c488cf089",
+      "mimeType": "text/plain",
+      "sourceName": "synthetic-profile.txt",
+      "language": "zh",
+      "blocks": [
+        {
+          "blockId": "b101",
+          "index": 0,
+          "type": "paragraph",
+          "text": "海岚仪器有限公司以光学检测技术为核心，开展工业测量业务，面向零件质量检查提供样品评估、仪器配置和操作培训，并自称技术服务企业。研发成员来自高校实验室。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "synthetic-fixture",
+        "quality": "partial"
+      }
+    }
+  ],
+  "constraints": {
+    "preserveFacts": true,
+    "forbiddenNewFacts": true,
+    "notes": "提取已给出的事实；成立年份、研发人数没有依据时保留缺失。"
+  },
+  "executionPolicyRef": "policy_synthetic_replay"
+}

@@ -1,0 +1,226 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_quality_reconciliation",
+  "attemptId": "attempt_quality_reconciliation",
+  "projectId": "project_quality_synthetic",
+  "status": "needs_information",
+  "candidateSnapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_quality_reconciliation",
+    "snapshotVersionId": "snapv_quality_reconciliation_1",
+    "projectId": "project_quality_synthetic",
+    "taskId": "task_quality_reconciliation",
+    "attemptId": "attempt_quality_reconciliation",
+    "entities": [
+      {
+        "entityId": "ent_org",
+        "entityType": "organization",
+        "label": "北辰实验室"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_prior",
+        "claimVersionId": "claimv_prior_1",
+        "entityId": "ent_org",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 16,
+          "unit": "人",
+          "raw": "16人"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_prior_a",
+          "ev_prior_b"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2024
+          },
+          "basis": "年末在册"
+        }
+      },
+      {
+        "claimId": "claim_registered_a",
+        "claimVersionId": "claimv_registered_a_1",
+        "entityId": "ent_org",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 18,
+          "unit": "人",
+          "raw": "18人"
+        },
+        "supportStatus": "conflicted",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_registered_a"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "年末在册"
+        },
+        "conflictGroupId": "conflict_registered"
+      },
+      {
+        "claimId": "claim_registered_b",
+        "claimVersionId": "claimv_registered_b_1",
+        "entityId": "ent_org",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 19,
+          "unit": "人",
+          "raw": "19人"
+        },
+        "supportStatus": "conflicted",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_registered_b"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "年末在册"
+        },
+        "conflictGroupId": "conflict_registered"
+      },
+      {
+        "claimId": "claim_project",
+        "claimVersionId": "claimv_project_1",
+        "entityId": "ent_org",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 21,
+          "unit": "人",
+          "raw": "21人"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_project"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "全年参与项目"
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_prior_a",
+        "documentId": "doc_r_a",
+        "documentVersionId": "docv_r_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2024年末在册研发人员16人"
+      },
+      {
+        "evidenceId": "ev_prior_b",
+        "documentId": "doc_r_b",
+        "documentVersionId": "docv_r_b_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2024年末在册研发人员16人"
+      },
+      {
+        "evidenceId": "ev_registered_a",
+        "documentId": "doc_r_a",
+        "documentVersionId": "docv_r_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2025年末在册研发人员18人"
+      },
+      {
+        "evidenceId": "ev_registered_b",
+        "documentId": "doc_r_b",
+        "documentVersionId": "docv_r_b_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2025年末在册研发人员19人"
+      },
+      {
+        "evidenceId": "ev_project",
+        "documentId": "doc_r_a",
+        "documentVersionId": "docv_r_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2025全年参与项目的研发人员21人"
+      }
+    ],
+    "relations": [],
+    "events": [],
+    "conflicts": [
+      {
+        "conflictId": "conflict_registered",
+        "claimRefs": [
+          "claim_registered_a",
+          "claim_registered_b"
+        ],
+        "description": "同为2025年末在册研发人员，18人与19人相互冲突，原文未澄清。",
+        "resolutionStatus": "open"
+      }
+    ],
+    "missing": [],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_r_a",
+          "documentVersionId": "docv_r_a_1",
+          "blockIds": [
+            "b001"
+          ]
+        },
+        {
+          "documentId": "doc_r_b",
+          "documentVersionId": "docv_r_b_1",
+          "blockIds": [
+            "b001"
+          ]
+        }
+      ],
+      "unsupported": []
+    },
+    "reviewStatus": "pending",
+    "producedBy": {
+      "role": "evidence",
+      "protocolVersion": "1.0",
+      "model": "synthetic_model",
+      "sessionId": "session_quality_reconciliation",
+      "promptVersion": "synthetic_reference_only"
+    },
+    "createdAt": "2026-10-10T00:00:00Z"
+  },
+  "stopReason": "合成参考候选：仍有待补充或澄清的内容，见 missing、conflicts 和 coverage。",
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0",
+    "model": "synthetic_model",
+    "sessionId": "session_quality_reconciliation",
+    "promptVersion": "synthetic_reference_only"
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_quality_coverage",
+  "attemptId": "attempt_quality_coverage",
+  "projectId": "project_quality_synthetic",
+  "status": "needs_information",
+  "candidateSnapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_quality_coverage",
+    "snapshotVersionId": "snapv_quality_coverage_1",
+    "projectId": "project_quality_synthetic",
+    "taskId": "task_quality_coverage",
+    "attemptId": "attempt_quality_coverage",
+    "entities": [
+      {
+        "entityId": "ent_org",
+        "entityType": "organization",
+        "label": "青禾服务站"
+      },
+      {
+        "entityId": "ent_device",
+        "entityType": "product",
+        "label": "远帆"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_filter",
+        "claimVersionId": "claimv_filter_1",
+        "entityId": "ent_device",
+        "predicate": "filter_form",
+        "value": {
+          "type": "text",
+          "text": "可拆卸滤芯",
+          "raw": "采用可拆卸滤芯"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_filter"
+        ]
+      },
+      {
+        "claimId": "claim_temperature",
+        "claimVersionId": "claimv_temperature_1",
+        "entityId": "ent_device",
+        "predicate": "rated_temperature_range",
+        "value": {
+          "type": "text",
+          "text": "-10至45摄氏度",
+          "raw": "-10至45摄氏度"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_temperature"
+        ],
+        "qualifiers": {
+          "basis": "额定工作温度"
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_device",
+        "documentId": "doc_c_a",
+        "documentVersionId": "docv_c_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "青禾服务站的试验装置“远帆”于2024年6月15日启用"
+      },
+      {
+        "evidenceId": "ev_filter",
+        "documentId": "doc_c_a",
+        "documentVersionId": "docv_c_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "采用可拆卸滤芯"
+      },
+      {
+        "evidenceId": "ev_temperature",
+        "documentId": "doc_c_b",
+        "documentVersionId": "docv_c_b_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "“远帆”的额定工作温度为-10至45摄氏度"
+      }
+    ],
+    "relations": [
+      {
+        "relationId": "rel_device",
+        "fromEntityId": "ent_org",
+        "toEntityId": "ent_device",
+        "relationType": "has_test_device",
+        "evidenceRefs": [
+          "ev_device"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "eventId": "event_commission",
+        "entityId": "ent_device",
+        "eventType": "commissioned",
+        "time": {
+          "year": 2024,
+          "period": "2024年6月15日"
+        },
+        "description": "试验装置启用",
+        "evidenceRefs": [
+          "ev_device"
+        ]
+      }
+    ],
+    "conflicts": [],
+    "missing": [
+      {
+        "missingId": "missing_spares",
+        "entityId": "ent_device",
+        "expectedPredicate": "spare_filter_count",
+        "description": "备用滤芯数量尚未记录，不能推断为0。",
+        "severity": "warning"
+      },
+      {
+        "missingId": "missing_conditions",
+        "entityId": "ent_device",
+        "expectedPredicate": "temperature_test_conditions",
+        "description": "温度对应的试验条件未说明。",
+        "severity": "warning"
+      }
+    ],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_c_a",
+          "documentVersionId": "docv_c_a_1",
+          "blockIds": [
+            "b001"
+          ]
+        },
+        {
+          "documentId": "doc_c_b",
+          "documentVersionId": "docv_c_b_1",
+          "blockIds": [
+            "b001"
+          ]
+        }
+      ],
+      "unsupported": [
+        {
+          "documentId": "doc_c_b",
+          "blockId": "b002",
+          "reason": "合成解析失败段落没有可读取文本。"
+        }
+      ]
+    },
+    "reviewStatus": "pending",
+    "producedBy": {
+      "role": "evidence",
+      "protocolVersion": "1.0",
+      "model": "synthetic_model",
+      "sessionId": "session_quality_coverage",
+      "promptVersion": "synthetic_reference_only"
+    },
+    "createdAt": "2026-10-10T00:00:00Z"
+  },
+  "stopReason": "合成参考候选：仍有待补充或澄清的内容，见 missing、conflicts 和 coverage。",
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0",
+    "model": "synthetic_model",
+    "sessionId": "session_quality_coverage",
+    "promptVersion": "synthetic_reference_only"
+  }
+}

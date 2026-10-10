@@ -1,0 +1,142 @@
+{
+  "description": "合成资料中期望提取的事实与证据，供后续真实模型抽取时对照。当前仅用于协议与校验测试。",
+  "documents": [
+    {
+      "documentId": "doc_profile",
+      "documentVersionId": "docv_profile_1",
+      "contentHash": "sha256:75ff3b1e1d5d9ed1f677d98db1f9e6a9763875c8e0d315ba9bd7e12c2e1f8daa"
+    },
+    {
+      "documentId": "doc_update",
+      "documentVersionId": "docv_update_1",
+      "contentHash": "sha256:161617336d51108b4a3f999eb1474a16327cd1de735d0afe6608a0f775ad2e95"
+    }
+  ],
+  "facts": [
+    {
+      "claimId": "claim_founded",
+      "entityId": "ent_company",
+      "predicate": "founded_year",
+      "value": {
+        "type": "number",
+        "normalized": 2018,
+        "unit": "年",
+        "raw": "2018 年"
+      },
+      "supportStatus": "supported",
+      "conflictGroupId": null,
+      "evidenceRefs": [
+        "ev_founded"
+      ]
+    },
+    {
+      "claimId": "claim_registered",
+      "entityId": "ent_company",
+      "predicate": "registered_address",
+      "value": {
+        "type": "text",
+        "text": "天津市滨海新区",
+        "raw": "注册地为天津市滨海新区"
+      },
+      "supportStatus": "supported",
+      "conflictGroupId": null,
+      "evidenceRefs": [
+        "ev_registered"
+      ]
+    },
+    {
+      "claimId": "claim_product",
+      "entityId": "ent_product",
+      "predicate": "product_name",
+      "value": {
+        "type": "text",
+        "text": "智检云"
+      },
+      "supportStatus": "supported",
+      "conflictGroupId": null,
+      "evidenceRefs": [
+        "ev_product"
+      ]
+    },
+    {
+      "claimId": "claim_rd_60",
+      "entityId": "ent_rd",
+      "predicate": "headcount",
+      "value": {
+        "type": "quantity",
+        "normalized": 60,
+        "unit": "人",
+        "raw": "60 人"
+      },
+      "supportStatus": "supported",
+      "conflictGroupId": null,
+      "evidenceRefs": [
+        "ev_rd_60"
+      ]
+    },
+    {
+      "claimId": "claim_revenue",
+      "entityId": "ent_revenue",
+      "predicate": "amount",
+      "value": {
+        "type": "quantity",
+        "normalized": 1200,
+        "unit": "万元",
+        "raw": "1200 万元"
+      },
+      "supportStatus": "supported",
+      "conflictGroupId": null,
+      "evidenceRefs": [
+        "ev_revenue"
+      ]
+    },
+    {
+      "claimId": "claim_rd_55",
+      "entityId": "ent_rd",
+      "predicate": "headcount",
+      "value": {
+        "type": "quantity",
+        "normalized": 55,
+        "unit": "人",
+        "raw": "55 人"
+      },
+      "supportStatus": "conflicted",
+      "conflictGroupId": "conflict_rd_headcount",
+      "evidenceRefs": [
+        "ev_rd_55"
+      ]
+    },
+    {
+      "claimId": "claim_office",
+      "entityId": "ent_office",
+      "predicate": "office_location",
+      "value": {
+        "type": "text",
+        "text": "天津市滨海新区海河教育园区",
+        "raw": "办公地点位于天津市滨海新区海河教育园区"
+      },
+      "supportStatus": "supported",
+      "conflictGroupId": null,
+      "evidenceRefs": [
+        "ev_office"
+      ]
+    }
+  ],
+  "expectedConflicts": [
+    {
+      "conflictId": "conflict_rd_headcount",
+      "claimRefs": [
+        "claim_rd_60",
+        "claim_rd_55"
+      ],
+      "resolutionStatus": "open"
+    }
+  ],
+  "expectedMissing": [
+    {
+      "missingId": "missing_brand",
+      "expectedPredicate": "brand_name",
+      "severity": "warning"
+    }
+  ]
+}

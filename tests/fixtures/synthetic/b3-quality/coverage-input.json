@@ -1,0 +1,103 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_quality_coverage",
+  "attemptId": "attempt_quality_coverage",
+  "projectId": "project_quality_synthetic",
+  "taskType": "generate",
+  "stage": "facts",
+  "scope": {
+    "projectId": "project_quality_synthetic",
+    "documentRefs": [
+      {
+        "documentId": "doc_c_a",
+        "documentVersionId": "docv_c_a_1"
+      },
+      {
+        "documentId": "doc_c_b",
+        "documentVersionId": "docv_c_b_1"
+      }
+    ],
+    "allowedOperations": [
+      "read_document",
+      "submit_candidate"
+    ]
+  },
+  "documents": [
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_c_a",
+      "documentVersionId": "docv_c_a_1",
+      "projectId": "project_quality_synthetic",
+      "version": 1,
+      "contentHash": "sha256:7e9ebc2c9d34ffdae7df2a846b82de5c47acfbf02476854807b49e76d37ae64c",
+      "mimeType": "text/plain",
+      "sourceName": "c_a-synthetic.txt",
+      "language": "zh-CN",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "paragraph",
+          "text": "全合成资料。青禾服务站的试验装置“远帆”于2024年6月15日启用，采用可拆卸滤芯。备用滤芯数量尚未记录。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "handwritten_synthetic_fixture",
+        "quality": "complete"
+      }
+    },
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_c_b",
+      "documentVersionId": "docv_c_b_1",
+      "projectId": "project_quality_synthetic",
+      "version": 1,
+      "contentHash": "sha256:75fc158b6d03e5c1bc51714a1759503363025d54eeac1641dcedd094ece905b6",
+      "mimeType": "text/plain",
+      "sourceName": "c_b-synthetic.txt",
+      "language": "zh-CN",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "paragraph",
+          "text": "全合成资料补充。“远帆”的额定工作温度为-10至45摄氏度。资料未说明温度对应试验条件。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        },
+        {
+          "blockId": "b002",
+          "index": 1,
+          "type": "paragraph",
+          "text": "",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 1
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "handwritten_synthetic_fixture",
+        "quality": "partial",
+        "unsupported": [
+          {
+            "blockId": "b002",
+            "reason": "合成解析失败段落没有可读取文本。"
+          }
+        ]
+      }
+    }
+  ],
+  "constraints": {
+    "preserveFacts": true,
+    "forbiddenNewFacts": true,
+    "notes": "提取装置、启用事件、滤芯形式与温度范围；核对备用滤芯数量及试验条件。原文范围值不得擅自缩成单值；无法读取的资料块保留原因，不推断未识别段落内容。"
+  },
+  "executionPolicyRef": "policy_quality_offline"
+}

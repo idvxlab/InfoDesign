@@ -1,0 +1,32 @@
+# 本地系统与编辑器缓存
+.DS_Store
+.idea/
+.vscode/
+# 凭据与本地运行数据；环境示例可以提交
+.env
+.env.*
+!.env.example
+.local-data/
+.pi/auth.json
+.pi/sessions/
+# JavaScript 构建与依赖
+node_modules/
+.pnpm-store/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+# 浏览器、模型执行与评测的实际产物
+playwright-report/
+test-results/
+evals/results/
+*.log
+# 不忽略 pnpm-lock.yaml 等锁文件；后续安装依赖后应提交。

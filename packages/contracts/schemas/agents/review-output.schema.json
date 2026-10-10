@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:review-output",
+  "title": "独立审查 Agent输出",
+  "description": "绑定候选版本的 ReviewReport。审查角色只提交报告，不能直接改写事实或采纳成果；报告指纹与版本由服务层核对。",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "taskId",
+    "attemptId",
+    "projectId",
+    "status",
+    "report"
+  ],
+  "properties": {
+    "protocolVersion": { "$ref": "urn:tju-mas:contracts:common#/$defs/protocolVersion" },
+    "taskId": { "$ref": "urn:tju-mas:contracts:common#/$defs/taskId" },
+    "attemptId": { "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId" },
+    "projectId": { "$ref": "urn:tju-mas:contracts:common#/$defs/projectId" },
+    "status": { "$ref": "urn:tju-mas:contracts:common#/$defs/agentOutputStatus" },
+    "report": {
+      "allOf": [
+        { "$ref": "urn:tju-mas:contracts:review-report" },
+        {
+          "type": "object",
+          "properties": {
+            "reviewedBy": {
+              "allOf": [
+                { "$ref": "urn:tju-mas:contracts:common#/$defs/agentProvenance" },
+                { "type": "object", "properties": { "role": { "const": "review" } } }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "stopReason": { "type": "string", "minLength": 1 },
+    "producedBy": {
+      "allOf": [
+        { "$ref": "urn:tju-mas:contracts:common#/$defs/agentProvenance" },
+        { "type": "object", "properties": { "role": { "const": "review" } } }
+      ]
+    },
+    "extensions": { "$ref": "urn:tju-mas:contracts:common#/$defs/extensionBag" }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "enum": ["needs_information", "blocked", "failed"] } }, "required": ["status"] },
+      "then": { "properties": { "stopReason": {} }, "required": ["stopReason"] }
+    }
+  ]
+}

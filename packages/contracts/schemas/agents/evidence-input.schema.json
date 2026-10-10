@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:evidence-input",
+  "title": "信息与证据 Agent输入",
+  "description": "被授权的资料引用与处理范围、待处理的 DocumentIR、可选既有快照与任务约束。身份与访问范围由服务层授予，模型不能自行扩大。",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "taskId",
+    "attemptId",
+    "projectId",
+    "taskType",
+    "stage",
+    "scope",
+    "documents",
+    "constraints",
+    "executionPolicyRef"
+  ],
+  "properties": {
+    "protocolVersion": { "$ref": "urn:tju-mas:contracts:common#/$defs/protocolVersion" },
+    "taskId": { "$ref": "urn:tju-mas:contracts:common#/$defs/taskId" },
+    "attemptId": { "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId" },
+    "projectId": { "$ref": "urn:tju-mas:contracts:common#/$defs/projectId" },
+    "taskType": { "$ref": "urn:tju-mas:contracts:common#/$defs/taskType" },
+    "stage": { "$ref": "urn:tju-mas:contracts:common#/$defs/stage" },
+    "scope": { "$ref": "urn:tju-mas:contracts:common#/$defs/scope" },
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "urn:tju-mas:contracts:document-ir" }
+    },
+    "existingSnapshot": { "$ref": "urn:tju-mas:contracts:evidence-snapshot" },
+    "constraints": { "$ref": "urn:tju-mas:contracts:task#/$defs/constraints" },
+    "executionPolicyRef": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+    "extensions": { "$ref": "urn:tju-mas:contracts:common#/$defs/extensionBag" }
+  },
+  "additionalProperties": false
+}

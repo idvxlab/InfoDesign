@@ -1,0 +1,321 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_facts_001",
+  "attemptId": "attempt_facts_001",
+  "projectId": "project_tju_demo",
+  "status": "completed",
+  "candidateSnapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_facts_001",
+    "snapshotVersionId": "snapv_facts_001",
+    "projectId": "project_tju_demo",
+    "taskId": "task_facts_001",
+    "attemptId": "attempt_facts_001",
+    "entities": [
+      {
+        "entityId": "ent_company",
+        "entityType": "organization",
+        "label": "天津智造科技有限公司"
+      },
+      {
+        "entityId": "ent_product",
+        "entityType": "product",
+        "label": "智检云"
+      },
+      {
+        "entityId": "ent_rd",
+        "entityType": "metric",
+        "label": "研发人员数"
+      },
+      {
+        "entityId": "ent_revenue",
+        "entityType": "metric",
+        "label": "营业收入"
+      },
+      {
+        "entityId": "ent_office",
+        "entityType": "location",
+        "label": "海河教育园区"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_founded",
+        "claimVersionId": "claimv_founded_1",
+        "entityId": "ent_company",
+        "predicate": "founded_year",
+        "value": {
+          "type": "number",
+          "normalized": 2018,
+          "unit": "年",
+          "raw": "2018 年"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_founded"
+        ]
+      },
+      {
+        "claimId": "claim_registered",
+        "claimVersionId": "claimv_registered_1",
+        "entityId": "ent_company",
+        "predicate": "registered_address",
+        "value": {
+          "type": "text",
+          "text": "天津市滨海新区",
+          "raw": "注册地为天津市滨海新区"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_registered"
+        ]
+      },
+      {
+        "claimId": "claim_product",
+        "claimVersionId": "claimv_product_1",
+        "entityId": "ent_product",
+        "predicate": "product_name",
+        "value": {
+          "type": "text",
+          "text": "智检云"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_product"
+        ]
+      },
+      {
+        "claimId": "claim_rd_60",
+        "claimVersionId": "claimv_rd_60_1",
+        "entityId": "ent_rd",
+        "predicate": "headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 60,
+          "unit": "人",
+          "raw": "60 人"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "截至2025年"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_rd_60"
+        ]
+      },
+      {
+        "claimId": "claim_revenue",
+        "claimVersionId": "claimv_revenue_1",
+        "entityId": "ent_revenue",
+        "predicate": "amount",
+        "value": {
+          "type": "quantity",
+          "normalized": 1200,
+          "unit": "万元",
+          "raw": "1200 万元"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          }
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_revenue"
+        ]
+      },
+      {
+        "claimId": "claim_rd_55",
+        "claimVersionId": "claimv_rd_55_1",
+        "entityId": "ent_rd",
+        "predicate": "headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 55,
+          "unit": "人",
+          "raw": "55 人"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "年末在册"
+        },
+        "supportStatus": "conflicted",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_rd_55"
+        ],
+        "conflictGroupId": "conflict_rd_headcount"
+      },
+      {
+        "claimId": "claim_office",
+        "claimVersionId": "claimv_office_1",
+        "entityId": "ent_office",
+        "predicate": "office_location",
+        "value": {
+          "type": "text",
+          "text": "天津市滨海新区海河教育园区",
+          "raw": "办公地点位于天津市滨海新区海河教育园区"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_office"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_founded",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "成立于 2018 年",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_registered",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "注册地为天津市滨海新区",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_product",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b003",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 2
+        },
+        "excerpt": "智检云",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_rd_60",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b004",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 3
+        },
+        "excerpt": "研发人员 60 人",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_revenue",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b004",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 3
+        },
+        "excerpt": "营业收入 1200 万元",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_rd_55",
+        "documentId": "doc_update",
+        "documentVersionId": "docv_update_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "研发人员 55 人",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_office",
+        "documentId": "doc_update",
+        "documentVersionId": "docv_update_1",
+        "blockId": "b003",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 2
+        },
+        "excerpt": "海河教育园区",
+        "confidence": "high"
+      }
+    ],
+    "conflicts": [
+      {
+        "conflictId": "conflict_rd_headcount",
+        "claimRefs": [
+          "claim_rd_60",
+          "claim_rd_55"
+        ],
+        "description": "研发人员数在不同资料中分别为 60 人与 55 人，统计口径不同，需人工确认。",
+        "resolutionStatus": "open"
+      }
+    ],
+    "missing": [
+      {
+        "missingId": "missing_brand",
+        "expectedPredicate": "brand_name",
+        "entityId": "ent_company",
+        "description": "未找到品牌名称信息。",
+        "severity": "warning"
+      }
+    ],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_profile",
+          "documentVersionId": "docv_profile_1",
+          "blockIds": [
+            "b001",
+            "b002",
+            "b003",
+            "b004"
+          ]
+        },
+        {
+          "documentId": "doc_update",
+          "documentVersionId": "docv_update_1",
+          "blockIds": [
+            "b001",
+            "b002",
+            "b003"
+          ]
+        }
+      ]
+    },
+    "reviewStatus": "pending",
+    "producedBy": {
+      "role": "review",
+      "model": "synthetic-fixture",
+      "sessionId": "session_fixture",
+      "protocolVersion": "1.0",
+      "promptVersion": "fixture-v1"
+    },
+    "createdAt": "2025-01-10T08:00:00Z"
+  },
+  "producedBy": {
+    "role": "evidence",
+    "model": "synthetic-fixture",
+    "sessionId": "session_fixture",
+    "protocolVersion": "1.0"
+  }
+}

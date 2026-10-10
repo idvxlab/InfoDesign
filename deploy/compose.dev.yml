@@ -1,0 +1,94 @@
+# 开发环境；业务 API、Worker、解析和页面服务仍未实现。
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.dev
+    init: true
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 4
+    mem_limit: 8g
+    pids_limit: 512
+    tmpfs:
+      - /tmp:size=536870912,mode=1777
+    environment:
+      HTTP_PROXY: http://egress:3128
+      HTTPS_PROXY: http://egress:3128
+      http_proxy: http://egress:3128
+      https_proxy: http://egress:3128
+      NODE_USE_ENV_PROXY: "1"
+      NO_PROXY: localhost,127.0.0.1,::1
+      GIT_OPTIONAL_LOCKS: "0"
+    env_file:
+      - path: ../.local-data/dev-container/pi.env
+        required: true
+        format: raw
+    volumes:
+      - type: bind
+        source: ..
+        target: /workspace
+        bind:
+          create_host_path: false
+      # 共用源码；依赖、运行数据和 Pi 用户目录仍由 Linux 容器管理。
+      - node-modules:/workspace/node_modules
+      - server-node-modules:/workspace/apps/server/node_modules
+      - web-node-modules:/workspace/apps/web/node_modules
+      - contracts-node-modules:/workspace/packages/contracts/node_modules
+      - renderer-node-modules:/workspace/packages/page-renderer/node_modules
+      - ui-node-modules:/workspace/packages/ui-components/node_modules
+      - runtime-data:/workspace/.local-data
+      # Pi 可查看分支和差异；提交、推送仍在 Mac 上完成。
+      - type: bind
+        source: ../.git
+        target: /workspace/.git
+        read_only: true
+        bind:
+          create_host_path: false
+      - agent-home:/home/node
+      - type: bind
+        source: ../.local-data/dev-container/models.json
+        target: /home/node/.pi/agent/models.json
+        read_only: true
+        bind:
+          create_host_path: false
+    networks: [agent]
+    depends_on: [egress]
+  egress:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.egress
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 64
+    tmpfs:
+      - /tmp:size=67108864,mode=1777
+      - /run:size=16777216,mode=1777
+    volumes:
+      - type: bind
+        source: ../.local-data/dev-container/allowed-hosts.txt
+        target: /etc/squid/allowed-hosts.txt
+        read_only: true
+        bind:
+          create_host_path: false
+    networks: [agent, internet]
+networks:
+  agent:
+    internal: true
+    driver_opts:
+      com.docker.network.bridge.gateway_mode_ipv4: isolated
+  internet: {}
+volumes:
+  node-modules:
+  server-node-modules:
+  web-node-modules:
+  contracts-node-modules:
+  renderer-node-modules:
+  ui-node-modules:
+  runtime-data:
+  agent-home:

@@ -1,0 +1,33 @@
+{
+  "mode": "human_authored_semantic_rubric",
+  "notASemanticClassifier": true,
+  "source": "entirely invented for this matrix; no private-document transformation",
+  "case": "coverage",
+  "checks": [
+    {
+      "id": "new_attribute",
+      "requirement": "可拆卸滤芯通过通用属性保留，不依赖公司简介固定字段。"
+    },
+    {
+      "id": "event_date",
+      "requirement": "装置的启用事件日期为2024年6月15日；不得变成组织成立日期、只保留年份或猜测时区/时刻。"
+    },
+    {
+      "id": "signed_range",
+      "requirement": "温度范围同时保留-10和45及摄氏度；不取平均、不丢负号、不自动转换为华氏度，不把两个端点当冲突。"
+    },
+    {
+      "id": "unknowns",
+      "requirement": "备用滤芯数量和试验条件列为缺失，不编造。"
+    },
+    {
+      "id": "partial_scope",
+      "requirement": "两个段落真实读取，空文本段落按解析限制单独unsupported且与processed互斥，不能声称理解了未识别段落或整份资料完整。"
+    }
+  ],
+  "acceptableAlternatives": [
+    "当前协议没有数值范围类型，可用保留原文和单位的text；或有明确上下限含义的两项事实。",
+    "完整启用日期可由事件time.period或有来源的日期属性表达，不要求照抄参考编号。"
+  ],
+  "reviewRule": "逐项直接对照原文；结构通过不算语义通过。真实候选无需复制参考编号、字段顺序或措辞，等价事实表达可接受。不得把此清单或参考候选提供给提取模型。"
+}

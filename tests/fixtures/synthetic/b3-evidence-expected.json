@@ -1,0 +1,310 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_b3_synthetic",
+  "attemptId": "attempt_b3_synthetic",
+  "projectId": "project_tju_demo",
+  "status": "needs_information",
+  "stopReason": "同口径人数存在冲突，营业收入缺失，需澄清补充。",
+  "candidateSnapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_b3_synthetic",
+    "snapshotVersionId": "snapv_b3_synthetic_1",
+    "projectId": "project_tju_demo",
+    "taskId": "task_b3_synthetic",
+    "attemptId": "attempt_b3_synthetic",
+    "entities": [
+      {
+        "entityId": "ent_company",
+        "entityType": "organization",
+        "label": "星河制造有限公司"
+      },
+      {
+        "entityId": "ent_product",
+        "entityType": "product",
+        "label": "星图"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_2024",
+        "claimVersionId": "claimv_2024_1",
+        "entityId": "ent_company",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 10,
+          "unit": "人",
+          "raw": "10人"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2024
+          },
+          "basis": "年末在册"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_2024_a",
+          "ev_2024_b"
+        ]
+      },
+      {
+        "claimId": "claim_2025_a",
+        "claimVersionId": "claimv_2025_a_1",
+        "entityId": "ent_company",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 12,
+          "unit": "人",
+          "raw": "12人"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "年末在册"
+        },
+        "supportStatus": "conflicted",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_2025_a"
+        ],
+        "conflictGroupId": "conflict_rd"
+      },
+      {
+        "claimId": "claim_2025_b",
+        "claimVersionId": "claimv_2025_b_1",
+        "entityId": "ent_company",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 13,
+          "unit": "人",
+          "raw": "13人"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "年末在册"
+        },
+        "supportStatus": "conflicted",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_2025_b"
+        ],
+        "conflictGroupId": "conflict_rd"
+      },
+      {
+        "claimId": "claim_project",
+        "claimVersionId": "claimv_project_1",
+        "entityId": "ent_company",
+        "predicate": "rd_headcount",
+        "value": {
+          "type": "quantity",
+          "normalized": 15,
+          "unit": "人",
+          "raw": "15人"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "参与项目"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_project"
+        ]
+      },
+      {
+        "claimId": "claim_energy",
+        "claimVersionId": "claimv_energy_1",
+        "entityId": "ent_company",
+        "predicate": "renewable_energy_share",
+        "value": {
+          "type": "quantity",
+          "normalized": 72,
+          "unit": "%",
+          "raw": "72%"
+        },
+        "qualifiers": {
+          "time": {
+            "year": 2025
+          },
+          "basis": "年度使用比例"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_energy"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_launch",
+        "documentId": "doc_a",
+        "documentVersionId": "docv_a_1",
+        "blockId": "b000",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "星河制造有限公司于2024年推出星图产品。"
+      },
+      {
+        "evidenceId": "ev_2024_a",
+        "documentId": "doc_a",
+        "documentVersionId": "docv_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "2024年末在册研发人员10人"
+      },
+      {
+        "evidenceId": "ev_2024_b",
+        "documentId": "doc_b",
+        "documentVersionId": "docv_b_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "2024年末在册研发人员10人"
+      },
+      {
+        "evidenceId": "ev_2025_a",
+        "documentId": "doc_a",
+        "documentVersionId": "docv_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "2025年末在册研发人员12人"
+      },
+      {
+        "evidenceId": "ev_2025_b",
+        "documentId": "doc_b",
+        "documentVersionId": "docv_b_1",
+        "blockId": "b000",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2025年末在册研发人员13人"
+      },
+      {
+        "evidenceId": "ev_project",
+        "documentId": "doc_a",
+        "documentVersionId": "docv_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "2025年参与项目的研发人员15人"
+      },
+      {
+        "evidenceId": "ev_energy",
+        "documentId": "doc_a",
+        "documentVersionId": "docv_a_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 2
+        },
+        "excerpt": "2025年度可再生能源使用比例为72%。"
+      }
+    ],
+    "relations": [
+      {
+        "relationId": "rel_product",
+        "fromEntityId": "ent_company",
+        "toEntityId": "ent_product",
+        "relationType": "offers_product",
+        "evidenceRefs": [
+          "ev_launch"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "eventId": "event_launch",
+        "entityId": "ent_company",
+        "eventType": "product_launch",
+        "time": {
+          "year": 2024
+        },
+        "description": "推出星图产品",
+        "evidenceRefs": [
+          "ev_launch"
+        ]
+      }
+    ],
+    "conflicts": [
+      {
+        "conflictId": "conflict_rd",
+        "claimRefs": [
+          "claim_2025_a",
+          "claim_2025_b"
+        ],
+        "description": "相同年末在册口径的2025年研发人数分别为12和13人",
+        "resolutionStatus": "open"
+      }
+    ],
+    "missing": [
+      {
+        "missingId": "missing_revenue",
+        "entityId": "ent_company",
+        "expectedPredicate": "annual_revenue",
+        "description": "2025年度营业收入未披露，需补充资料",
+        "severity": "warning"
+      }
+    ],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_a",
+          "documentVersionId": "docv_a_1",
+          "blockIds": [
+            "b000",
+            "b001",
+            "b002"
+          ]
+        },
+        {
+          "documentId": "doc_b",
+          "documentVersionId": "docv_b_1",
+          "blockIds": [
+            "b000",
+            "b001",
+            "b002"
+          ]
+        }
+      ]
+    },
+    "reviewStatus": "pending",
+    "producedBy": {
+      "role": "evidence",
+      "protocolVersion": "1.0",
+      "model": "synthetic_model",
+      "sessionId": "session_synthetic",
+      "promptVersion": "evidence_b3_v1"
+    },
+    "createdAt": "2026-10-10T00:00:00Z"
+  },
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0",
+    "model": "synthetic_model",
+    "sessionId": "session_synthetic",
+    "promptVersion": "evidence_b3_v1"
+  }
+}

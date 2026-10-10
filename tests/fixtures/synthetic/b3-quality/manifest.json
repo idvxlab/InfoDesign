@@ -1,0 +1,27 @@
+{
+  "mode": "synthetic_offline_matrix",
+  "cases": [
+    "quantities",
+    "reconciliation",
+    "coverage"
+  ],
+  "sourceFiles": [
+    "quantities-input.json",
+    "reconciliation-input.json",
+    "coverage-input.json"
+  ],
+  "referenceFiles": [
+    "quantities-reference.json",
+    "reconciliation-reference.json",
+    "coverage-reference.json"
+  ],
+  "paidExecutionAuthorized": false,
+  "proposedLiveLimits": {
+    "timeoutMs": 120000,
+    "maxModelCalls": 4,
+    "maxToolCalls": 2,
+    "maxOutputTokens": 4096,
+    "maxContextBytes": 60000
+  },
+  "reviewBoundary": "Reference outputs are handwritten, never extraction-model input. No automated semantic verdict or B4 implementation."
+}

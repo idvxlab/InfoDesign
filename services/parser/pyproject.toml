@@ -1,0 +1,12 @@
+[project]
+name = "tju-mas-parser"
+version = "0.1.0"
+description = "Offline PDF inspection adapter producing the existing DocumentIR contract"
+requires-python = ">=3.12,<3.13"
+dependencies = ["pdfplumber==0.11.10", "pypdfium2==5.14.0"]
+
+[project.optional-dependencies]
+test = ["reportlab==5.0.1"]
+
+# The reproducible execution path is deploy/Dockerfile.parser plus hashed locks.
+# No API server, OCR model, remote service or package build backend is introduced.

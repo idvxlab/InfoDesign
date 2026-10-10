@@ -1,0 +1,148 @@
+{
+  "description": "结构层正反例清单。有效性由 packages/contracts 的校验器判定；服务层用例在 tests/integration/contracts-service.test.ts。",
+  "valid": [
+    {
+      "name": "task",
+      "schemaId": "urn:tju-mas:contracts:task",
+      "file": "task.json"
+    },
+    {
+      "name": "document-ir",
+      "schemaId": "urn:tju-mas:contracts:document-ir",
+      "file": "document-ir.json"
+    },
+    {
+      "name": "document-ir-v2",
+      "schemaId": "urn:tju-mas:contracts:document-ir",
+      "file": "document-ir-v2.json"
+    },
+    {
+      "name": "snapshot",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "snapshot.json"
+    },
+    {
+      "name": "evidence-input",
+      "schemaId": "urn:tju-mas:contracts:evidence-input",
+      "file": "evidence-input.json"
+    },
+    {
+      "name": "evidence-output",
+      "schemaId": "urn:tju-mas:contracts:evidence-output",
+      "file": "evidence-output.json"
+    },
+    {
+      "name": "review-input",
+      "schemaId": "urn:tju-mas:contracts:review-input",
+      "file": "review-input.json"
+    },
+    {
+      "name": "review-report",
+      "schemaId": "urn:tju-mas:contracts:review-report",
+      "file": "review-report.json"
+    },
+    {
+      "name": "review-output",
+      "schemaId": "urn:tju-mas:contracts:review-output",
+      "file": "review-output.json"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "snapshot-missing-coverage",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "invalid/snapshot-missing-coverage.json",
+      "reason": "缺少必填字段 coverage"
+    },
+    {
+      "name": "snapshot-unknown-field",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "invalid/snapshot-unknown-field.json",
+      "reason": "实体出现未知字段 permissions"
+    },
+    {
+      "name": "snapshot-bad-fact-value",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "invalid/snapshot-bad-fact-value.json",
+      "reason": "事实值 normalized 应为数字"
+    },
+    {
+      "name": "snapshot-reserved-extension",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "invalid/snapshot-reserved-extension.json",
+      "reason": "扩展区使用保留键 permissions"
+    },
+    {
+      "name": "snapshot-invalid-review-status",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "invalid/snapshot-invalid-review-status.json",
+      "reason": "reviewStatus 使用未登记的状态 approved"
+    },
+    {
+      "name": "document-ir-missing-blocks",
+      "schemaId": "urn:tju-mas:contracts:document-ir",
+      "file": "invalid/document-ir-missing-blocks.json",
+      "reason": "缺少必填字段 blocks"
+    },
+    {
+      "name": "task-missing-task-id",
+      "schemaId": "urn:tju-mas:contracts:task",
+      "file": "invalid/task-missing-task-id.json",
+      "reason": "缺少必填字段 taskId"
+    },
+    {
+      "name": "evidence-output-forged-review-status",
+      "schemaId": "urn:tju-mas:contracts:evidence-output",
+      "file": "invalid/evidence-output-forged-review-status.json",
+      "reason": "候选快照审查状态被改为 passed"
+    },
+    {
+      "name": "evidence-output-forged-role",
+      "schemaId": "urn:tju-mas:contracts:evidence-output",
+      "file": "invalid/evidence-output-forged-role.json",
+      "reason": "候选快照角色被改为 review"
+    },
+    {
+      "name": "evidence-output-forged-claim-review-status",
+      "schemaId": "urn:tju-mas:contracts:evidence-output",
+      "file": "invalid/evidence-output-forged-claim-review-status.json",
+      "reason": "候选内部单条事实的审查状态被改为 passed"
+    },
+    {
+      "name": "evidence-output-claims-not-array",
+      "schemaId": "urn:tju-mas:contracts:evidence-output",
+      "file": "invalid/evidence-output-claims-not-array.json",
+      "reason": "候选事实集合被改为对象，结构错误"
+    },
+    {
+      "name": "snapshot-invalid-timestamp",
+      "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+      "file": "invalid/snapshot-invalid-timestamp.json",
+      "reason": "createdAt 使用不存在的日期 2025-02-30"
+    },
+    {
+      "name": "review-input-unsupported-mode",
+      "schemaId": "urn:tju-mas:contracts:review-input",
+      "file": "invalid/review-input-unsupported-mode.json",
+      "reason": "未实现的审查模式 page"
+    },
+    {
+      "name": "review-output-forged-role",
+      "schemaId": "urn:tju-mas:contracts:review-output",
+      "file": "invalid/review-output-forged-role.json",
+      "reason": "审查报告角色被改为 evidence"
+    },
+    {
+      "name": "evidence-output-missing-stop-reason",
+      "schemaId": "urn:tju-mas:contracts:evidence-output",
+      "file": "invalid/evidence-output-missing-stop-reason.json",
+      "reason": "失败状态缺少 stopReason"
+    },
+    {
+      "name": "information-plan-placeholder",
+      "schemaId": "urn:tju-mas:contracts:information-plan",
+      "file": "invalid/information-plan-placeholder.json",
+      "reason": "未实现的占位协议必须拒绝任何输入"
+    }
+  ]
+}

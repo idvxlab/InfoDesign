@@ -1,0 +1,22 @@
+{
+  "kind": "synthetic-reconstruction-with-human-semantic-annotations",
+  "cases": [
+    {
+      "file": "first-candidate.json",
+      "expectedProgramIssueCodes": [],
+      "semanticIssues": [
+        { "category": "overstrong_name_predicate", "path": "candidateSnapshot.claims[0].predicate", "reason": "资料只出现名称，没有登记或法定名称的证明，legal_name 的确定程度过强。" },
+        { "category": "partial_scope_overreach", "path": "stopReason", "reason": "partial 没有指出目录外存在表格或图片；停止原因和 coverage_note 都作了额外推断。" }
+      ]
+    },
+    {
+      "file": "recheck-candidate.json",
+      "expectedProgramIssueCodes": ["coverage.duplicate_block"],
+      "semanticIssues": [
+        { "category": "unsupported_alias", "path": "candidateSnapshot.entities[0].aliases[0]", "reason": "名称中的子串不是明确的简称声明，原文未将其声明为别名。" }
+      ]
+    }
+  ],
+  "unavailableHistoricalEvidence": ["失败重验第三次响应的原始正文", "失败重验第三次响应的实际停止码", "失败重验各次响应的用量拆分"],
+  "boundary": "标注是对合成样例的人工作业预期，不是运行中的语义判定器。新的 stop/error/length/aborted SSE 响应均为独立合成场景，不能倒推历史第三次响应为何失败。"
+}

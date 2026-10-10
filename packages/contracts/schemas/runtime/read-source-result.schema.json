@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:read-source-result",
+  "title": "受控读取原文结果（read_source）",
+  "description": "read_source 工具的唯一对外结果结构。只包含经策展的结果字段：绑定信息、块类型、原文、位置、状态，以及镜像/表格的受限元数据。绝不包含整份 DocumentIR、主机路径、原始二进制或 base64。图像标记 semanticStatus=not_run，不做 OCR/视觉推断。整个 JSON 编码后不得超过 65536 字节。",
+  "type": "object",
+  "properties": {
+    "projectId": { "$ref": "urn:tju-mas:contracts:common#/$defs/projectId" },
+    "documentId": { "$ref": "urn:tju-mas:contracts:common#/$defs/documentId" },
+    "documentVersionId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+    "blockId": { "$ref": "urn:tju-mas:contracts:common#/$defs/blockId" },
+    "contentHash": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" },
+    "blockType": {
+      "type": "string",
+      "enum": ["heading", "paragraph", "list", "table", "caption", "image", "other"]
+    },
+    "text": { "type": "string", "maxLength": 65536 },
+    "location": { "$ref": "urn:tju-mas:contracts:common#/$defs/sourceLocation" },
+    "status": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "semanticStatus": { "type": "string", "const": "not_run" },
+    "asset": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "description": "镜像区域元数据；只有安全相对路径与身份指纹，不含原始字节。",
+          "properties": {
+            "assetKind": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^/][^\\\\]*$",
+              "description": "资料包内安全相对路径；不得为绝对路径或含反斜杠/回溯段。"
+            },
+            "sha256": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" },
+            "bytes": { "type": "integer", "minimum": 0 },
+            "blockId": { "$ref": "urn:tju-mas:contracts:common#/$defs/blockId" }
+          },
+          "required": ["assetKind", "path", "sha256", "bytes", "blockId"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "table": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "description": "候选表格的原始单元格；状态固定为 candidate_not_reviewed，表示这是未经人工复核的候选内容，并非已确认事实，也不存在通用的人类批准前置要求。表格单元格的原始位置（row、column、text、location）必须原样保留，仅作为原始证据供人工复核。",
+          "properties": {
+            "status": { "type": "string", "const": "candidate_not_reviewed" },
+            "sourceHash": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" },
+            "tablePath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[^/][^\\\\]*$"
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": { "type": ["string", "null"] }
+              }
+            },
+            "cells": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "row": { "type": "integer", "minimum": 0 },
+                  "column": { "type": "integer", "minimum": 0 },
+                  "text": { "type": ["string", "null"] },
+                  "location": { "$ref": "urn:tju-mas:contracts:common#/$defs/sourceLocation" }
+                },
+                "required": ["row", "column", "text", "location"],
+                "additionalProperties": false
+              }
+            },
+            "warnings": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          },
+          "required": ["status", "sourceHash", "tablePath", "rows", "cells", "warnings"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "unsupportedReasons": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "required": [
+    "projectId",
+    "documentId",
+    "documentVersionId",
+    "blockId",
+    "contentHash",
+    "blockType",
+    "text",
+    "location",
+    "status",
+    "asset",
+    "table",
+    "limitations",
+    "unsupportedReasons"
+  ],
+  "additionalProperties": false
+}

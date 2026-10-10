@@ -1,0 +1,1362 @@
+[
+  {
+    "schemaId": "urn:tju-mas:contracts:change-set",
+    "file": "change-set.ts",
+    "types": [
+      {
+        "name": "ChangeSet",
+        "pointer": "urn:tju-mas:contracts:change-set",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:common",
+    "file": "common.ts",
+    "types": [
+      {
+        "name": "CommonProtocolVersion",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/protocolVersion",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonIdentifier",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/identifier",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonPredicate",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/predicate",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonProjectId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/projectId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonTaskId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/taskId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonAttemptId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/attemptId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonDocumentId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/documentId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonBlockId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/blockId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonSnapshotId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/snapshotId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonReportId",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/reportId",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonContentHash",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/contentHash",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonTimestamp",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/timestamp",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonDate",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/date",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonTaskType",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/taskType",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonStage",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/stage",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonSupportStatus",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/supportStatus",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonReviewStatus",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/reviewStatus",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonAgentOutputStatus",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/agentOutputStatus",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonReviewMode",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/reviewMode",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonReviewVerdict",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/reviewVerdict",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonCheckType",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/checkType",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonCheckStatus",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/checkStatus",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonSeverity",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/severity",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonSuggestedStage",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/suggestedStage",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonAllowedOperation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/allowedOperation",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonDocumentVersionRef",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/documentVersionRef",
+        "kind": "def",
+        "properties": [
+          "documentId",
+          "documentVersionId"
+        ],
+        "required": [
+          "documentId",
+          "documentVersionId"
+        ]
+      },
+      {
+        "name": "CommonSourceLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/sourceLocation",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonParagraphLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/paragraphLocation",
+        "kind": "def",
+        "properties": [
+          "kind",
+          "paragraphIndex",
+          "charStart",
+          "charEnd"
+        ],
+        "required": [
+          "kind",
+          "paragraphIndex"
+        ]
+      },
+      {
+        "name": "CommonTableCellLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/tableCellLocation",
+        "kind": "def",
+        "properties": [
+          "kind",
+          "tableId",
+          "row",
+          "column",
+          "cellRef"
+        ],
+        "required": [
+          "kind",
+          "tableId",
+          "row",
+          "column"
+        ]
+      },
+      {
+        "name": "CommonPageRegionLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/pageRegionLocation",
+        "kind": "def",
+        "properties": [
+          "kind",
+          "page",
+          "bbox"
+        ],
+        "required": [
+          "kind",
+          "page",
+          "bbox"
+        ]
+      },
+      {
+        "name": "CommonSlideLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/slideLocation",
+        "kind": "def",
+        "properties": [
+          "kind",
+          "slideIndex",
+          "objectId"
+        ],
+        "required": [
+          "kind",
+          "slideIndex"
+        ]
+      },
+      {
+        "name": "CommonImageRegionLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/imageRegionLocation",
+        "kind": "def",
+        "properties": [
+          "kind",
+          "page",
+          "bbox"
+        ],
+        "required": [
+          "kind",
+          "page",
+          "bbox"
+        ]
+      },
+      {
+        "name": "CommonSheetCellLocation",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/sheetCellLocation",
+        "kind": "def",
+        "properties": [
+          "kind",
+          "sheet",
+          "cell",
+          "headerRange"
+        ],
+        "required": [
+          "kind",
+          "sheet",
+          "cell"
+        ]
+      },
+      {
+        "name": "CommonBoundingBox",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/boundingBox",
+        "kind": "def",
+        "properties": [
+          "x",
+          "y",
+          "width",
+          "height"
+        ],
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height"
+        ]
+      },
+      {
+        "name": "CommonFactValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/factValue",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonNumberValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/numberValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "normalized",
+          "unit",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "normalized"
+        ]
+      },
+      {
+        "name": "CommonQuantityValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/quantityValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "normalized",
+          "unit",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "normalized",
+          "unit"
+        ]
+      },
+      {
+        "name": "CommonTextValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/textValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "text",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "text"
+        ]
+      },
+      {
+        "name": "CommonBooleanValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/booleanValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "value",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "value"
+        ]
+      },
+      {
+        "name": "CommonDateValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/dateValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "date",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "date"
+        ]
+      },
+      {
+        "name": "CommonReferenceValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/referenceValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "refId",
+          "refType",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "refId",
+          "refType"
+        ]
+      },
+      {
+        "name": "CommonEnumValue",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/enumValue",
+        "kind": "def",
+        "properties": [
+          "type",
+          "option",
+          "raw"
+        ],
+        "required": [
+          "type",
+          "option"
+        ]
+      },
+      {
+        "name": "CommonTimeQualifier",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/timeQualifier",
+        "kind": "def",
+        "properties": [
+          "year",
+          "period",
+          "asOf"
+        ],
+        "required": []
+      },
+      {
+        "name": "CommonQualifiers",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/qualifiers",
+        "kind": "def",
+        "properties": [
+          "time",
+          "basis",
+          "scope",
+          "measure"
+        ],
+        "required": []
+      },
+      {
+        "name": "CommonExtensionBag",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/extensionBag",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "CommonAgentProvenance",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/agentProvenance",
+        "kind": "def",
+        "properties": [
+          "role",
+          "model",
+          "sessionId",
+          "protocolVersion",
+          "promptVersion"
+        ],
+        "required": [
+          "role",
+          "protocolVersion"
+        ]
+      },
+      {
+        "name": "CommonScope",
+        "pointer": "urn:tju-mas:contracts:common#/$defs/scope",
+        "kind": "def",
+        "properties": [
+          "projectId",
+          "documentRefs",
+          "allowedOperations"
+        ],
+        "required": [
+          "projectId",
+          "documentRefs",
+          "allowedOperations"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:component-engineer-input",
+    "file": "component-engineer-input.ts",
+    "types": [
+      {
+        "name": "ComponentEngineerInput",
+        "pointer": "urn:tju-mas:contracts:component-engineer-input",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:component-engineer-output",
+    "file": "component-engineer-output.ts",
+    "types": [
+      {
+        "name": "ComponentEngineerOutput",
+        "pointer": "urn:tju-mas:contracts:component-engineer-output",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:design-input",
+    "file": "design-input.ts",
+    "types": [
+      {
+        "name": "DesignInput",
+        "pointer": "urn:tju-mas:contracts:design-input",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:design-output",
+    "file": "design-output.ts",
+    "types": [
+      {
+        "name": "DesignOutput",
+        "pointer": "urn:tju-mas:contracts:design-output",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:document-ir",
+    "file": "document-ir.ts",
+    "types": [
+      {
+        "name": "DocumentIrBlock",
+        "pointer": "urn:tju-mas:contracts:document-ir#/$defs/block",
+        "kind": "def",
+        "properties": [
+          "blockId",
+          "index",
+          "type",
+          "text",
+          "location",
+          "parentBlockId",
+          "extensions"
+        ],
+        "required": [
+          "blockId",
+          "index",
+          "type",
+          "text",
+          "location"
+        ]
+      },
+      {
+        "name": "DocumentIrParseInfo",
+        "pointer": "urn:tju-mas:contracts:document-ir#/$defs/parseInfo",
+        "kind": "def",
+        "properties": [
+          "parser",
+          "quality",
+          "unsupported"
+        ],
+        "required": [
+          "parser",
+          "quality"
+        ]
+      },
+      {
+        "name": "DocumentIrUnsupportedContent",
+        "pointer": "urn:tju-mas:contracts:document-ir#/$defs/unsupportedContent",
+        "kind": "def",
+        "properties": [
+          "blockId",
+          "reason"
+        ],
+        "required": [
+          "blockId",
+          "reason"
+        ]
+      },
+      {
+        "name": "DocumentIr",
+        "pointer": "urn:tju-mas:contracts:document-ir",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "documentId",
+          "documentVersionId",
+          "projectId",
+          "version",
+          "contentHash",
+          "mimeType",
+          "sourceName",
+          "language",
+          "createdAt",
+          "blocks",
+          "parseInfo",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "documentId",
+          "documentVersionId",
+          "projectId",
+          "version",
+          "contentHash",
+          "mimeType",
+          "sourceName",
+          "blocks"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:evidence-input",
+    "file": "evidence-input.ts",
+    "types": [
+      {
+        "name": "EvidenceInput",
+        "pointer": "urn:tju-mas:contracts:evidence-input",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "taskType",
+          "stage",
+          "scope",
+          "documents",
+          "existingSnapshot",
+          "constraints",
+          "executionPolicyRef",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "taskType",
+          "stage",
+          "scope",
+          "documents",
+          "constraints",
+          "executionPolicyRef"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:evidence-output",
+    "file": "evidence-output.ts",
+    "types": [
+      {
+        "name": "EvidenceOutputClaimChange",
+        "pointer": "urn:tju-mas:contracts:evidence-output#/$defs/claimChange",
+        "kind": "def",
+        "properties": [
+          "changeId",
+          "changeType",
+          "claimId",
+          "description"
+        ],
+        "required": [
+          "changeId",
+          "changeType",
+          "claimId",
+          "description"
+        ]
+      },
+      {
+        "name": "EvidenceOutput",
+        "pointer": "urn:tju-mas:contracts:evidence-output",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "status",
+          "candidateSnapshot",
+          "changes",
+          "stopReason",
+          "producedBy",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "status",
+          "candidateSnapshot",
+          "producedBy"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:evidence-snapshot",
+    "file": "evidence-snapshot.ts",
+    "types": [
+      {
+        "name": "EvidenceSnapshotEntity",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/entity",
+        "kind": "def",
+        "properties": [
+          "entityId",
+          "entityType",
+          "label",
+          "aliases",
+          "extensions"
+        ],
+        "required": [
+          "entityId",
+          "entityType",
+          "label"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotClaim",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/claim",
+        "kind": "def",
+        "properties": [
+          "claimId",
+          "claimVersionId",
+          "entityId",
+          "predicate",
+          "value",
+          "qualifiers",
+          "supportStatus",
+          "reviewStatus",
+          "evidenceRefs",
+          "conflictGroupId",
+          "note",
+          "extensions"
+        ],
+        "required": [
+          "claimId",
+          "claimVersionId",
+          "entityId",
+          "predicate",
+          "value",
+          "supportStatus",
+          "reviewStatus",
+          "evidenceRefs"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotEvidenceEntry",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/evidenceEntry",
+        "kind": "def",
+        "properties": [
+          "evidenceId",
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "locator",
+          "excerpt",
+          "confidence",
+          "extensions"
+        ],
+        "required": [
+          "evidenceId",
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "locator",
+          "excerpt"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotRelation",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/relation",
+        "kind": "def",
+        "properties": [
+          "relationId",
+          "fromEntityId",
+          "toEntityId",
+          "relationType",
+          "evidenceRefs"
+        ],
+        "required": [
+          "relationId",
+          "fromEntityId",
+          "toEntityId",
+          "relationType",
+          "evidenceRefs"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotEvent",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/event",
+        "kind": "def",
+        "properties": [
+          "eventId",
+          "entityId",
+          "eventType",
+          "time",
+          "description",
+          "evidenceRefs"
+        ],
+        "required": [
+          "eventId",
+          "entityId",
+          "eventType",
+          "description",
+          "evidenceRefs"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotAsset",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/asset",
+        "kind": "def",
+        "properties": [
+          "assetId",
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "location",
+          "description"
+        ],
+        "required": [
+          "assetId",
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "location",
+          "description"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotConflict",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/conflict",
+        "kind": "def",
+        "properties": [
+          "conflictId",
+          "claimRefs",
+          "description",
+          "resolutionStatus"
+        ],
+        "required": [
+          "conflictId",
+          "claimRefs",
+          "description",
+          "resolutionStatus"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotMissing",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/missing",
+        "kind": "def",
+        "properties": [
+          "missingId",
+          "expectedPredicate",
+          "entityId",
+          "description",
+          "severity"
+        ],
+        "required": [
+          "missingId",
+          "description",
+          "severity"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotCoverage",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/coverage",
+        "kind": "def",
+        "properties": [
+          "documentsProcessed",
+          "unsupported"
+        ],
+        "required": [
+          "documentsProcessed"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotDocumentCoverage",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/documentCoverage",
+        "kind": "def",
+        "properties": [
+          "documentId",
+          "documentVersionId",
+          "blockIds"
+        ],
+        "required": [
+          "documentId",
+          "documentVersionId",
+          "blockIds"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshotUnsupportedContent",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot#/$defs/unsupportedContent",
+        "kind": "def",
+        "properties": [
+          "documentId",
+          "blockId",
+          "reason"
+        ],
+        "required": [
+          "documentId",
+          "blockId",
+          "reason"
+        ]
+      },
+      {
+        "name": "EvidenceSnapshot",
+        "pointer": "urn:tju-mas:contracts:evidence-snapshot",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "snapshotId",
+          "snapshotVersionId",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "basedOnSnapshotVersionId",
+          "entities",
+          "claims",
+          "evidence",
+          "relations",
+          "events",
+          "assets",
+          "conflicts",
+          "missing",
+          "coverage",
+          "reviewStatus",
+          "producedBy",
+          "createdAt",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "snapshotId",
+          "snapshotVersionId",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "entities",
+          "claims",
+          "evidence",
+          "conflicts",
+          "missing",
+          "coverage",
+          "reviewStatus",
+          "producedBy",
+          "createdAt"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:information-plan",
+    "file": "information-plan.ts",
+    "types": [
+      {
+        "name": "InformationPlan",
+        "pointer": "urn:tju-mas:contracts:information-plan",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:page-spec",
+    "file": "page-spec.ts",
+    "types": [
+      {
+        "name": "PageSpec",
+        "pointer": "urn:tju-mas:contracts:page-spec",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:page-version",
+    "file": "page-version.ts",
+    "types": [
+      {
+        "name": "PageVersion",
+        "pointer": "urn:tju-mas:contracts:page-version",
+        "kind": "placeholder",
+        "properties": [],
+        "required": []
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:read-document-request",
+    "file": "read-document-request.ts",
+    "types": [
+      {
+        "name": "ReadDocumentRequest",
+        "pointer": "urn:tju-mas:contracts:read-document-request",
+        "kind": "root",
+        "properties": [
+          "documentId",
+          "documentVersionId",
+          "blockId"
+        ],
+        "required": [
+          "documentId",
+          "documentVersionId",
+          "blockId"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:read-document-result",
+    "file": "read-document-result.ts",
+    "types": [
+      {
+        "name": "ReadDocumentResult",
+        "pointer": "urn:tju-mas:contracts:read-document-result",
+        "kind": "root",
+        "properties": [
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "contentHash",
+          "text",
+          "location"
+        ],
+        "required": [
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "contentHash",
+          "text",
+          "location"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:read-source-result",
+    "file": "read-source-result.ts",
+    "types": [
+      {
+        "name": "ReadSourceResult",
+        "pointer": "urn:tju-mas:contracts:read-source-result",
+        "kind": "root",
+        "properties": [
+          "projectId",
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "contentHash",
+          "blockType",
+          "text",
+          "location",
+          "status",
+          "semanticStatus",
+          "asset",
+          "table",
+          "limitations",
+          "unsupportedReasons"
+        ],
+        "required": [
+          "projectId",
+          "documentId",
+          "documentVersionId",
+          "blockId",
+          "contentHash",
+          "blockType",
+          "text",
+          "location",
+          "status",
+          "asset",
+          "table",
+          "limitations",
+          "unsupportedReasons"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:review-input",
+    "file": "review-input.ts",
+    "types": [
+      {
+        "name": "ReviewInput",
+        "pointer": "urn:tju-mas:contracts:review-input",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "reviewMode",
+          "scope",
+          "subject",
+          "documents",
+          "checksRequired",
+          "executionPolicyRef",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "reviewMode",
+          "scope",
+          "subject",
+          "documents",
+          "checksRequired"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:review-output",
+    "file": "review-output.ts",
+    "types": [
+      {
+        "name": "ReviewOutput",
+        "pointer": "urn:tju-mas:contracts:review-output",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "status",
+          "report",
+          "stopReason",
+          "producedBy",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "status",
+          "report"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:review-report",
+    "file": "review-report.ts",
+    "types": [
+      {
+        "name": "ReviewReportReportSubject",
+        "pointer": "urn:tju-mas:contracts:review-report#/$defs/reportSubject",
+        "kind": "def",
+        "properties": [
+          "subjectType",
+          "snapshotId",
+          "snapshotVersionId",
+          "contentHash"
+        ],
+        "required": [
+          "subjectType",
+          "snapshotId",
+          "snapshotVersionId",
+          "contentHash"
+        ]
+      },
+      {
+        "name": "ReviewReportCheckResult",
+        "pointer": "urn:tju-mas:contracts:review-report#/$defs/checkResult",
+        "kind": "def",
+        "properties": [
+          "checkId",
+          "checkType",
+          "status",
+          "claimRefs",
+          "evidenceRefs",
+          "finding",
+          "severity"
+        ],
+        "required": [
+          "checkId",
+          "checkType",
+          "status",
+          "finding"
+        ]
+      },
+      {
+        "name": "ReviewReportIssue",
+        "pointer": "urn:tju-mas:contracts:review-report#/$defs/issue",
+        "kind": "def",
+        "properties": [
+          "issueId",
+          "claimId",
+          "evidenceRefs",
+          "severity",
+          "category",
+          "description",
+          "expected",
+          "actual",
+          "suggestedStage"
+        ],
+        "required": [
+          "issueId",
+          "severity",
+          "category",
+          "description"
+        ]
+      },
+      {
+        "name": "ReviewReport",
+        "pointer": "urn:tju-mas:contracts:review-report",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "reportId",
+          "reportVersionId",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "reviewMode",
+          "subject",
+          "verdict",
+          "checks",
+          "issues",
+          "summary",
+          "executionStatus",
+          "reviewedBy",
+          "createdAt",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "reportId",
+          "reportVersionId",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "reviewMode",
+          "subject",
+          "verdict",
+          "checks",
+          "issues",
+          "summary",
+          "executionStatus",
+          "reviewedBy",
+          "createdAt"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:task",
+    "file": "task.ts",
+    "types": [
+      {
+        "name": "TaskBaseVersionRef",
+        "pointer": "urn:tju-mas:contracts:task#/$defs/baseVersionRef",
+        "kind": "def",
+        "properties": [
+          "artifactType",
+          "artifactId",
+          "versionId",
+          "contentHash"
+        ],
+        "required": [
+          "artifactType",
+          "artifactId",
+          "versionId"
+        ]
+      },
+      {
+        "name": "TaskInputRef",
+        "pointer": "urn:tju-mas:contracts:task#/$defs/inputRef",
+        "kind": "def",
+        "properties": [
+          "refType",
+          "refId",
+          "versionId",
+          "contentHash"
+        ],
+        "required": [
+          "refType",
+          "refId"
+        ]
+      },
+      {
+        "name": "TaskConstraints",
+        "pointer": "urn:tju-mas:contracts:task#/$defs/constraints",
+        "kind": "def",
+        "properties": [
+          "preserveFacts",
+          "forbiddenNewFacts",
+          "immutableNodeIds",
+          "brand",
+          "notes"
+        ],
+        "required": [
+          "preserveFacts",
+          "forbiddenNewFacts"
+        ]
+      },
+      {
+        "name": "Task",
+        "pointer": "urn:tju-mas:contracts:task",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "taskType",
+          "stage",
+          "userIntent",
+          "baseVersions",
+          "inputRefs",
+          "targetNodeIds",
+          "constraints",
+          "executionPolicyRef",
+          "createdAt",
+          "extensions"
+        ],
+        "required": [
+          "protocolVersion",
+          "taskId",
+          "attemptId",
+          "projectId",
+          "taskType",
+          "stage",
+          "userIntent",
+          "baseVersions",
+          "inputRefs",
+          "constraints",
+          "executionPolicyRef",
+          "createdAt"
+        ]
+      }
+    ]
+  }
+]

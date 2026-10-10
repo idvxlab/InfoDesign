@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "types": ["node"]
+  },
+  "include": [
+    "packages/contracts/src/**/*.ts",
+    "packages/contracts/generated/**/*.ts",
+    "tests/helpers/**/*.ts",
+    "tests/integration/contracts*.test.ts",
+    "tests/integration/generated-types.test.ts",
+    "tests/types/**/*.ts"
+  ]
+}

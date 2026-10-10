@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:design-input",
+  "title": "信息设计 Agent输入",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。可用信息快照、展示目标、视觉规范、组件目录；修改时含当前计划/规格/范围；身份范围由后端授予。",
+  "not": {}
+}

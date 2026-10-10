@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:component-engineer-output",
+  "title": "可选组件工程 Agent输出",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。候选组件代码、参数规范、示例、依赖/来源与测试记录；独立隔离工作区；不修改企业事实，不自动部署候选代码。",
+  "not": {}
+}

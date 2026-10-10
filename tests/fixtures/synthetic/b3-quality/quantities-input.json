@@ -1,0 +1,87 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_quality_quantities",
+  "attemptId": "attempt_quality_quantities",
+  "projectId": "project_quality_synthetic",
+  "taskType": "generate",
+  "stage": "facts",
+  "scope": {
+    "projectId": "project_quality_synthetic",
+    "documentRefs": [
+      {
+        "documentId": "doc_q_a",
+        "documentVersionId": "docv_q_a_1"
+      },
+      {
+        "documentId": "doc_q_b",
+        "documentVersionId": "docv_q_b_1"
+      }
+    ],
+    "allowedOperations": [
+      "read_document",
+      "submit_candidate"
+    ]
+  },
+  "documents": [
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_q_a",
+      "documentVersionId": "docv_q_a_1",
+      "projectId": "project_quality_synthetic",
+      "version": 1,
+      "contentHash": "sha256:c9fcce577a3fce2cdab4838b2f595b5f5134674ea87c9982ece388f989ab2382",
+      "mimeType": "text/plain",
+      "sourceName": "q_a-synthetic.txt",
+      "language": "zh-CN",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "paragraph",
+          "text": "全合成资料。云杉测试社2023年度设备维护支出为12.50万元（不含税）；2024年度设备维护支出为125000元（含税）。2024年计划停机时长为0小时。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "handwritten_synthetic_fixture",
+        "quality": "complete"
+      }
+    },
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_q_b",
+      "documentVersionId": "docv_q_b_1",
+      "projectId": "project_quality_synthetic",
+      "version": 1,
+      "contentHash": "sha256:8d1c34fc5f523b491b9683741d37d3f89b822b040d46b427b22fd0cceb8bad92",
+      "mimeType": "text/plain",
+      "sourceName": "q_b-synthetic.txt",
+      "language": "zh-CN",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "paragraph",
+          "text": "全合成资料。云杉测试社在2024年第三季度抽检的成品不良率为0.8%（抽检500件）；主营业务收入未披露。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "handwritten_synthetic_fixture",
+        "quality": "complete"
+      }
+    }
+  ],
+  "constraints": {
+    "preserveFacts": true,
+    "forbiddenNewFacts": true,
+    "notes": "提取明确的数值、单位、期间及口径，核对主营业务收入；缺失不要填零，原文没有提供的换算或精度不要猜测。"
+  },
+  "executionPolicyRef": "policy_quality_offline"
+}

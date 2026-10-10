@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:component-engineer-input",
+  "title": "可选组件工程 Agent输入",
+  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。组件能力缺口、接口要求、授权源码、测试数据、交互与来源绑定要求；身份范围由后端授予。",
+  "not": {}
+}

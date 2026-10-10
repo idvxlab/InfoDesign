@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:read-document-request",
+  "title": "B2 受控资料读取请求",
+  "description": "只接受资料编号、确切版本与块编号。项目身份与访问授权由服务层提供，不能传路径或权限。",
+  "type": "object",
+  "properties": {
+    "documentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "documentVersionId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "blockId": { "type": "string", "minLength": 1, "maxLength": 128 }
+  },
+  "required": ["documentId", "documentVersionId", "blockId"],
+  "additionalProperties": false
+}

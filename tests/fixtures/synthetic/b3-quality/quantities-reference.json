@@ -1,0 +1,211 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_quality_quantities",
+  "attemptId": "attempt_quality_quantities",
+  "projectId": "project_quality_synthetic",
+  "status": "needs_information",
+  "candidateSnapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_quality_quantities",
+    "snapshotVersionId": "snapv_quality_quantities_1",
+    "projectId": "project_quality_synthetic",
+    "taskId": "task_quality_quantities",
+    "attemptId": "attempt_quality_quantities",
+    "entities": [
+      {
+        "entityId": "ent_org",
+        "entityType": "organization",
+        "label": "云杉测试社"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_cost_2023",
+        "claimVersionId": "claimv_cost_2023_1",
+        "entityId": "ent_org",
+        "predicate": "maintenance_spend",
+        "value": {
+          "type": "quantity",
+          "normalized": 12.5,
+          "unit": "万元",
+          "raw": "12.50万元"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_cost_2023"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2023
+          },
+          "basis": "年度设备维护支出，不含税"
+        }
+      },
+      {
+        "claimId": "claim_cost_2024",
+        "claimVersionId": "claimv_cost_2024_1",
+        "entityId": "ent_org",
+        "predicate": "maintenance_spend",
+        "value": {
+          "type": "quantity",
+          "normalized": 125000,
+          "unit": "元",
+          "raw": "125000元"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_cost_2024"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2024
+          },
+          "basis": "年度设备维护支出，含税"
+        }
+      },
+      {
+        "claimId": "claim_downtime",
+        "claimVersionId": "claimv_downtime_1",
+        "entityId": "ent_org",
+        "predicate": "planned_downtime",
+        "value": {
+          "type": "quantity",
+          "normalized": 0,
+          "unit": "小时",
+          "raw": "0小时"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_downtime"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2024
+          },
+          "basis": "计划停机"
+        }
+      },
+      {
+        "claimId": "claim_defect",
+        "claimVersionId": "claimv_defect_1",
+        "entityId": "ent_org",
+        "predicate": "sample_defect_rate",
+        "value": {
+          "type": "quantity",
+          "normalized": 0.8,
+          "unit": "%",
+          "raw": "0.8%"
+        },
+        "supportStatus": "supported",
+        "reviewStatus": "pending",
+        "evidenceRefs": [
+          "ev_defect"
+        ],
+        "qualifiers": {
+          "time": {
+            "year": 2024,
+            "period": "第三季度"
+          },
+          "basis": "成品抽检，样本500件"
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_cost_2023",
+        "documentId": "doc_q_a",
+        "documentVersionId": "docv_q_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2023年度设备维护支出为12.50万元（不含税）"
+      },
+      {
+        "evidenceId": "ev_cost_2024",
+        "documentId": "doc_q_a",
+        "documentVersionId": "docv_q_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2024年度设备维护支出为125000元（含税）"
+      },
+      {
+        "evidenceId": "ev_downtime",
+        "documentId": "doc_q_a",
+        "documentVersionId": "docv_q_a_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2024年计划停机时长为0小时"
+      },
+      {
+        "evidenceId": "ev_defect",
+        "documentId": "doc_q_b",
+        "documentVersionId": "docv_q_b_1",
+        "blockId": "b001",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 0
+        },
+        "excerpt": "2024年第三季度抽检的成品不良率为0.8%（抽检500件）"
+      }
+    ],
+    "relations": [],
+    "events": [],
+    "conflicts": [],
+    "missing": [
+      {
+        "missingId": "missing_revenue",
+        "entityId": "ent_org",
+        "expectedPredicate": "main_business_revenue",
+        "description": "主营业务收入未披露，需补充金额及统计期间/口径。",
+        "severity": "warning"
+      }
+    ],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_q_a",
+          "documentVersionId": "docv_q_a_1",
+          "blockIds": [
+            "b001"
+          ]
+        },
+        {
+          "documentId": "doc_q_b",
+          "documentVersionId": "docv_q_b_1",
+          "blockIds": [
+            "b001"
+          ]
+        }
+      ],
+      "unsupported": []
+    },
+    "reviewStatus": "pending",
+    "producedBy": {
+      "role": "evidence",
+      "protocolVersion": "1.0",
+      "model": "synthetic_model",
+      "sessionId": "session_quality_quantities",
+      "promptVersion": "synthetic_reference_only"
+    },
+    "createdAt": "2026-10-10T00:00:00Z"
+  },
+  "stopReason": "合成参考候选：仍有待补充或澄清的内容，见 missing、conflicts 和 coverage。",
+  "producedBy": {
+    "role": "evidence",
+    "protocolVersion": "1.0",
+    "model": "synthetic_model",
+    "sessionId": "session_quality_quantities",
+    "promptVersion": "synthetic_reference_only"
+  }
+}

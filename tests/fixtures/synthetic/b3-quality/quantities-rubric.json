@@ -1,0 +1,34 @@
+{
+  "mode": "human_authored_semantic_rubric",
+  "notASemanticClassifier": true,
+  "source": "entirely invented for this matrix; no private-document transformation",
+  "case": "quantities",
+  "checks": [
+    {
+      "id": "decimal_units",
+      "requirement": "保留12.50万元和125000元及各自年份/含税口径；不得仅因金额可换算而合并或认定冲突。"
+    },
+    {
+      "id": "explicit_zero",
+      "requirement": "0小时是已明确披露的计划值，应保留为零而非缺失。"
+    },
+    {
+      "id": "percent_period",
+      "requirement": "0.8%的百分数单位、2024年第三季度、抽检500件范围均须保留，不应变成80%、0.008%或总体不良率。"
+    },
+    {
+      "id": "missing_not_zero",
+      "requirement": "主营业务收入为缺失，不得填写0、false或任意金额。"
+    },
+    {
+      "id": "source_coverage",
+      "requirement": "两份文档同为b001，必须分别读取并保留各自版本和出处。"
+    }
+  ],
+  "acceptableAlternatives": [
+    "time.period可用第三季度或等价明确区间；不要求照抄措辞。",
+    "抽检500件可作限定或独立有证据的事实；不能丢失。",
+    "允许保留原始单位或准确规范化，但必须保留原文数值、单位与不同口径，且不编造换算依据。"
+  ],
+  "reviewRule": "逐项直接对照原文；结构通过不算语义通过。真实候选无需复制参考编号、字段顺序或措辞，等价事实表达可接受。不得把此清单或参考候选提供给提取模型。"
+}

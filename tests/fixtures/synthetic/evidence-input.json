@@ -1,0 +1,139 @@
+{
+  "protocolVersion": "1.0",
+  "taskId": "task_facts_001",
+  "attemptId": "attempt_facts_001",
+  "projectId": "project_tju_demo",
+  "taskType": "generate",
+  "stage": "facts",
+  "scope": {
+    "projectId": "project_tju_demo",
+    "documentRefs": [
+      {
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1"
+      },
+      {
+        "documentId": "doc_update",
+        "documentVersionId": "docv_update_1"
+      }
+    ],
+    "allowedOperations": [
+      "read_document",
+      "read_evidence",
+      "submit_candidate"
+    ]
+  },
+  "documents": [
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_profile",
+      "documentVersionId": "docv_profile_1",
+      "projectId": "project_tju_demo",
+      "version": 1,
+      "contentHash": "sha256:75ff3b1e1d5d9ed1f677d98db1f9e6a9763875c8e0d315ba9bd7e12c2e1f8daa",
+      "mimeType": "text/plain",
+      "sourceName": "company-profile.txt",
+      "language": "zh-CN",
+      "createdAt": "2025-01-10T08:00:00Z",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "heading",
+          "text": "天津智造科技有限公司简介",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        },
+        {
+          "blockId": "b002",
+          "index": 1,
+          "type": "paragraph",
+          "text": "天津智造科技有限公司成立于 2018 年，注册地为天津市滨海新区。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 1
+          }
+        },
+        {
+          "blockId": "b003",
+          "index": 2,
+          "type": "paragraph",
+          "text": "公司专注于工业软件与智能质检设备，主要产品为“智检云”平台。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 2
+          }
+        },
+        {
+          "blockId": "b004",
+          "index": 3,
+          "type": "paragraph",
+          "text": "截至 2025 年，公司研发人员 60 人，营业收入 1200 万元。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 3
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "synthetic/fixture",
+        "quality": "complete"
+      }
+    },
+    {
+      "protocolVersion": "1.0",
+      "documentId": "doc_update",
+      "documentVersionId": "docv_update_1",
+      "projectId": "project_tju_demo",
+      "version": 1,
+      "contentHash": "sha256:161617336d51108b4a3f999eb1474a16327cd1de735d0afe6608a0f775ad2e95",
+      "mimeType": "text/plain",
+      "sourceName": "company-profile-v2.txt",
+      "language": "zh-CN",
+      "createdAt": "2025-01-10T08:00:00Z",
+      "blocks": [
+        {
+          "blockId": "b001",
+          "index": 0,
+          "type": "heading",
+          "text": "天津智造科技有限公司 2025 年度更新",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 0
+          }
+        },
+        {
+          "blockId": "b002",
+          "index": 1,
+          "type": "paragraph",
+          "text": "本年度补充说明：公司研发人员 55 人（以年末在册口径计）。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 1
+          }
+        },
+        {
+          "blockId": "b003",
+          "index": 2,
+          "type": "paragraph",
+          "text": "公司办公地点位于天津市滨海新区海河教育园区。",
+          "location": {
+            "kind": "paragraph",
+            "paragraphIndex": 2
+          }
+        }
+      ],
+      "parseInfo": {
+        "parser": "synthetic/fixture",
+        "quality": "complete"
+      }
+    }
+  ],
+  "constraints": {
+    "preserveFacts": true,
+    "forbiddenNewFacts": true
+  },
+  "executionPolicyRef": "policy_facts_v1"
+}

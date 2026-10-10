@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:task",
+  "title": "Task",
+  "description": "统一任务信息。任务编号、尝试编号、项目范围与执行策略引用由服务端分配；模型不能自行扩大权限。首轮只运行事实阶段。",
+  "type": "object",
+  "required": [
+    "protocolVersion",
+    "taskId",
+    "attemptId",
+    "projectId",
+    "taskType",
+    "stage",
+    "userIntent",
+    "baseVersions",
+    "inputRefs",
+    "constraints",
+    "executionPolicyRef",
+    "createdAt"
+  ],
+  "properties": {
+    "protocolVersion": { "$ref": "urn:tju-mas:contracts:common#/$defs/protocolVersion" },
+    "taskId": { "$ref": "urn:tju-mas:contracts:common#/$defs/taskId" },
+    "attemptId": { "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId" },
+    "projectId": { "$ref": "urn:tju-mas:contracts:common#/$defs/projectId" },
+    "taskType": { "$ref": "urn:tju-mas:contracts:common#/$defs/taskType" },
+    "stage": { "$ref": "urn:tju-mas:contracts:common#/$defs/stage" },
+    "userIntent": { "type": "string", "minLength": 1, "maxLength": 20000 },
+    "baseVersions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/baseVersionRef" },
+      "maxItems": 50
+    },
+    "inputRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/inputRef" },
+      "maxItems": 200
+    },
+    "targetNodeIds": {
+      "type": "array",
+      "items": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+      "maxItems": 500
+    },
+    "constraints": { "$ref": "#/$defs/constraints" },
+    "executionPolicyRef": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+    "createdAt": { "$ref": "urn:tju-mas:contracts:common#/$defs/timestamp" },
+    "extensions": { "$ref": "urn:tju-mas:contracts:common#/$defs/extensionBag" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "baseVersionRef": {
+      "type": "object",
+      "required": ["artifactType", "artifactId", "versionId"],
+      "properties": {
+        "artifactType": { "enum": ["snapshot"] },
+        "artifactId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+        "versionId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+        "contentHash": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "inputRef": {
+      "type": "object",
+      "required": ["refType", "refId"],
+      "properties": {
+        "refType": { "enum": ["document", "snapshot"] },
+        "refId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+        "versionId": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+        "contentHash": { "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "constraints": {
+      "type": "object",
+      "required": ["preserveFacts", "forbiddenNewFacts"],
+      "properties": {
+        "preserveFacts": { "type": "boolean" },
+        "forbiddenNewFacts": { "type": "boolean" },
+        "immutableNodeIds": {
+          "type": "array",
+          "items": { "$ref": "urn:tju-mas:contracts:common#/$defs/identifier" },
+          "maxItems": 500
+        },
+        "brand": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
