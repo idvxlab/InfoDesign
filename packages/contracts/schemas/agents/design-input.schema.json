@@ -1,7 +1,211 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:tju-mas:contracts:design-input",
-  "title": "信息设计 Agent输入",
-  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。可用信息快照、展示目标、视觉规范、组件目录；修改时含当前计划/规格/范围；身份范围由后端授予。",
-  "not": {}
+  "title": "DesignInput v1 — 首次生成",
+  "description": "服务组装的固定设计任务；不能从模型输出反推权限。首版传入授权快照，后续大快照读取工具另行实现。",
+  "type": "object",
+  "properties": {
+    "protocolVersion": {
+      "const": "1.0"
+    },
+    "projectId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/projectId"
+    },
+    "taskId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/taskId"
+    },
+    "attemptId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId"
+    },
+    "taskType": {
+      "const": "generate"
+    },
+    "snapshot": {
+      "$ref": "urn:tju-mas:contracts:evidence-snapshot"
+    },
+    "snapshotRef": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/snapshotId"
+        },
+        "snapshotVersionId": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+        },
+        "contentHash": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+        }
+      },
+      "required": [
+        "snapshotId",
+        "snapshotVersionId",
+        "contentHash"
+      ],
+      "additionalProperties": false
+    },
+    "audience": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "needs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "role",
+        "needs"
+      ],
+      "additionalProperties": false
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "visualGuidance": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2000
+      },
+      "minItems": 0,
+      "maxItems": 20
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "enum": [
+            "zh-CN",
+            "en"
+          ]
+        },
+        "maxSections": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "maxNodes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        }
+      },
+      "required": [
+        "language",
+        "maxSections",
+        "maxNodes"
+      ],
+      "additionalProperties": false
+    },
+    "catalog": {
+      "type": "object",
+      "properties": {
+        "catalogId": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "contentHash": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "enum": [
+                  "page",
+                  "fact_text",
+                  "comparison_matrix",
+                  "disclosure"
+                ]
+              },
+              "version": {
+                "const": "0.1.0"
+              }
+            },
+            "required": [
+              "id",
+              "version"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "catalogId",
+        "version",
+        "contentHash",
+        "components"
+      ],
+      "additionalProperties": false
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "themeId": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "contentHash": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "themeId",
+        "version",
+        "contentHash",
+        "tokens"
+      ],
+      "additionalProperties": false
+    },
+    "reviewRef": {
+      "$ref": "urn:tju-mas:contracts:design-review-ref"
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "projectId",
+    "taskId",
+    "attemptId",
+    "taskType",
+    "snapshot",
+    "snapshotRef",
+    "audience",
+    "goal",
+    "visualGuidance",
+    "constraints",
+    "catalog",
+    "theme"
+  ],
+  "additionalProperties": false
 }
