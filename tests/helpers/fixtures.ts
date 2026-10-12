@@ -41,12 +41,8 @@ export const IDS = {
 } as const;
 
 export const PLACEHOLDER_IDS = [
-  IDS.informationPlan,
-  IDS.pageSpec,
   IDS.pageVersion,
   IDS.changeSet,
-  IDS.designInput,
-  IDS.designOutput,
   'urn:tju-mas:contracts:component-engineer-input',
   'urn:tju-mas:contracts:component-engineer-output',
 ];

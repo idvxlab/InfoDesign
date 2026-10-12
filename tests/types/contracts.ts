@@ -1,7 +1,7 @@
 /** 编译期契约：只由 tsc 执行；@ts-expect-error 变得多余时检查必须失败。 */
 import type {
   Task, DocumentIr, EvidenceSnapshot, EvidenceInput, EvidenceOutput,
-  ReviewInput, ReviewOutput, ReviewReport, CommonFactValue, PageSpec,
+  ReviewInput, ReviewOutput, ReviewReport, CommonFactValue, PageSpec, DesignInput, DesignOutput,
 } from '../../packages/contracts/generated/index.ts';
 import {
   checkTask, checkDocuments, checkEvidenceInput, checkEvidenceOutput,
@@ -55,5 +55,12 @@ evaluateAdoption(snapshot, report, registry, { outputStatus: 'completed', checks
 declare const taskWithoutId: Omit<Task, 'taskId'>;
 // @ts-expect-error 任务必须有 taskId。
 const missingTaskId: Task = taskWithoutId;
-// @ts-expect-error 未实现协议继续生成 never。
+// @ts-expect-error PageSpec 必须包含版本、布局、节点及绑定等必填字段。
 const placeholder: PageSpec = {};
+
+declare const designInput: DesignInput;
+declare const designOutput: DesignOutput;
+// @ts-expect-error 首版设计任务只允许首次生成。
+designInput.taskType = 'revise';
+// @ts-expect-error 设计输出不能改写权威事实快照。
+designOutput.snapshot = snapshot;
