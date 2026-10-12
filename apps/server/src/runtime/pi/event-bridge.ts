@@ -19,12 +19,10 @@ export class RuntimeTrace {
   usageReportedResponses = 0;
   usageUnreportedResponses = 0;
   observe(event: AgentSessionEvent): void {
-    // 只白名单事实角色的两个受控读工具名，其余一律折叠为 'unrecognized'。
-    const known = (name: string): string => name === 'read_document' || name === 'read_source' ? name : 'unrecognized';
     if (event.type === 'tool_execution_start') {
-      this.events.push({ type: 'tool_start', toolName: known(event.toolName) });
+      this.events.push({ type: 'tool_start', toolName: ['read_document', 'read_design'].includes(event.toolName) ? event.toolName : 'unrecognized' });
     } else if (event.type === 'tool_execution_end') {
-      this.events.push({ type: 'tool_end', toolName: known(event.toolName), ok: !event.isError });
+      this.events.push({ type: 'tool_end', toolName: ['read_document', 'read_design'].includes(event.toolName) ? event.toolName : 'unrecognized', ok: !event.isError });
     } else if (event.type === 'message_end' && event.message.role === 'assistant') {
       const source = event.message.usage;
       const values = [source.input, source.output, source.cacheRead, source.cacheWrite];

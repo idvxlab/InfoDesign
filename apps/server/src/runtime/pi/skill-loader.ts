@@ -7,6 +7,24 @@ const REVIEW_FILES = [
   new URL('../../../../../skills/evidence-review/SKILL.md', import.meta.url),
 ];
 
+/** Design uses only these repository resources, never skills from uploaded files. */
+export async function loadDesignResources(workspace: string, settingsManager: SettingsManager) {
+  const files = [
+    new URL('../../agents/design/prompt.md', import.meta.url),
+    new URL('../../../../../skills/information-planning/SKILL.md', import.meta.url),
+    new URL('../../../../../skills/visual-design/SKILL.md', import.meta.url),
+    new URL('../../../../../skills/page-spec-authoring/SKILL.md', import.meta.url),
+  ];
+  const instructions = await Promise.all(files.map(file => readFile(file, 'utf8')));
+  const loader = new DefaultResourceLoader({
+    cwd: workspace, agentDir: workspace, settingsManager,
+    noExtensions: true, noSkills: true, noPromptTemplates: true, noThemes: true, noContextFiles: true,
+    systemPrompt: instructions.join('\n\n'),
+  });
+  await loader.reload();
+  return loader;
+}
+
 export async function loadProbeResources(workspace: string, settingsManager: SettingsManager) {
   const loader = new DefaultResourceLoader({
     cwd: workspace, agentDir: workspace, settingsManager,
