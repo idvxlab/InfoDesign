@@ -11,6 +11,45 @@ import { createDiagnosticFetch } from '../apps/server/src/runtime/pi/transport-d
 export const DEV_POLICY = Object.freeze({ limitMicros: 2_000_000, safetyMicros: 200_000,
   inputCnyPerMillion: 2, outputCnyPerMillion: 8, inputTokensPerByte: 2, inputTokenOverhead: 8192 });
 
+// Trusted-host-only authorization table. Caps outside this table are never accepted by the CLI,
+// and the authorized 100m/200m/300m/400m caps all carry the same 10m safety (not a proportional 20m/30m/40m),
+// so a 300m/400m task can never spend more than 290m/390m and keeps the exact same 10m headroom. Pure and offline-testable.
+export const AUTHORIZED_LIMITS = Object.freeze({
+  2_000_000: 200_000, 10_000_000: 1_000_000, 100_000_000: 10_000_000, 200_000_000: 10_000_000, 300_000_000: 10_000_000, 400_000_000: 10_000_000,
+});
+export const CUMULATIVE_LIMITS = Object.freeze([100_000_000, 200_000_000, 300_000_000, 400_000_000]);
+
+/** Resolve the exact frozen policy for a trusted authorized cap; rejects any unlisted cap. */
+export function resolveAuthorizedPolicy(limitMicros) {
+  if (!Number.isSafeInteger(limitMicros) || !(limitMicros in AUTHORIZED_LIMITS)) throw new Error('invalid_authorized_limit');
+  return Object.freeze({ ...DEV_POLICY, limitMicros, safetyMicros: AUTHORIZED_LIMITS[limitMicros] });
+}
+
+/**
+ * Pure trusted-CLI config gate: requires a cumulative ledger for every cumulative cap (100m, 200m, 300m and 400m),
+ * keeps the exact same ledger/authorizationId contract, and rejects a stored ledger whose
+ * authorizationId, policy or record shapes do not exactly match the current task. Never migrates or
+ * resets history. Takes the already-parsed stored ledger (or null) so it can be exercised offline.
+ * Prior records are replayed through the real RequestSpendBudget to validate shape, sequence and
+ * quote, and the stored reservedMicros total must be a safe integer equal to the validated sum.
+ */
+export function validateCumulativeConfig(config, policy, storedLedger) {
+  if (!config || !config.totalLedgerPath || !config.authorizationId) throw new Error('cumulative_ledger_required');
+  let previousReservations = [];
+  if (storedLedger) {
+    if (storedLedger.authorizationId !== config.authorizationId || JSON.stringify(storedLedger.policy) !== JSON.stringify(policy)) throw new Error('cumulative_authorization_mismatch');
+    if (!Array.isArray(storedLedger.records) || !Number.isSafeInteger(storedLedger.reservedMicros)) throw new Error('cumulative_authorization_mismatch');
+    try {
+      const replay = new RequestSpendBudget(policy, () => {}, structuredClone(storedLedger.records));
+      const validated = replay.list();
+      const sum = validated.reduce((n, r) => n + r.reservedMicros, 0);
+      if (!Array.isArray(validated) || validated.length !== storedLedger.records.length || sum !== storedLedger.reservedMicros) throw new Error('cumulative_authorization_mismatch');
+      previousReservations = storedLedger.records;
+    } catch { throw new Error('cumulative_authorization_mismatch'); }
+  }
+  return { totalLedgerPath: config.totalLedgerPath, authorizationId: config.authorizationId, previousReservations };
+}
+
 export function atomicLedger(path, value) {
   const fd = openSync(`${path}.tmp`, 'w', 0o600);
   try { writeSync(fd, JSON.stringify(value)); fsyncSync(fd); } finally { closeSync(fd); }
@@ -30,7 +69,8 @@ export async function startBudgetProxy(options) {
       || !['max_tokens', 'max_completion_tokens'].includes(maxTokensField)
       || !Number.isSafeInteger(minRequestIntervalMs) || minRequestIntervalMs < 0 || minRequestIntervalMs > 30_000
       || !['coding', 'business'].includes(toolProfile)
-      || policy.limitMicros > 100_000_000) throw new Error('invalid_dev_budget_configuration');
+      // Only the 200m, 300m and 400m authorized caps may exceed 100m; every intermediate cap stays rejected.
+      || (policy.limitMicros > 100_000_000 && policy.limitMicros !== 200_000_000 && policy.limitMicros !== 300_000_000 && policy.limitMicros !== 400_000_000)) throw new Error('invalid_dev_budget_configuration');
   const startedAt = Date.now(), controller = new AbortController();
   let active = false, stopReason = null, records = structuredClone(previousReservations);
   const attempts = [];
@@ -131,18 +171,20 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       || config.model !== 'deepseek-v4.1-flash' || existsSync(config.ledgerPath)) throw new Error('invalid_or_reused_task');
   const lock = openSync(`${config.ledgerPath}.lock`, 'wx', 0o600); closeSync(lock);
   const limitMicros = config.limitMicros ?? DEV_POLICY.limitMicros;
-  if (![2_000_000, 10_000_000, 100_000_000].includes(limitMicros)) throw new Error('invalid_authorized_limit');
-  const policy = { ...DEV_POLICY, limitMicros, safetyMicros: limitMicros / 10 };
+  const policy = resolveAuthorizedPolicy(limitMicros);
   let previousReservations = [], globalLock;
-  if (limitMicros === 100_000_000) {
-    if (!config.totalLedgerPath || !config.authorizationId) throw new Error('cumulative_ledger_required');
+  if (CUMULATIVE_LIMITS.includes(limitMicros)) {
+    // Presence check is fine before locking, but the ledger must be read only AFTER we hold the
+    // exclusive global lock, so another owner cannot finish between our read and our lock and have
+    // a fresh run overwrite their history.
     globalLock = `${config.totalLedgerPath}.lock`;
     const fd = openSync(globalLock, 'wx', 0o600); closeSync(fd);
-    if (existsSync(config.totalLedgerPath)) {
-      const saved = JSON.parse(readFileSync(config.totalLedgerPath, 'utf8'));
-      if (saved.authorizationId !== config.authorizationId || JSON.stringify(saved.policy) !== JSON.stringify(policy)) throw new Error('cumulative_authorization_mismatch');
-      previousReservations = saved.records;
-    }
+    let cumulative;
+    try {
+      const storedLedger = config.totalLedgerPath && existsSync(config.totalLedgerPath) ? JSON.parse(readFileSync(config.totalLedgerPath, 'utf8')) : null;
+      cumulative = validateCumulativeConfig(config, policy, storedLedger);
+      previousReservations = cumulative.previousReservations;
+    } catch (error) { unlinkSync(globalLock); throw error; }
   }
   const persist = state => {
     if (config.totalLedgerPath) atomicLedger(config.totalLedgerPath, { authorizationId: config.authorizationId,

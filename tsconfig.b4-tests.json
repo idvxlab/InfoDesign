@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.server.json",
+  "include": [
+    "apps/server/src/**/*.ts",
+    "tests/integration/review-*.test.ts",
+    "tests/helpers/review-*.ts",
+    "tests/integration/fact-workflow.test.ts",
+    "tests/integration/design-handoff.test.ts",
+    "tests/helpers/fact-workflow-harness.ts",
+    "evals/fixtures/b4-cases.ts",
+    "evals/run-b4.ts"
+  ]
+}

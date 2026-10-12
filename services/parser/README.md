@@ -38,4 +38,4 @@ parseInfo.quality 始终为 partial。图片语义／OCR、无内容页、解析
 
 `parse` 只读挂载一个明确的本地 PDF，并只写一个新输出目录；无网络、无模型凭据、只读系统、非特权用户、去除 capabilities、限制 CPU／内存／进程。默认最多 25 MiB、40 页、页面边长 2400 pt、5000 块；180 秒任务超时。不支持加密 PDF、非默认 UserUnit 或越出 MediaBox 的 CropBox。资源限制并非面向公开不可信上传的完整生产隔离方案。
 
-本轮真实样本和合成样本结果、已发现的质量问题及浏览器核验边界见 [验证报告（历史记录未随快照上传）](../../SNAPSHOT.md#verification)。依赖与 Docling Skill 的评估见 [THIRD_PARTY.md](THIRD_PARTY.md)。
+本轮真实样本和合成样本结果、已发现的质量问题及浏览器核验边界见 [验证报告](../../docs/reports/pdf-local-parser-2026-10-10.md)。依赖与 Docling Skill 的评估见 [THIRD_PARTY.md](THIRD_PARTY.md)。

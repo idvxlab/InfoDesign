@@ -1,0 +1,13 @@
+{
+  "currency": "CNY",
+  "perTokens": 1000000,
+  "note": "按人民币／百万 token 暂估。输入与输出取用户第三方平台截图；缓存读取暂取参考截图高峰价 0.04，尚非平台确认价，不自动套用 96 折或分时优惠。缓存写入价格未知。实际扣费以平台账单为准。",
+  "models": {
+    "company-gateway/deepseek-v4.1-flash": {
+      "input": 1.92,
+      "output": 7.68,
+      "cacheRead": 0.04,
+      "cacheWrite": null
+    }
+  }
+}

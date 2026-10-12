@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import { once } from 'node:events';
 import assert from 'node:assert/strict';
-import { startBudgetProxy, DEV_POLICY } from '../../scripts/pi-dev-budget-proxy.mjs';
+import { startBudgetProxy, DEV_POLICY, resolveAuthorizedPolicy, validateCumulativeConfig, AUTHORIZED_LIMITS, CUMULATIVE_LIMITS } from '../../scripts/pi-dev-budget-proxy.mjs';
+import { RequestSpendBudget } from '../../apps/server/src/runtime/pi/spend-budget.ts';
 
 const payload = { model: 'test-model', messages: [{ role: 'user', content: 'Only synthetic code fixture' }], stream: true, max_tokens: 999999 };
 const send = (gate, data = payload, key = 'client-token') => fetch(gate.address, {
@@ -216,5 +217,163 @@ test('transport failures retain only fixed safe codes, keep reservation and neve
     assert.equal(JSON.stringify(saved).includes('private'), false);
     assert.equal(JSON.stringify(saved).includes('secret'), false);
     assert.equal((await send(gate)).status, 429); assert.equal(calls, 1);
+  } finally { await gate.close(); }
+});
+
+// --- New tests for cumulative authorization (budgetcap200) ---
+
+// Build real, valid previous records via the production budget implementation.
+const realRecords = (policy, requests, persistCapture) => {
+  const records = [];
+  const budget = new RequestSpendBudget(policy, next => { records.splice(0, records.length, ...next); if (persistCapture) persistCapture(records); });
+  for (const [contextBytes, outputTokens] of requests) budget.reserve(contextBytes, outputTokens);
+  return structuredClone(records);
+};
+
+test('resolveAuthorizedPolicy maps allowed caps to exact frozen safeties', () => {
+  assert.deepEqual(AUTHORIZED_LIMITS, { 2000000: 200000, 10000000: 1000000, 100000000: 10000000, 200000000: 10000000, 300000000: 10000000, 400000000: 10000000 });
+  assert.deepEqual(CUMULATIVE_LIMITS, [100000000, 200000000, 300000000, 400000000]);
+  for (const [limitMicros, safetyMicros] of Object.entries(AUTHORIZED_LIMITS)) {
+    const policy = resolveAuthorizedPolicy(Number(limitMicros));
+    assert.equal(policy.limitMicros, Number(limitMicros));
+    assert.equal(policy.safetyMicros, safetyMicros);
+    assert.ok(Object.isFrozen(policy));
+    assert.deepEqual({ ...policy, limitMicros: 0, safetyMicros: 0 }, { ...DEV_POLICY, limitMicros: 0, safetyMicros: 0 });
+  }
+});
+
+test('resolveAuthorizedPolicy rejects unlisted and non-integer caps', () => {
+  assert.throws(() => resolveAuthorizedPolicy(100000001), /invalid_authorized_limit/);
+  assert.throws(() => resolveAuthorizedPolicy(500000000), /invalid_authorized_limit/);
+  assert.throws(() => resolveAuthorizedPolicy(Number.NaN), /invalid_authorized_limit/);
+});
+
+test('cumulative caps 100m, 200m, 300m and 400m all require a configured ledger', () => {
+  for (const limitMicros of CUMULATIVE_LIMITS) {
+    const policy = resolveAuthorizedPolicy(limitMicros);
+    assert.throws(() => validateCumulativeConfig({}, policy, null), /cumulative_ledger_required/);
+    assert.throws(() => validateCumulativeConfig({ totalLedgerPath: '/l.json' }, policy, null), /cumulative_ledger_required/);
+    assert.equal(validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'a' }, policy, null).previousReservations.length, 0);
+  }
+});
+
+test('saved 100m ledger is refused under a new 200m task without reset', () => {
+  const oldPolicy = resolveAuthorizedPolicy(100000000);
+  const records = realRecords(oldPolicy, [[10, 100]]);
+  const stored = { authorizationId: 'task-100', policy: oldPolicy, records, reservedMicros: records.reduce((n, r) => n + r.reservedMicros, 0) };
+  const newPolicy = resolveAuthorizedPolicy(200000000);
+  assert.throws(() => validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'task-200' }, newPolicy, stored), /cumulative_authorization_mismatch/);
+  // Same records under the matching authorizationId still validate and are preserved exactly.
+  const same = validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'task-100' }, oldPolicy, stored);
+  assert.deepEqual(same.previousReservations, records);
+});
+
+test('malformed records and wrong saved totals are refused', () => {
+  const policy = resolveAuthorizedPolicy(100000000);
+  const records = realRecords(policy, [[10, 100]]);
+  const good = { authorizationId: 'a', policy, records, reservedMicros: records[0].reservedMicros };
+  assert.equal(validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'a' }, policy, good).previousReservations.length, 1);
+  assert.throws(() => validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'a' }, policy, { ...good, records: [{ sequence: 1, contextBytes: 10, requestedOutputTokens: 100, reservedInputTokens: 1, reservedMicros: 999999 }] }), /cumulative_authorization_mismatch/);
+  assert.throws(() => validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'a' }, policy, { ...good, reservedMicros: records[0].reservedMicros + 1 }), /cumulative_authorization_mismatch/);
+  assert.throws(() => validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'a' }, policy, { ...good, reservedMicros: 1.5 }), /cumulative_authorization_mismatch/);
+  assert.throws(() => validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'a' }, policy, { ...good, records: 'nope' }), /cumulative_authorization_mismatch/);
+});
+
+test('proxy accepts an additional call and retains old records in order', async () => {
+  const policy = resolveAuthorizedPolicy(100000000);
+  const previous = realRecords(policy, [[10, 100], [20, 200]]);
+  const snapshots = [];
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ policy, previousReservations: previous, persist: s => snapshots.push(structuredClone(s)), fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate); assert.equal(response.status, 200); await response.text();
+    assert.equal(calls, 1);
+    const saved = snapshots.at(-1);
+    assert.equal(saved.records.length, 3);
+    assert.deepEqual(saved.records.slice(0, 2), previous);
+    assert.equal(saved.records[2].sequence, 3);
+    assert.equal(saved.reservedMicros, saved.records.reduce((n, r) => n + r.reservedMicros, 0));
+  } finally { await gate.close(); }
+});
+
+test('real near-190m history stops the first forward and keeps all records', async () => {
+  const policy = resolveAuthorizedPolicy(200000000);
+  const previous = realRecords(policy, [[47490000, 2048]]);
+  assert.ok(previous[0].reservedMicros > 180000000 * 0.97, `near 190m: ${previous[0].reservedMicros}`);
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ policy, previousReservations: previous, fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate);
+    assert.equal(response.status, 429);
+    assert.equal(calls, 0);
+    assert.deepEqual(gate.state().records, previous);
+  } finally { await gate.close(); }
+});
+
+test('proxy accepts a 300m task and preserves prior records after a successful forward', async () => {
+  const policy = resolveAuthorizedPolicy(300000000);
+  const previous = realRecords(policy, [[10, 100], [20, 200]]);
+  const snapshots = [];
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ policy, previousReservations: previous, persist: s => snapshots.push(structuredClone(s)), fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate); assert.equal(response.status, 200); await response.text();
+    assert.equal(calls, 1);
+    const saved = snapshots.at(-1);
+    assert.equal(saved.records.length, 3);
+    assert.deepEqual(saved.records.slice(0, 2), previous);
+    assert.equal(saved.records[2].sequence, 3);
+    assert.equal(saved.reservedMicros, saved.records.reduce((n, r) => n + r.reservedMicros, 0));
+  } finally { await gate.close(); }
+});
+
+test('real near-290m history denies before fetch and keeps all records', async () => {
+  const policy = resolveAuthorizedPolicy(300000000);
+  const previous = realRecords(policy, [[72490000, 2048]]);
+  assert.ok(previous[0].reservedMicros > 280000000 * 0.97, `near 290m: ${previous[0].reservedMicros}`);
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ policy, previousReservations: previous, fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate);
+    assert.equal(response.status, 429);
+    assert.equal(calls, 0);
+    assert.deepEqual(gate.state().records, previous);
+  } finally { await gate.close(); }
+});
+
+test('proxy still rejects intermediate caps above 100m that are not 200m, 300m or 400m', async () => {
+  await assert.rejects(startBudgetProxy(options({ policy: { ...DEV_POLICY, limitMicros: 150000000, safetyMicros: 10000000 } })), /invalid_dev_budget_configuration/);
+});
+
+// --- New tests for 400m cumulative authorization (only400CNY) ---
+
+test('proxy accepts a 400m task and preserves prior records after a successful forward', async () => {
+  const policy = resolveAuthorizedPolicy(400000000);
+  const previous = realRecords(policy, [[10, 100], [20, 200]]);
+  const snapshots = [];
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ policy, previousReservations: previous, persist: s => snapshots.push(structuredClone(s)), fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate); assert.equal(response.status, 200); await response.text();
+    assert.equal(calls, 1);
+    const saved = snapshots.at(-1);
+    assert.equal(saved.records.length, 3);
+    assert.deepEqual(saved.records.slice(0, 2), previous);
+    assert.equal(saved.records[2].sequence, 3);
+    assert.equal(saved.reservedMicros, saved.records.reduce((n, r) => n + r.reservedMicros, 0));
+  } finally { await gate.close(); }
+});
+
+test('real near-390m history denies before fetch and keeps all records', async () => {
+  const policy = resolveAuthorizedPolicy(400000000);
+  const previous = realRecords(policy, [[97490000, 2048]]);
+  assert.ok(previous[0].reservedMicros > 380000000 * 0.97, `near 390m: ${previous[0].reservedMicros}`);
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ policy, previousReservations: previous, fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate);
+    assert.equal(response.status, 429);
+    assert.equal(calls, 0);
+    assert.deepEqual(gate.state().records, previous);
   } finally { await gate.close(); }
 });

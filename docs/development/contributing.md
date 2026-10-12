@@ -14,7 +14,7 @@ git clone --branch snapshot/2026-10-10-multimodal-reader https://github.com/idvx
 cd InfoDesign
 ```
 
-当前公开阶段分支为 `snapshot/2026-10-10-multimodal-reader`，尚未建立 `main`。下文 `main` 是正式协作流程示例；主分支建立前，应从已克隆的阶段分支创建自己的任务分支，不直接执行切换或拉取 `main` 的示例。
+用户已确认将官方 `snapshot/2026-10-10-multimodal-reader` 改名为 `main` 并保留同一历史；当前认证只有代码推送权限，默认分支改名仍待仓库管理员完成。现阶段从已克隆的快照分支建立任务分支，不直接执行下文切换或拉取 `main` 的示例。改名后按 `main` 的日常 PR 流程协作。
 
 已有本地仓库就进入项目目录，无需再次克隆或执行 `git init`。克隆、推送需要仓库访问权限及 GitHub 身份验证。以下 Git 命令都在 Mac 的项目根目录运行。
 
