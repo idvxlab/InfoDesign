@@ -1,0 +1,140 @@
+{
+  "snapshotRef": {
+    "snapshotId": "snap_placeholder",
+    "snapshotVersionId": "snapshot_version_placeholder"
+  },
+  "informationPlanRef": {
+    "planId": "plan_placeholder",
+    "planVersionId": "plan_version_placeholder"
+  },
+  "componentCatalogRef": {
+    "catalogId": "catalog_proposed",
+    "version": "0.1.0"
+  },
+  "themeRef": { "themeId": "theme_proposed", "version": "0.1.0" },
+  "state": [
+    { "stateId": "state_service_expanded", "type": "boolean", "initialValue": false }
+  ],
+  "root": {
+    "nodeId": "node_page",
+    "componentRef": { "id": "page", "version": "0.1.0" },
+    "props": { "lang": "zh-CN" },
+    "layout": { "type": "stack", "gapToken": "space_section", "widthToken": "width_content" },
+    "children": [
+      {
+        "nodeId": "node_overview",
+        "planSectionId": "section_overview",
+        "componentRef": { "id": "fact_text", "version": "0.1.0" },
+        "props": { "title": "业务概览", "headingLevel": 1 },
+        "bindings": {
+          "body": {
+            "kind": "claimValue",
+            "claimRef": { "kind": "claim", "id": "claim_business_placeholder" },
+            "format": { "unit": "source", "qualifiers": "visible" }
+          }
+        },
+        "events": { "sourceRequested": "action_overview_source" }
+      },
+      {
+        "nodeId": "node_products",
+        "planSectionId": "section_products",
+        "componentRef": { "id": "comparison_matrix", "version": "0.1.0" },
+        "props": {
+          "title": "产品比较",
+          "headingLevel": 2,
+          "missingValueLabel": "资料未提供",
+          "ranking": "none"
+        },
+        "bindings": {
+          "rows": {
+            "kind": "comparisonRows",
+            "columns": [{ "columnId": "column_parameter", "label": "待选定的同类参数" }],
+            "items": [
+              {
+                "rowId": "row_product_a",
+                "entityRef": { "kind": "entity", "id": "entity_product_a_placeholder" },
+                "cells": [
+                  {
+                    "columnId": "column_parameter",
+                    "claimRef": { "kind": "claim", "id": "claim_parameter_a_placeholder" },
+                    "format": { "unit": "source", "qualifiers": "visible" }
+                  }
+                ]
+              },
+              {
+                "rowId": "row_product_b",
+                "entityRef": { "kind": "entity", "id": "entity_product_b_placeholder" },
+                "cells": [
+                  {
+                    "columnId": "column_parameter",
+                    "claimRef": { "kind": "claim", "id": "claim_parameter_b_placeholder" },
+                    "format": { "unit": "source", "qualifiers": "visible" }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "responsive": { "small": { "mode": "cards" }, "large": { "mode": "table" } },
+        "events": { "sourceRequested": "action_parameter_source" }
+      },
+      {
+        "nodeId": "node_services",
+        "planSectionId": "section_services",
+        "componentRef": { "id": "disclosure", "version": "0.1.0" },
+        "props": { "title": "技术服务", "headingLevel": 2, "expandLabel": "展开服务详情", "collapseLabel": "收起服务详情" },
+        "bindings": {
+          "expanded": { "kind": "state", "stateId": "state_service_expanded" }
+        },
+        "events": { "toggleRequested": "action_toggle_service" },
+        "children": [
+          {
+            "nodeId": "node_service_detail",
+            "planSectionId": "section_services",
+            "componentRef": { "id": "fact_text", "version": "0.1.0" },
+            "props": {},
+            "bindings": {
+              "body": {
+                "kind": "claimValue",
+                "claimRef": { "kind": "claim", "id": "claim_service_placeholder" },
+                "format": { "unit": "source", "qualifiers": "visible" }
+              }
+            },
+            "events": { "sourceRequested": "action_service_source" }
+          }
+        ]
+      }
+    ]
+  },
+  "actions": [
+    {
+      "actionId": "action_toggle_service",
+      "type": "toggleBoolean",
+      "sourceNodeId": "node_services",
+      "targetStateId": "state_service_expanded"
+    },
+    {
+      "actionId": "action_overview_source",
+      "type": "openEvidence",
+      "sourceNodeId": "node_overview",
+      "target": { "kind": "claim", "id": "claim_business_placeholder" }
+    },
+    {
+      "actionId": "action_parameter_source",
+      "type": "openEvidence",
+      "sourceNodeId": "node_products",
+      "target": { "kind": "eventBoundClaim", "bindingSlot": "rows" }
+    },
+    {
+      "actionId": "action_service_source",
+      "type": "openEvidence",
+      "sourceNodeId": "node_service_detail",
+      "target": { "kind": "claim", "id": "claim_service_placeholder" }
+    }
+  ],
+  "checks": [
+    { "type": "visibleQualifiers", "nodeId": "node_products", "bindingSlot": "rows" },
+    { "type": "evidenceResolvable", "nodeIds": ["node_overview", "node_products", "node_service_detail"] },
+    { "type": "toggleRoundTrip", "nodeId": "node_services", "stateId": "state_service_expanded" }
+  ]
+}

@@ -1,7 +1,302 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:tju-mas:contracts:information-plan",
-  "title": "InformationPlan",
-  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。受众、目标、内容选择、分组、优先级、层级、浏览路径及事实引用。",
-  "not": {}
+  "title": "InformationPlan v1",
+  "type": "object",
+  "properties": {
+    "protocolVersion": {
+      "const": "1.0"
+    },
+    "projectId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/projectId"
+    },
+    "taskId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/taskId"
+    },
+    "attemptId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId"
+    },
+    "snapshotRef": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/snapshotId"
+        },
+        "snapshotVersionId": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+        },
+        "contentHash": {
+          "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+        }
+      },
+      "required": [
+        "snapshotId",
+        "snapshotVersionId",
+        "contentHash"
+      ],
+      "additionalProperties": false
+    },
+    "producedBy": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "const": "design"
+        },
+        "protocolVersion": {
+          "const": "1.0"
+        }
+      },
+      "required": [
+        "role",
+        "protocolVersion"
+      ],
+      "additionalProperties": false
+    },
+    "createdAt": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/timestamp"
+    },
+    "planId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+    },
+    "planVersionId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+    },
+    "audience": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "needs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "role",
+        "needs"
+      ],
+      "additionalProperties": false
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "readerQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "questionId",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 50
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sectionId": {
+            "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "questionIds": {
+            "type": "array",
+            "items": {
+              "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+            },
+            "minItems": 1,
+            "maxItems": 50
+          },
+          "sourceRefs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "claim",
+                    "entity",
+                    "relation",
+                    "event",
+                    "asset"
+                  ]
+                },
+                "id": {
+                  "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+                }
+              },
+              "required": [
+                "kind",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 200
+          },
+          "priority": {
+            "enum": [
+              "primary",
+              "secondary"
+            ]
+          },
+          "presentationIntent": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "selectionReason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "sectionId",
+          "title",
+          "purpose",
+          "questionIds",
+          "sourceRefs",
+          "priority",
+          "presentationIntent",
+          "selectionReason"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 50
+    },
+    "omissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sourceRefs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "claim",
+                    "entity",
+                    "relation",
+                    "event",
+                    "asset"
+                  ]
+                },
+                "id": {
+                  "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+                }
+              },
+              "required": [
+                "kind",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 200
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "sourceRefs",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 200
+    },
+    "openIssues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "issueId": {
+            "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+          },
+          "kind": {
+            "enum": [
+              "missing_input",
+              "conflict",
+              "uncertainty"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "issueId",
+          "kind",
+          "description"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 50
+    },
+    "reviewRef": {
+      "$ref": "urn:tju-mas:contracts:design-review-ref"
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "projectId",
+    "taskId",
+    "attemptId",
+    "snapshotRef",
+    "producedBy",
+    "createdAt",
+    "planId",
+    "planVersionId",
+    "audience",
+    "goal",
+    "readerQuestions",
+    "sections",
+    "omissions",
+    "openIssues"
+  ],
+  "additionalProperties": false
 }

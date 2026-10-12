@@ -2,6 +2,10 @@
 
 本页汇总已确认的需求与设计边界，描述目标系统，不代表全部能力已经实现。完整例子和实施规范见 [项目总方案](project-spec.md)，实际进度见 [当前状态](../../status.md)。
 
+设计 Agent 输出 InformationPlan 与 PageSpec，由下游渲染器生成页面；有限 v1 Schema 与服务校验已实现，说明见 [协议文档](design-contracts-draft.md)及[验证记录](../reports/design-contracts-v1-2026-10-11.md)。业务 Agent、组件及渲染器尚未接入。
+
+首次生成的 [DesignInput／DesignOutput](design-agent-io-v1.md) 现已定义并校验，包括固定输入指纹和明确停止分支；尚未运行真实设计模型。
+
 [需求](#requirements) · [架构](#architecture) · [协议](#agent-contracts) · [流程](#workflows) · [溯源](#provenance) · [组件](#component-branch) · [验收](#acceptance)
 
 
@@ -66,7 +70,7 @@ DESIGN.md 仅约束视觉风格，不决定企业事实或硬性栏目。
 代码集中在同一仓库，API、Agent Worker、解析和预览检查服务可分别运行。
 三个 Agent 可以共用服务器，系统不自动部署；前端仅访问业务 API。
 开发用 Pi CLI、业务 Pi SDK 及其工具和子进程均须在容器或虚拟机内运行，不直接在 Mac 宿主机启动。
-开发环境使用 Docker Desktop，项目源码直接挂载到 `/workspace`，Mac 编辑器和 Pi 修改同一份代码；Linux 依赖、运行数据和 Pi 用户目录单独存放。保留普通用户、只读系统和受限 HTTPS 代理；方法与边界见 [容器开发指南](../development/dev-container.md)，验证见 [容器报告](../reports/dev-container-verification.md)。业务服务仍未接通。
+开发环境使用 Docker Desktop，项目源码直接挂载到 `/workspace`，Mac 编辑器和 Pi 修改同一份代码；Linux 依赖、运行数据和 Pi 用户目录单独存放。保留普通用户、只读系统和受限 HTTPS 代理；方法与边界见 [容器开发指南](../development/dev-container.md)，验证见 [容器报告（历史记录未随快照上传）](../../SNAPSHOT.md#verification)。业务服务仍未接通。
 
 
 <a id="agent-contracts"></a>
@@ -185,7 +189,7 @@ page-renderer/bindings.ts、api/routes/evidence.ts、web/features/evidence/。
 
 以下按实际验证证据更新；未勾选项仍待完成。已勾选项的验证范围见对应记录。
 
-- [x] 真实 Pi 会话能够调用受控工具，并返回可校验的成果。B2 最小读取任务已通过，见 [验收记录](../reports/b2-live-success-2026-10-10.md)；完整角色业务仍待后续阶段。
+- [x] 真实 Pi 会话能够调用受控工具，并返回可校验的成果。B2 最小读取任务已通过，见 [验收记录（历史记录未随快照上传）](../../SNAPSHOT.md#verification)；完整角色业务仍待后续阶段。
 - [ ] 能关联多类企业资料中的信息，不能仅输出彼此孤立的文件摘要。
 - [ ] 事实、数值、口径、来源位置与文件版本正确绑定。
 - [ ] InformationPlan 按目标组织内容，PageSpec 能表达必要结构与交互。
@@ -198,6 +202,8 @@ page-renderer/bindings.ts、api/routes/evidence.ts、web/features/evidence/。
 - [ ] 组件扩展只进入候选工作区，通过实际测试后登记并部署。
 - [ ] 记录真实模型效果、耗时和成本，不以空测试或模拟返回冒充结果。
 
-### 当前交付边界（2026-10-12）
+设计运行时实施更新（2026-10-11）：独立 Pi 设计会话、只读工具及一次有限修正已通过模拟网关验证；身份与指纹由服务封装。真实模型设计质量、渲染和页面审查尚未验收，见[运行时记录](../reports/design-agent-runtime-v1-2026-10-11.md)。
 
-B5已提供[只读设计交付适配](../development/design-handoff.md)，复用事实、审查报告及来源版本／定位。程序区分ready与blocked并验证可信上下文，所有候选仍pending；它不执行正式采纳，也未实现设计端。DesignInput继续拒绝全部输入，设计团队待联调。该进展不代表上文完整生成流程已贯通，证据见[验收报告](../reports/design-handoff-2026-10-12.md)。
+### 2026-10-12 设计交底消费补充
+
+设计侧通过可信服务注入的四参数 verifyDesignHandoff 核验 ready 包、存储历史、版本、检查集合和资料权限。审查报告 pass 不等于已采纳事实；经核验的 pending 候选保持原状态，由服务 reviewRef 绑定到 DesignInput、DesignOutput、InformationPlan 和 PageSpec。核验失败不得调用设计模型。已完成接口实现与模拟网关联调，业务服务装配及真实端到端验收尚待完成，见[对接说明](../development/design-handoff-consumer.md)。

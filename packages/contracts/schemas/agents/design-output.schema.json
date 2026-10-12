@@ -1,7 +1,206 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:tju-mas:contracts:design-output",
-  "title": "信息设计 Agent输出",
-  "$comment": "未实现的协议占位。not: {} 故意拒绝所有输入，避免空 Schema 被误用为校验通过。InformationPlan、PageSpec；修订时另交 ChangeSet；必要时交补充信息/组件需求；可读事实与来源，仅提交设计；禁止修改底层企业事实。",
-  "not": {}
+  "title": "DesignOutput v1 — 候选设计或明确停止",
+  "description": "completed 仅代表设计候选完成，不代表页面审核或发布。失败分支不携带候选页面；绑定服务端保存的输入指纹。",
+  "type": "object",
+  "properties": {
+    "protocolVersion": {
+      "const": "1.0"
+    },
+    "projectId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/projectId"
+    },
+    "taskId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/taskId"
+    },
+    "attemptId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId"
+    },
+    "inputHash": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+    },
+    "status": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/agentOutputStatus"
+    },
+    "informationPlan": {
+      "$ref": "urn:tju-mas:contracts:information-plan"
+    },
+    "pageSpec": {
+      "$ref": "urn:tju-mas:contracts:page-spec"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "enum": [
+              "information",
+              "component"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "kind",
+          "description"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "stopReason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "producedBy": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "const": "design"
+        },
+        "protocolVersion": {
+          "const": "1.0"
+        }
+      },
+      "required": [
+        "role",
+        "protocolVersion"
+      ],
+      "additionalProperties": false
+    },
+    "reviewRef": {
+      "$ref": "urn:tju-mas:contracts:design-review-ref"
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "projectId",
+    "taskId",
+    "attemptId",
+    "inputHash",
+    "status",
+    "producedBy"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "informationPlan": {},
+          "pageSpec": {},
+          "requirements": false,
+          "stopReason": false
+        },
+        "required": [
+          "informationPlan",
+          "pageSpec"
+        ]
+      },
+      "else": {
+        "properties": {
+          "informationPlan": false,
+          "pageSpec": false,
+          "stopReason": {}
+        },
+        "required": [
+          "stopReason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "needs_information"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "requirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "information"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "requirements"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "requirements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "const": "component"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "requirements"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "requirements": false
+        }
+      }
+    }
+  ]
 }
