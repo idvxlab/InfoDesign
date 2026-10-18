@@ -527,9 +527,38 @@
       {
         "name": "DesignInput",
         "pointer": "urn:tju-mas:contracts:design-input",
-        "kind": "placeholder",
-        "properties": [],
-        "required": []
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "taskType",
+          "snapshot",
+          "snapshotRef",
+          "audience",
+          "goal",
+          "visualGuidance",
+          "constraints",
+          "catalog",
+          "theme",
+          "reviewRef"
+        ],
+        "required": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "taskType",
+          "snapshot",
+          "snapshotRef",
+          "audience",
+          "goal",
+          "visualGuidance",
+          "constraints",
+          "catalog",
+          "theme"
+        ]
       }
     ]
   },
@@ -540,9 +569,71 @@
       {
         "name": "DesignOutput",
         "pointer": "urn:tju-mas:contracts:design-output",
-        "kind": "placeholder",
-        "properties": [],
-        "required": []
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "inputHash",
+          "status",
+          "informationPlan",
+          "pageSpec",
+          "requirements",
+          "stopReason",
+          "producedBy",
+          "reviewRef"
+        ],
+        "required": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "inputHash",
+          "status",
+          "producedBy"
+        ]
+      }
+    ]
+  },
+  {
+    "schemaId": "urn:tju-mas:contracts:design-review-ref",
+    "file": "design-review-ref.ts",
+    "types": [
+      {
+        "name": "DesignReviewRef",
+        "pointer": "urn:tju-mas:contracts:design-review-ref",
+        "kind": "root",
+        "properties": [
+          "packageVersion",
+          "runId",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "candidateVersionId",
+          "reportVersionId",
+          "candidateFingerprint",
+          "reportFingerprint",
+          "bindingFingerprint",
+          "reviewVerdict",
+          "stopReason",
+          "checksRequired"
+        ],
+        "required": [
+          "packageVersion",
+          "runId",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "candidateVersionId",
+          "reportVersionId",
+          "candidateFingerprint",
+          "reportFingerprint",
+          "bindingFingerprint",
+          "reviewVerdict",
+          "stopReason",
+          "checksRequired"
+        ]
       }
     ]
   },
@@ -979,9 +1070,42 @@
       {
         "name": "InformationPlan",
         "pointer": "urn:tju-mas:contracts:information-plan",
-        "kind": "placeholder",
-        "properties": [],
-        "required": []
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "snapshotRef",
+          "producedBy",
+          "createdAt",
+          "planId",
+          "planVersionId",
+          "audience",
+          "goal",
+          "readerQuestions",
+          "sections",
+          "omissions",
+          "openIssues",
+          "reviewRef"
+        ],
+        "required": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "snapshotRef",
+          "producedBy",
+          "createdAt",
+          "planId",
+          "planVersionId",
+          "audience",
+          "goal",
+          "readerQuestions",
+          "sections",
+          "omissions",
+          "openIssues"
+        ]
       }
     ]
   },
@@ -990,11 +1114,53 @@
     "file": "page-spec.ts",
     "types": [
       {
-        "name": "PageSpec",
-        "pointer": "urn:tju-mas:contracts:page-spec",
-        "kind": "placeholder",
+        "name": "PageSpecNode",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/node",
+        "kind": "def",
         "properties": [],
         "required": []
+      },
+      {
+        "name": "PageSpec",
+        "pointer": "urn:tju-mas:contracts:page-spec",
+        "kind": "root",
+        "properties": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "snapshotRef",
+          "producedBy",
+          "createdAt",
+          "pageSpecId",
+          "pageSpecVersionId",
+          "informationPlanRef",
+          "componentCatalogRef",
+          "themeRef",
+          "state",
+          "root",
+          "actions",
+          "checks",
+          "reviewRef"
+        ],
+        "required": [
+          "protocolVersion",
+          "projectId",
+          "taskId",
+          "attemptId",
+          "snapshotRef",
+          "producedBy",
+          "createdAt",
+          "pageSpecId",
+          "pageSpecVersionId",
+          "informationPlanRef",
+          "componentCatalogRef",
+          "themeRef",
+          "state",
+          "root",
+          "actions",
+          "checks"
+        ]
       }
     ]
   },

@@ -2,6 +2,8 @@
 
 本页汇总已确认的需求与设计边界，描述目标系统，不代表全部能力已经实现。完整例子和实施规范见 [项目总方案](project-spec.md)，实际进度见 [当前状态](../../status.md)。
 
+设计 Agent 的 InformationPlan／PageSpec、输入输出、独立 Pi 会话与只读工具随设计分支纳入。协议含可信 reviewRef 绑定，但对应 Schema／类型与设计交底消费测试未完整提供，当前不能据历史报告认定可运行。见[协议说明](design-agent-io-v1.md)及[本次合并验证](../reports/design-pr1-merge-2026-10-18.md)。
+
 [需求](#requirements) · [架构](#architecture) · [协议](#agent-contracts) · [流程](#workflows) · [溯源](#provenance) · [组件](#component-branch) · [验收](#acceptance)
 
 
@@ -200,8 +202,12 @@ page-renderer/bindings.ts、api/routes/evidence.ts、web/features/evidence/。
 
 ### 当前交付边界（2026-10-12）
 
-B5已提供[只读设计交付适配](../development/design-handoff.md)，复用事实、审查报告及来源版本／定位。程序区分ready与blocked并验证可信上下文，所有候选仍pending；它不执行正式采纳，也未实现设计端。DesignInput继续拒绝全部输入，设计团队待联调。该进展不代表上文完整生成流程已贯通，证据见[验收报告](../reports/design-handoff-2026-10-12.md)。
+B5已提供[只读设计交付适配](../development/design-handoff.md)，复用事实、审查报告及来源版本／定位。程序区分ready与blocked并验证可信上下文，所有候选仍pending；它不执行正式采纳。设计分支已提供 DesignInput 等具体协议与 Agent 核心，但 reviewRef 配套协议及消费测试缺失，联调仍受阻。该进展不代表上文完整生成流程已贯通，证据见[验收报告](../reports/design-handoff-2026-10-12.md)。
 
 ## 分段事实实现边界（2026-10-18）
 
 已提供受信分段输入的顺序执行与严格合并核心，各段保留独立 Pi 上下文、候选、审查及来源；聚合不是正式采纳。PDF 切分、原区域映射、失败段恢复和真实全文验收尚未接线。详见[核心说明](../development/segmented-fact-workflow.md)；当前整仓类型阻塞见[状态](../../status.md)。
+
+## 设计交底消费约束（2026-10-18 合并核对）
+
+设计入口应通过可信服务注入的四参数 verifyDesignHandoff 核验 ready 包、存储历史、版本、检查集合和资料权限。审查报告 pass 不等于已采纳事实；经核验的 pending 候选保持原状态，由服务 reviewRef 绑定到 DesignInput、DesignOutput、InformationPlan 和 PageSpec。核验失败不得调用设计模型。现有设计核心保留这些绑定检查；配套消费入口及缺失协议、测试由后续任务补齐，渲染与独立页面审查仍待实现。

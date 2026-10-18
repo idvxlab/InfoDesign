@@ -331,6 +331,8 @@ Agent 提交的结果应包含输入版本引用、明确状态、候选成果�
 
 **InformationPlan → PageSpec 是同一设计 Agent 的两层逻辑成果。** 不要求额外增加两个 Agent，也不规定必须发起两次模型请求。若视觉细化揭示原计划不合理，可返回调整信息组织；变更必须可追踪。
 
+两份产物的字段与绑定见[设计协议说明](design-contracts-draft.md)，任务边界见[DesignInput／DesignOutput](design-agent-io-v1.md)。设计分支提供有限 v1 Schema、服务校验、独立 Pi 会话和按 ID 读取事实／组件目录／授权段落的工具；reviewRef 配套协议与交底消费测试仍缺失，不能把历史通过记录视为本次合并已验收。模型输出规格，下游渲染器生成页面；大快照分页、渲染和页面审查仍待实现。
+
 设计 Agent 先读取企业全景索引，再按需查询细节。不能只依据上一阶段的摘要，也不必把全部原始资料放入上下文。
 
 **实现位置：** `agents/design/`、`tools/design.tools.ts`、`packages/contracts/schemas/`、`packages/page-renderer/`。
@@ -1304,4 +1306,8 @@ docs/development/backend-plan.md，
 
 在正式设计接入前，`domain/design-handoff.ts` 从可信已校验B5历史派生只读交付包，复用EvidenceOutput、ReviewOutput和原始DocumentIR；可信服务另传身份、期望候选／报告版本、允许来源和必需检查。ready／blocked由程序核对终态、版本、指纹和既有审查资格得出，消费者从可信来源重新派生核验，不用包内声明赋予权限。
 
-ready只表示已审查候选可供只读准备，候选及事实的历史pending不回写，正式采纳仍按第10节由后续服务流程处理。DesignInput占位Schema继续拒绝输入，未新增设计业务Agent或人工审批；真实设计团队状态为待联调。原读取回执／能力句柄未持久化，本层依赖B5历史校验，不伪造回执。接口与调用方式见[设计交付接口](../development/design-handoff.md)，实际验收见[交付报告](../reports/design-handoff-2026-10-12.md)。
+ready只表示已审查候选可供只读准备，候选及事实的历史pending不回写，正式采纳仍按第10节由后续服务流程处理。2026-10-18 合并已纳入具体 DesignInput Schema 与设计 Agent 核心，但 reviewRef 配套协议及消费测试缺失，设计联调仍待完成；不新增人工审批。原读取回执／能力句柄未持久化，本层依赖B5历史校验，不伪造回执。接口与调用方式见[设计交付接口](../development/design-handoff.md)，实际验收见[交付报告](../reports/design-handoff-2026-10-12.md)。
+
+### 2026-10-18：设计分支合并与消费约束
+
+设计侧应由可信服务注入四参数 verifyDesignHandoff，核对 ready 包、存储历史、版本、检查集合和资料权限。审查报告 pass 不等于已采纳事实；经核验的 pending 候选保持原状态，由服务 reviewRef 绑定到 DesignInput、DesignOutput、InformationPlan 和 PageSpec。核验失败不得调用设计模型。设计核心已包含绑定检查；缺失的 reviewRef 协议、消费入口与测试另行补齐，本轮仅整合双方代码，不扩展业务实现或降低校验。提取输出 16384、提取上下文 32768、设计输出 8192 及分段事实核心保持，验证与阻塞见[合并记录](../reports/design-pr1-merge-2026-10-18.md)。

@@ -20,17 +20,21 @@ export const REVIEW_LIMITS: Readonly<ExecutionLimits> = Object.freeze({
   timeoutMs: 180_000, maxModelCalls: 6, maxToolCalls: 16,
   maxOutputTokens: 8192, maxContextBytes: 128_000,
 });
-export type ExecutionProfile = 'probe' | 'evidence' | 'review';
+export const DESIGN_LIMITS: Readonly<ExecutionLimits> = Object.freeze({
+  timeoutMs: 180_000, maxModelCalls: 6, maxToolCalls: 16,
+  maxOutputTokens: 8192, maxContextBytes: 128_000,
+});
+export type ExecutionProfile = 'probe' | 'evidence' | 'review' | 'design';
 export type StopCode = 'cancelled' | 'timeout' | 'model_budget' | 'tool_budget' | 'context_budget' | 'spend_budget' | 'spend_ledger_failed';
 export class ExecutionStopped extends Error {
   readonly code: StopCode;
   constructor(code: StopCode) { super(code); this.name = 'ExecutionStopped'; this.code = code; }
 }
 export function validateLimits(limits: ExecutionLimits, profile: ExecutionProfile = 'probe'): void {
-  if (profile !== 'probe' && profile !== 'evidence' && profile !== 'review') throw new Error('invalid_execution_profile');
+  if (!['probe', 'evidence', 'review', 'design'].includes(profile)) throw new Error('invalid_execution_profile');
   const ceiling = profile === 'probe' ? B2_LIMITS
     : profile === 'evidence' ? EVIDENCE_LIMITS
-    : REVIEW_LIMITS;
+    : profile === 'design' ? DESIGN_LIMITS : REVIEW_LIMITS;
   for (const key of Object.keys(ceiling) as Array<keyof ExecutionLimits>) {
     if (!Number.isSafeInteger(limits[key]) || limits[key] <= 0 || limits[key] > ceiling[key]) {
       throw new Error(`无效或超过 ${profile} 上限的预算：${key}`);

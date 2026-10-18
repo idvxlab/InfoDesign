@@ -73,6 +73,12 @@ B4 离线七案例使用固定合成资料，覆盖：一条全部正确的正�
 
 `integration/design-handoff.test.ts` 新增24项，并注册到默认测试与`tsconfig.b4-tests.json`。在准备好的隔离容器内执行`pnpm test:handoff`，以真实Pi SDK＋本地模拟网关产生B5历史，验证返修后ready、缺失／冲突／上限／技术失败blocked、错误身份／版本／工件／来源、内容篡改与历史不变性。没有真实业务模型调用。最新主仓库446/446及类型／生成／协议结果见[交付报告](../docs/reports/design-handoff-2026-10-12.md)。
 
-## 分段核心与当前验收（2026-10-18）
+## 分段核心合并前验收（2026-10-18）
 
-`integration/segmented-fact-workflow.test.ts` 的 40 项专项已登记默认测试和 B4 类型检查，覆盖独立会话、完整输入／快照指纹、最新报告、缺段、空结果和冲突拒绝。当前版本默认 504 项、费用扩展 7 项通过，生成／协议一致；官方设计端缺失依赖导致 45 条类型错误，不能称为整仓通过。见[本轮验证](../docs/reports/segmented-release-candidate-2026-10-18.md)。
+`integration/segmented-fact-workflow.test.ts` 的 40 项专项已登记默认测试和 B4 类型检查，覆盖独立会话、完整输入／快照指纹、最新报告、缺段、空结果和冲突拒绝。合并设计分支前的默认 504 项、费用扩展 7 项通过，生成／协议一致；官方设计端缺失依赖导致 45 条类型错误，不能称为整仓通过。见[本轮验证](../docs/reports/segmented-release-candidate-2026-10-18.md)。
+
+## 设计 PR #1 合并检查（2026-10-18）
+
+默认 test 保留上述全部文件、串行与 spec 报告，并追加设计分支的 contracts-design、design-agent、design-review-binding 三文件；test:design 与 test:design-handoff 也保留。check:types 继续包含根、服务端和 B4 三组配置。
+
+当前 design-review-ref Schema／生成类型、design-review-binding.test.ts 与 design-handoff-consumer.test.ts 缺失，默认命令和设计命令会失败。不得删除登记或跳过这些文件来声称通过。已有设计测试使用真实 Pi SDK 和本地模拟网关，协作者历史 273／98／36 项的记载不代表合并版本复验通过；当前实际结果与诊断命令见[合并验证](../docs/reports/design-pr1-merge-2026-10-18.md)。

@@ -19,8 +19,8 @@ export class RuntimeTrace {
   usageReportedResponses = 0;
   usageUnreportedResponses = 0;
   observe(event: AgentSessionEvent): void {
-    // 只白名单事实角色的两个受控读工具名，其余一律折叠为 'unrecognized'。
-    const known = (name: string): string => name === 'read_document' || name === 'read_source' ? name : 'unrecognized';
+    // 只白名单事实与设计角色的三个受控读工具名，其余一律折叠为 'unrecognized'。
+    const known = (name: string): string => name === 'read_document' || name === 'read_source' || name === 'read_design' ? name : 'unrecognized';
     if (event.type === 'tool_execution_start') {
       this.events.push({ type: 'tool_start', toolName: known(event.toolName) });
     } else if (event.type === 'tool_execution_end') {

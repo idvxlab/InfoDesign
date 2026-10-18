@@ -5,20 +5,21 @@ import { join } from 'node:path';
 import { createAgentSession, ModelRuntime, SessionManager, SettingsManager, type ToolDefinition } from '@earendil-works/pi-coding-agent';
 import type { ModelConfig } from '../../config/env.ts';
 import { ExecutionBudget } from './execution-limits.ts';
-import { loadProbeResources, loadEvidenceResources, loadReviewResources } from './skill-loader.ts';
+import { loadProbeResources, loadEvidenceResources, loadReviewResources, loadDesignResources } from './skill-loader.ts';
 import { createDiagnosticFetch, type TransportDiagnostics } from './transport-diagnostics.ts';
 import { createModelTransport } from './model-transport.ts';
 
-type SessionRole = 'probe' | 'evidence' | 'review';
+type SessionRole = 'probe' | 'evidence' | 'review' | 'design';
 
 function workspacePrefix(role: SessionRole): string {
   if (role === 'probe') return 'tju-b2-session-';
   if (role === 'evidence') return 'tju-evidence-session-';
+  if (role === 'design') return 'tju-design-session-';
   return 'tju-review-session-';
 }
 
 export async function createBusinessSession(config: ModelConfig, tool: ToolDefinition, budget: ExecutionBudget, role: SessionRole = 'probe') {
-  if (role !== 'probe' && role !== 'evidence' && role !== 'review') throw new Error('invalid_session_role');
+  if (!['probe', 'evidence', 'review', 'design'].includes(role)) throw new Error('invalid_session_role');
   // 显式声明的 thinkingProfile 才改变线行为；未声明时完全保持旧默认。
   const profile = config.thinkingProfile;
   if (profile !== undefined && profile !== 'bailian-off' && profile !== 'bailian-low') {
@@ -71,7 +72,7 @@ export async function createBusinessSession(config: ModelConfig, tool: ToolDefin
       defaultTools: [], packages: [], extensions: [], skills: [], prompts: [], themes: [],
       enableSkillCommands: false, images: { blockImages: true },
     });
-    const loader = role === 'review'
+    const loader = role === 'design' ? await loadDesignResources(workspace, settings) : role === 'review'
       ? await loadReviewResources(workspace, settings)
       : role === 'evidence'
         ? await loadEvidenceResources(workspace, settings)

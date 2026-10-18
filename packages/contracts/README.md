@@ -19,7 +19,11 @@
 B2 新增 `runtime/read-document-request` 与 `runtime/read-document-result`：请求指定资料版本与块，结果返回原文、段落位置和内容指纹；不接受任意路径或模型权限。
 `SchemaRegistry.validate` 支持已注册 `$id` 的定义片段，用于复用公共 scope 校验。工具结果不是候选 EvidenceSnapshot。
 
-未实现的协议（InformationPlan、PageSpec、PageVersion、ChangeSet、设计与组件工程输入输出）仍以 `not: {}` 拒绝全部输入；
+设计 v1 已实现 InformationPlan、PageSpec 的有限 Schema 与 `src/design-checks.ts` 的 `checkDesign` 服务校验。首版仅含 page、fact_text、comparison_matrix、disclosure 的接口形状；不代表组件已有实现。可信调用方必须提供固定快照指纹、授权记录、实际可用组件目录和主题。细节见 [设计协议验证记录](../../docs/reports/design-contracts-v1-2026-10-11.md)。
+
+设计首次生成的 DesignInput／DesignOutput 与 `src/design-agent-checks.ts` 已实现：绑定服务保存的 inputHash、受众／目标和约束，区分完成、缺资料、缺组件及执行失败。字段见 [输入输出说明](../../docs/design/design-agent-io-v1.md)。此项不代表 Pi 设计会话已经实现。
+
+未实现的协议（PageVersion、ChangeSet、组件工程输入输出）仍以 `not: {}` 拒绝全部输入；
 对应生成的 TypeScript 类型为 `never`。
 
 ## Schema 校验与类型检查
@@ -78,3 +82,5 @@ pnpm check:types        # 真正的 tsc --noEmit，包含编译期正反例
 pnpm check:contracts    # 类型一致性 + $ref 完整性 + 结构层正反例
 pnpm test               # 全部协议测试
 ```
+
+四份设计协议已引用 reviewRef，但 2026-10-18 合并核对发现 design-review-ref.schema.json 与对应生成类型未提供，当前注册表编译失败。只有独立可信上下文中的审查绑定核验通过，pending 候选才可供设计，不修改事实状态。引用本身不授予权限。设计交底消费说明与测试也未完整提供，见[合并阻塞记录](../../docs/reports/design-pr1-merge-2026-10-18.md)。

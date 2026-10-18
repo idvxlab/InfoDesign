@@ -21,12 +21,19 @@
 
 [项目总方案](design/project-spec.md) 包含完整设计、示例和参考来源，是实施依据。首次接手实现或调整方案时通读；后续按章节查阅。概览用于快速定位，不另设一套协议。
 
+## 设计侧文档
+
+- [设计协议](design/design-contracts-draft.md)与[设计输入输出](design/design-agent-io-v1.md)：协作者提供的协议、绑定及停止分支。
+- [设计运行时历史记录](reports/design-agent-runtime-v1-2026-10-11.md)与[输出排查记录](reports/design-agent-output-debug-2026-10-11.md)：仅代表各自记录版本。
+- 设计交底消费说明、消费测试与 reviewRef 协议尚有缺文件，当前合并不能据历史记录宣称通过；见[PR #1 合并验证](reports/design-pr1-merge-2026-10-18.md)。
+
 ## 验证报告
 
 各份报告记录对应任务实际执行的检查，并保留当时结论。判断当前进度请看 [status.md](../status.md)，不要用历史通过项推断新功能已完成。
 
 | 日期 | 报告 | 记录内容 |
 | --- | --- | --- |
+| 2026-10-18 | [设计 PR #1 合并](reports/design-pr1-merge-2026-10-18.md) | 逐项保留双方实现，记录当前协议与测试阻塞 |
 | 2026-10-18 | [分段核心发布](reports/segmented-release-candidate-2026-10-18.md) | 504＋7 项通过，保留官方设计端既有 45 条类型错误 |
 | 2026-10-12 | [官方源码交接](reports/official-handoff-2026-10-12.md) | 发布副本446＋7项离线测试、隐私排除、同历史交接与CI边界 |
 | 2026-10-12 | [整份真实PDF测试](reports/real-pdf-test-2026-10-12.md) | 客户端4096输出限制截断，未进入审查或返修 |

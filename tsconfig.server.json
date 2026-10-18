@@ -9,6 +9,9 @@
     "tests/integration/pi-proxy.test.ts",
     "tests/integration/fixtures/pi-proxy-child.ts",
     "tests/integration/evidence-agent.test.ts",
+    "tests/integration/design-agent.test.ts",
+    "tests/integration/design-review-binding.test.ts",
+    "tests/integration/design-handoff-consumer.test.ts",
     "tests/integration/evidence-replay.test.ts",
     "tests/integration/spend-budget.test.ts",
     "tests/integration/evidence-quality.test.ts"
