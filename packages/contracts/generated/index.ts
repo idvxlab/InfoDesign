@@ -5,6 +5,7 @@ export * from './component-engineer-input.ts';
 export * from './component-engineer-output.ts';
 export * from './design-input.ts';
 export * from './design-output.ts';
+export * from './design-review-ref.ts';
 export * from './document-ir.ts';
 export * from './evidence-input.ts';
 export * from './evidence-output.ts';
