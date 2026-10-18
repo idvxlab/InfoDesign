@@ -13,7 +13,8 @@ export const B2_LIMITS: Readonly<ExecutionLimits> = Object.freeze({
 });
 export const EVIDENCE_LIMITS: Readonly<ExecutionLimits> = Object.freeze({
   timeoutMs: 120_000, maxModelCalls: 6, maxToolCalls: 12,
-  maxOutputTokens: 4096, maxContextBytes: 128_000,
+  // 16384 依据同网关同模型实际 completion usage（含推理 token），不声称模型最高上限。
+  maxOutputTokens: 16_384, maxContextBytes: 128_000,
 });
 export const REVIEW_LIMITS: Readonly<ExecutionLimits> = Object.freeze({
   timeoutMs: 180_000, maxModelCalls: 6, maxToolCalls: 16,

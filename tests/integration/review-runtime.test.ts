@@ -151,12 +151,18 @@ test('review 预算校验 REVIEW_LIMITS：每个字段超过上限及无效数�
   assert.throws(() => validateLimits(reviewLimits, 'reviewer' as never), /invalid_execution_profile/);
 });
 
-test('证据/probe 上限不变，且 review 上限不低于证据上限', () => {
-  assert.deepEqual(EVIDENCE_LIMITS, { timeoutMs: 120_000, maxModelCalls: 6, maxToolCalls: 12, maxOutputTokens: 4096, maxContextBytes: 128_000 });
+test('三组精确不变上限：evidence 仅 output 为 16384，review 完整保持 8192，probe 原值不变', () => {
+  assert.deepEqual(EVIDENCE_LIMITS, { timeoutMs: 120_000, maxModelCalls: 6, maxToolCalls: 12, maxOutputTokens: 16384, maxContextBytes: 128_000 });
+  assert.deepEqual(REVIEW_LIMITS, { timeoutMs: 180_000, maxModelCalls: 6, maxToolCalls: 16, maxOutputTokens: 8192, maxContextBytes: 128_000 });
   assert.deepEqual(B2_LIMITS, { timeoutMs: 90_000, maxModelCalls: 3, maxToolCalls: 2, maxOutputTokens: 1024, maxContextBytes: 12_000 });
+  // 非 output 维度 review 仍不低于 evidence（仅 output 独立定向调整）。
   for (const key of Object.keys(EVIDENCE_LIMITS) as Array<keyof ExecutionLimits>) {
+    if (key === 'maxOutputTokens') continue;
     assert.ok(REVIEW_LIMITS[key] >= EVIDENCE_LIMITS[key]);
   }
+  // output 维度精确断言，不允许提高 REVIEW。
+  assert.equal(REVIEW_LIMITS.maxOutputTokens, 8192);
+  assert.equal(EVIDENCE_LIMITS.maxOutputTokens, 16384);
   // 证据预算仍按 evidence 上限校验（回归保证）。
   validateLimits({ ...EVIDENCE_LIMITS }, 'evidence');
   // 复用 evidence 预算做 review 也不被误改语义。

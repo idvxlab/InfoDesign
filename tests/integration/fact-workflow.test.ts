@@ -942,7 +942,7 @@ test('seed 引用不存在的证据/文档版本/定位 → HTTP 前 candidate_i
 /** 把合成 R5 账本写入临时目录，返回路径；全部数值与外部预算代理的授权策略精确一致。 */
 function writeSyntheticLedgers(dir: string, opts?: { policyMismatch?: boolean; historyMismatch?: boolean; extraKey?: boolean }) {
   const policy = {
-    limitMicros: 400_000_000,
+    limitMicros: 550_000_000,
     safetyMicros: 10_000_000,
     inputCnyPerMillion: 2,
     outputCnyPerMillion: 8,
@@ -1245,4 +1245,102 @@ test('B5 分级纯函数：seeded 零抽取通过，出现抽取或顺序错误�
     candidateStates: [...candidates],
   });
   assert.equal(dupSession.passed, false);
+});/* ---------- 授权修复回归：聚合网关与提取上限 16384（审查、探测及其他限制不变） ---------- */
+
+/** 仅克隆合成任务账本并覆盖 maxOutputTokens，用于 16384 合法值与非法值探测。 */
+function writeLedgersWithOutputTokens(dir: string, maxOutputTokens: unknown) {
+  const base = mkdtempSync(join(tmpdir(), 'b5-ot-base-'));
+  try {
+    writeSyntheticLedgers(base, {});
+    const task = JSON.parse(readFileSync(join(base, 'task-ledger.json'), 'utf8')) as Record<string, unknown>;
+    const total = readFileSync(join(base, 'total-ledger.json'), 'utf8');
+    task.maxOutputTokens = maxOutputTokens;
+    const taskPath = join(dir, 'task-ledger.json');
+    const totalPath = join(dir, 'total-ledger.json');
+    writeFileSync(taskPath, JSON.stringify(task));
+    writeFileSync(totalPath, total);
+    return { taskPath, totalPath, authorizationId: 'test-b5' };
+  } finally {
+    rmSync(base, { recursive: true, force: true });
+  }
+}
+
+test('网关上限修复：maxOutputTokens=16384 通过 before/after 且账本字节不变', async () => {
+  const { readExternalBudgetGate } = await import('../../apps/server/src/runtime/pi/external-budget-gate.ts');
+  const dir = mkdtempSync(join(tmpdir(), 'b5-gate-16384-'));
+  try {
+    const { taskPath, totalPath, authorizationId } = writeLedgersWithOutputTokens(dir, 16384);
+    const taskBytes = readFileSync(taskPath);
+    const totalBytes = readFileSync(totalPath);
+
+    const before = readExternalBudgetGate({
+      config: STUB_CONFIG, authorizationId, taskLedgerPath: taskPath, totalLedgerPath: totalPath, phase: 'before',
+    });
+    assert.equal(before.maxOutputTokens, 16384);
+    assert.equal(before.limitMicros, 550_000_000);
+    assert.equal(before.safetyMicros, 10_000_000);
+
+    const after = readExternalBudgetGate({
+      config: STUB_CONFIG, authorizationId, taskLedgerPath: taskPath, totalLedgerPath: totalPath, phase: 'after',
+    });
+    assert.equal(after.maxOutputTokens, 16384);
+    assert.equal(after.reservedMicros, before.reservedMicros);
+    assert.equal(after.recordCount, before.recordCount);
+
+    assert.deepEqual(readFileSync(taskPath), taskBytes);
+    assert.deepEqual(readFileSync(totalPath), totalBytes);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('网关上限修复：非法 maxOutputTokens 在 before/after 均抛 gate_phase_state 且不写账本', async () => {
+  const { readExternalBudgetGate } = await import('../../apps/server/src/runtime/pi/external-budget-gate.ts');
+  const invalid: ReadonlyArray<unknown> = [16385, 16384.5, 0, -1, '16384', null];
+  for (const value of invalid) {
+    const dir = mkdtempSync(join(tmpdir(), 'b5-gate-invalid-'));
+    try {
+      const { taskPath, totalPath, authorizationId } = writeLedgersWithOutputTokens(dir, value);
+      const taskBytes = readFileSync(taskPath);
+      const totalBytes = readFileSync(totalPath);
+      for (const phase of ['before', 'after'] as const) {
+        assert.throws(
+          () => readExternalBudgetGate({
+            config: STUB_CONFIG, authorizationId, taskLedgerPath: taskPath, totalLedgerPath: totalPath, phase,
+          }),
+          (error: unknown) => (error as { code?: string }).code === 'gate_phase_state',
+          `value=${String(value)} phase=${phase} 应抛 gate_phase_state`,
+        );
+      }
+      assert.deepEqual(readFileSync(taskPath), taskBytes);
+      assert.deepEqual(readFileSync(totalPath), totalBytes);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
+test('角色上限不变：EVIDENCE 16384 / REVIEW 8192 / B2 1024，其余边界未改', async () => {
+  const { EVIDENCE_LIMITS, REVIEW_LIMITS, B2_LIMITS, validateLimits } = await import('../../apps/server/src/runtime/pi/execution-limits.ts');
+  assert.equal(EVIDENCE_LIMITS.maxOutputTokens, 16384);
+  assert.equal(REVIEW_LIMITS.maxOutputTokens, 8192);
+  assert.equal(B2_LIMITS.maxOutputTokens, 1024);
+
+  assert.equal(EVIDENCE_LIMITS.timeoutMs, 120_000);
+  assert.equal(EVIDENCE_LIMITS.maxModelCalls, 6);
+  assert.equal(EVIDENCE_LIMITS.maxToolCalls, 12);
+  assert.equal(EVIDENCE_LIMITS.maxContextBytes, 128_000);
+  assert.equal(REVIEW_LIMITS.timeoutMs, 180_000);
+  assert.equal(REVIEW_LIMITS.maxModelCalls, 6);
+  assert.equal(REVIEW_LIMITS.maxToolCalls, 16);
+  assert.equal(REVIEW_LIMITS.maxContextBytes, 128_000);
+  assert.equal(B2_LIMITS.timeoutMs, 90_000);
+  assert.equal(B2_LIMITS.maxModelCalls, 3);
+  assert.equal(B2_LIMITS.maxToolCalls, 2);
+  assert.equal(B2_LIMITS.maxContextBytes, 12_000);
+
+  // 审查角色上限不接受 16384。
+  assert.throws(() => validateLimits({ ...REVIEW_LIMITS, maxOutputTokens: 16384 }, 'review'));
+  // 审查角色自身边界仍合法。
+  validateLimits({ ...REVIEW_LIMITS }, 'review');
 });

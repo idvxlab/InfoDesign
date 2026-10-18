@@ -44,7 +44,9 @@ export async function createBusinessSession(config: ModelConfig, tool: ToolDefin
         reasoning: explicitProfile,
         input: ['text'],
         // 本任务的保守执行配置，不声明网关实际最大上下文、视觉能力或价格。
-        contextWindow: 16_384, maxTokens: budget.limits.maxOutputTokens,
+        // 32768 仅为同一网关/模型历史成功用量的保守下界（非模型卡 1M，也非网关实测上限）；
+        // 其余角色保持 16384；提取上限 16384 仍受 SDK 输入估算及安全余量约束。
+        contextWindow: role === 'evidence' ? 32_768 : 16_384, maxTokens: budget.limits.maxOutputTokens,
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         ...(explicitProfile
           ? {

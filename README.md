@@ -6,11 +6,9 @@
 
 > **开发中，尚无可用的完整页面产品。** 已完成协议、真实Pi受控提取与独立事实审查，以及本地事实工作流的最低验收。B5可在独立会话间执行有限返修、保留版本与运行历史；页面设计、HTTP与生产保存仍待开发。
 
-提取／审查侧已增加[只读设计交付接口](docs/development/design-handoff.md)，含ready／blocked与模拟消费者；设计团队待联调，主仓库当前446项及类型／协议通过，见[交付报告](docs/reports/design-handoff-2026-10-12.md)。DesignInput继续拒绝全部输入，未实现设计端。
+提取／审查侧提供[只读设计交付接口](docs/development/design-handoff.md)。当前版本增加提取输出上限 16384 与[分段事实核心](docs/development/segmented-fact-workflow.md)，默认离线回归 504 项通过；PDF 分段接线、恢复和真实全文验收尚未完成。
 
-B5最终同版两条虚构真实路径通过，主仓库422项离线回归及类型／协议通过。人工错误候选的返修验收与真实提取后的缺证等待分别记录，全部候选仍为pending。历史B4七类验收为v12，当前v14未重跑七类；详见[B5报告](docs/reports/b5-fact-workflow-2026-10-12.md)与[当前状态](status.md)。
-
-2026-10-12整份真实PDF测试因本项目客户端4096输出Token配置截断，未进入独立审查或返修；模型最大输出能力尚未核实。见[真实测试记录](docs/reports/real-pdf-test-2026-10-12.md)。本次代码交接范围与离线复验见[交接说明](SNAPSHOT.md)。
+**整体类型检查尚未通过。** 官方已有设计 Agent 文件缺少配套协议、校验与运行层依赖；保留这些文件后，官方原版和本次版本均有相同的 45 条类型错误；本次保留这些已知问题并发布已经验证的增量。见[当前状态](status.md)与[本轮验证记录](docs/reports/segmented-release-candidate-2026-10-18.md)，不能把离线测试通过视为整仓验收通过。
 
 ## Get Started
 

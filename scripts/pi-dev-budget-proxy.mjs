@@ -12,12 +12,28 @@ export const DEV_POLICY = Object.freeze({ limitMicros: 2_000_000, safetyMicros: 
   inputCnyPerMillion: 2, outputCnyPerMillion: 8, inputTokensPerByte: 2, inputTokenOverhead: 8192 });
 
 // Trusted-host-only authorization table. Caps outside this table are never accepted by the CLI,
-// and the authorized 100m/200m/300m/400m caps all carry the same 10m safety (not a proportional 20m/30m/40m),
-// so a 300m/400m task can never spend more than 290m/390m and keeps the exact same 10m headroom. Pure and offline-testable.
+// and the authorized 100m/200m/300m/400m/450m/550m caps all carry the same 10m safety (not a proportional 20m/30m/40m/45m),
+// so a 300m/400m/450m/550m task can never spend more than 290m/390m/440m/540m and keeps the exact same 10m headroom. Pure and offline-testable.
 export const AUTHORIZED_LIMITS = Object.freeze({
-  2_000_000: 200_000, 10_000_000: 1_000_000, 100_000_000: 10_000_000, 200_000_000: 10_000_000, 300_000_000: 10_000_000, 400_000_000: 10_000_000,
+  2_000_000: 200_000, 10_000_000: 1_000_000, 100_000_000: 10_000_000, 200_000_000: 10_000_000, 300_000_000: 10_000_000, 400_000_000: 10_000_000, 450_000_000: 10_000_000, 550_000_000: 10_000_000,
 });
-export const CUMULATIVE_LIMITS = Object.freeze([100_000_000, 200_000_000, 300_000_000, 400_000_000]);
+export const CUMULATIVE_LIMITS = Object.freeze([100_000_000, 200_000_000, 300_000_000, 400_000_000, 450_000_000, 550_000_000]);
+
+// coding 任务继续无条件使用配置输出上限（默认 4096），行为不变。
+// business 任务必须由 SDK 显式声明一个合法正整数输出上限，代理只保留该值（不得超过信任代理 cap），
+// 绝不把 review 的 8192 或 probe 的 1024 抬升成配置值。缺失、非法、双字段冲突或超过 cap 都在预留/上游前拒绝。
+export function resolveRequestedOutputTokens({ body, toolProfile, maxOutputTokens, cap }) {
+  if (toolProfile === 'coding') return { ok: true, value: maxOutputTokens, field: null };
+  const hasMaxTokens = Object.prototype.hasOwnProperty.call(body, 'max_tokens');
+  const hasMaxCompletionTokens = Object.prototype.hasOwnProperty.call(body, 'max_completion_tokens');
+  if (hasMaxTokens && hasMaxCompletionTokens) return { ok: false, code: 'conflicting_output_token_fields' };
+  if (!hasMaxTokens && !hasMaxCompletionTokens) return { ok: false, code: 'missing_output_token_fields' };
+  const field = hasMaxTokens ? 'max_tokens' : 'max_completion_tokens';
+  const value = body[field];
+  if (!Number.isSafeInteger(value) || value <= 0) return { ok: false, code: 'invalid_output_token_limit' };
+  if (value > cap) return { ok: false, code: 'output_token_limit_exceeds_cap' };
+  return { ok: true, value, field };
+}
 
 /** Resolve the exact frozen policy for a trusted authorized cap; rejects any unlisted cap. */
 export function resolveAuthorizedPolicy(limitMicros) {
@@ -26,7 +42,7 @@ export function resolveAuthorizedPolicy(limitMicros) {
 }
 
 /**
- * Pure trusted-CLI config gate: requires a cumulative ledger for every cumulative cap (100m, 200m, 300m and 400m),
+ * Pure trusted-CLI config gate: requires a cumulative ledger for every cumulative cap (100m, 200m, 300m, 400m, 450m and 550m),
  * keeps the exact same ledger/authorizationId contract, and rejects a stored ledger whose
  * authorizationId, policy or record shapes do not exactly match the current task. Never migrates or
  * resets history. Takes the already-parsed stored ledger (or null) so it can be exercised offline.
@@ -69,8 +85,8 @@ export async function startBudgetProxy(options) {
       || !['max_tokens', 'max_completion_tokens'].includes(maxTokensField)
       || !Number.isSafeInteger(minRequestIntervalMs) || minRequestIntervalMs < 0 || minRequestIntervalMs > 30_000
       || !['coding', 'business'].includes(toolProfile)
-      // Only the 200m, 300m and 400m authorized caps may exceed 100m; every intermediate cap stays rejected.
-      || (policy.limitMicros > 100_000_000 && policy.limitMicros !== 200_000_000 && policy.limitMicros !== 300_000_000 && policy.limitMicros !== 400_000_000)) throw new Error('invalid_dev_budget_configuration');
+      // Only the 200m, 300m, 400m, 450m and 550m authorized caps may exceed 100m; every intermediate cap stays rejected.
+      || (policy.limitMicros > 100_000_000 && policy.limitMicros !== 200_000_000 && policy.limitMicros !== 300_000_000 && policy.limitMicros !== 400_000_000 && policy.limitMicros !== 450_000_000 && policy.limitMicros !== 550_000_000)) throw new Error('invalid_dev_budget_configuration');
   const startedAt = Date.now(), controller = new AbortController();
   let active = false, stopReason = null, records = structuredClone(previousReservations);
   const attempts = [];
@@ -102,17 +118,23 @@ export async function startBudgetProxy(options) {
             && (!Array.isArray(m.content) || m.content.some(c => c.type !== 'text' || typeof c.text !== 'string')))
           || (body.tools ?? []).some(t => t.type !== 'function' || !allowedTools.includes(t.function?.name))) throw new Error('unsupported_request');
       if (body.stream !== true) throw new Error('stream_required');
+      // business 保留 SDK 声明的合法输出上限；coding 依旧使用配置值。预留、持久化与上游都必须按最终值。
+      const requested = resolveRequestedOutputTokens({ body, toolProfile, maxOutputTokens, cap: maxOutputTokens });
+      if (!requested.ok) throw new Error(requested.code);
+      const upstreamOutputTokens = requested.value;
       delete body.max_tokens; delete body.max_completion_tokens;
-      body[maxTokensField] = maxOutputTokens;
+      // 配置字段决定上游写入哪个字段名（两字段名兼容转换），值始终是被保留/校验过的输出上限。
+      body[maxTokensField] = upstreamOutputTokens;
       const payload = JSON.stringify(body), contextBytes = Buffer.byteLength(payload);
       if (contextBytes > maxBodyBytes || stopReason || Date.now() >= startedAt + timeoutMs) throw new Error(stopReason ?? 'context_or_time_limit');
       if (attempts.length >= maxCalls) { stop('request_limit'); reply(429, stopReason); return; }
       const waitMs = attempts.length ? minRequestIntervalMs - (Date.now() - attempts.at(-1).startedAt) : 0;
       if (waitMs > 0) await delay(waitMs, undefined, { signal: controller.signal });
       if (stopReason || Date.now() >= startedAt + timeoutMs) throw new Error(stopReason ?? 'context_or_time_limit');
-      try { budget.reserve(contextBytes, maxOutputTokens); }
+      // 预留金额按最终实际上游输出上限计算，确保账本与真实请求一致。
+      try { budget.reserve(contextBytes, upstreamOutputTokens); }
       catch (error) { stop(error.code ?? 'budget_failed'); reply(429, stopReason); return; }
-      attempt = { sequence: attempts.length + 1, startedAt: Date.now(), status: null, completed: false, transport: { attempts: 0, httpStatuses: [], failureCodes: [] } };
+      attempt = { sequence: attempts.length + 1, startedAt: Date.now(), status: null, outputTokens: upstreamOutputTokens, completed: false, transport: { attempts: 0, httpStatuses: [], failureCodes: [] } };
       attempts.push(attempt);
       save(); // The individual HTTP attempt must also be durable before forwarding.
       requestTimer = setTimeout(() => stop('upstream_timeout'), requestTimeoutMs);
@@ -150,7 +172,8 @@ export async function startBudgetProxy(options) {
       }
       if (!terminal) throw new Error('upstream_incomplete');
     } catch (error) {
-      const known = new Set(['request_too_large', 'unsupported_request', 'stream_required', 'context_or_time_limit']);
+      const known = new Set(['request_too_large', 'unsupported_request', 'stream_required', 'context_or_time_limit',
+        'missing_output_token_fields', 'conflicting_output_token_fields', 'invalid_output_token_limit', 'output_token_limit_exceeds_cap']);
       stop(known.has(error.message) ? error.message : (stopReason ?? 'request_failed'));
       reply(502, stopReason); if (res.headersSent && !res.writableEnded) res.destroy();
     } finally { clearTimeout(requestTimer); active = false; res.off('close', disconnect); }

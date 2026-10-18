@@ -56,7 +56,7 @@ function fail(code: GateErrorCode): never {
 }
 
 const AUTHORIZED_POLICY: Readonly<SpendPolicy> = Object.freeze({
-  limitMicros: 400_000_000,
+  limitMicros: 550_000_000,
   safetyMicros: 10_000_000,
   inputCnyPerMillion: 2,
   outputCnyPerMillion: 8,
@@ -77,7 +77,7 @@ const TASK_KEYS = [
 
 const MAX_ATTEMPTS_WINDOW_MS = 900_000;
 const MAX_CALLS_LIMIT = 18;
-const MAX_OUTPUT_TOKENS_LIMIT = 8_192;
+const MAX_OUTPUT_TOKENS_LIMIT = 16_384;
 const MAX_BODY_BYTES_LIMIT = 256_000;
 
 const isObject = (value: unknown): value is Record<string, unknown> =>

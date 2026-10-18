@@ -72,3 +72,7 @@ B4 离线七案例使用固定合成资料，覆盖：一条全部正确的正�
 ## 提取／审查侧设计交付回归
 
 `integration/design-handoff.test.ts` 新增24项，并注册到默认测试与`tsconfig.b4-tests.json`。在准备好的隔离容器内执行`pnpm test:handoff`，以真实Pi SDK＋本地模拟网关产生B5历史，验证返修后ready、缺失／冲突／上限／技术失败blocked、错误身份／版本／工件／来源、内容篡改与历史不变性。没有真实业务模型调用。最新主仓库446/446及类型／生成／协议结果见[交付报告](../docs/reports/design-handoff-2026-10-12.md)。
+
+## 分段核心与当前验收（2026-10-18）
+
+`integration/segmented-fact-workflow.test.ts` 的 40 项专项已登记默认测试和 B4 类型检查，覆盖独立会话、完整输入／快照指纹、最新报告、缺段、空结果和冲突拒绝。当前版本默认 504 项、费用扩展 7 项通过，生成／协议一致；官方设计端缺失依赖导致 45 条类型错误，不能称为整仓通过。见[本轮验证](../docs/reports/segmented-release-candidate-2026-10-18.md)。

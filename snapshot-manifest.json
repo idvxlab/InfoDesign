@@ -1,8 +1,9 @@
 {
-  "snapshotDate": "2026-10-12",
-  "officialBaseCommit": "02cb140e257fd481fe1495bf7da8cf7328d06eaa",
+  "snapshotDate": "2026-10-18",
+  "officialBaseCommit": "f519b93227081d41214d07d27485b25bab5417fe",
   "sourceHistoryIncluded": false,
-  "fileCountExcludingManifest": 403,
+  "publicationStatus": "reviewed_increment_with_known_type_errors",
+  "fileCountExcludingManifest": 407,
   "files": [
     {
       "path": ".dockerignore",
@@ -71,13 +72,13 @@
     },
     {
       "path": "README.md",
-      "sha256": "fe71e8b18796ab97146eff7971e5380c1deacbee90bbbb08ab31e43d1e7b9cba",
-      "bytes": 4241
+      "sha256": "28d22614bb56fa926938e625d547a44874d640313ffa066e02e9793975d127ec",
+      "bytes": 3993
     },
     {
       "path": "SNAPSHOT.md",
-      "sha256": "225a494d37cde292d6d72602588d9b84f8422acfc1bbb870c6e7ee0c7522c256",
-      "bytes": 2812
+      "sha256": "5d060a6969d2853e7b9048be3f4ceceb70408ec7cf0360bef3a41674e4413ca5",
+      "bytes": 1180
     },
     {
       "path": "apps/server/README.md",
@@ -106,18 +107,18 @@
     },
     {
       "path": "apps/server/src/agents/design/agent.ts",
-      "sha256": "61ee3b8f960b07784c03235a6be4c9fc0bfba7b73323bf018a5f836cba31723c",
-      "bytes": 493
+      "sha256": "a223e1503d9c00f30cea61dac9f992b92cc5ac320bee909027ab01e8034adb51",
+      "bytes": 7513
     },
     {
       "path": "apps/server/src/agents/design/context.ts",
-      "sha256": "4bde4184559f99fb76234ed65743a0ad5ad0ef875e42a68fe3616b3dc362a67a",
-      "bytes": 414
+      "sha256": "aeae22d088578e21a37d93f4c28de6a43000c03f4e58413e35b29c31e4afdeba",
+      "bytes": 6631
     },
     {
       "path": "apps/server/src/agents/design/prompt.md",
-      "sha256": "2e9d7073addd7a4308e671f05426d43e6fe601075b3086d82901d33b506ede44",
-      "bytes": 698
+      "sha256": "6940c1482f34bf902a294297f82cb6816771f910dc42ef2a221a883affd50f17",
+      "bytes": 1056
     },
     {
       "path": "apps/server/src/agents/evidence/agent.ts",
@@ -375,6 +376,11 @@
       "bytes": 360
     },
     {
+      "path": "apps/server/src/orchestration/segmented-fact-workflow.ts",
+      "sha256": "8f749560f21337f7275acaf9ec52bc35ad41f42e29bccc77da02e82c1aaaab4a",
+      "bytes": 23977
+    },
+    {
       "path": "apps/server/src/orchestration/state.ts",
       "sha256": "2a76777194e2a5b4f91d37246e7ed06cb4c32680cfd90876ca05641a13387a27",
       "bytes": 6461
@@ -391,13 +397,13 @@
     },
     {
       "path": "apps/server/src/runtime/pi/execution-limits.ts",
-      "sha256": "ff9985bc3f1c2be4a1076e5bb3373317bc9544d68f87be09c79e556eb477cf4e",
-      "bytes": 4081
+      "sha256": "52acb8ad9f0ea2906325565eb6c56da219decf0037948ccdf287255fd46a49b0",
+      "bytes": 4196
     },
     {
       "path": "apps/server/src/runtime/pi/external-budget-gate.ts",
-      "sha256": "98f180de69419c1438aab75cb1976208dcc97230dc87f3b1f7996e6237f98b3c",
-      "bytes": 10860
+      "sha256": "86da7ba50252c5dcc4e75e9de3ef43e08a00bb963fb6489c507795928604c2ad",
+      "bytes": 10861
     },
     {
       "path": "apps/server/src/runtime/pi/model-transport.ts",
@@ -421,8 +427,8 @@
     },
     {
       "path": "apps/server/src/runtime/pi/session-factory.ts",
-      "sha256": "22c0d9d16e90c326a7affa2030ae9517520e539f212a27f6e998b3127b518f86",
-      "bytes": 6101
+      "sha256": "092ce7fbb44939be21b2c27caf8b43596d6eeabf52543297a7f368aa7f49a2f5",
+      "bytes": 6364
     },
     {
       "path": "apps/server/src/runtime/pi/skill-loader.ts",
@@ -651,18 +657,18 @@
     },
     {
       "path": "docs/README.md",
-      "sha256": "41423d2a757f7157ea05176b632e5cd3809f96625317fa12ee0a2edd17a07061",
-      "bytes": 7245
+      "sha256": "74dae9827131cbb1761c04da325f3560dfcb9737d9a59b698ff8b7c03eca2047",
+      "bytes": 7513
     },
     {
       "path": "docs/design/overview.md",
-      "sha256": "08b264d88117e3ff4200f23cd1028e2afb700c146e8e664db1af2506121f9478",
-      "bytes": 12745
+      "sha256": "72b345d6f2624893c62b65e603dcd495794752a672c31a056087c04e03dbb0aa",
+      "bytes": 13149
     },
     {
       "path": "docs/design/project-spec.md",
-      "sha256": "16e3f9cfb51b480111fa94aa9557b15c713fa017958c23b43407065c74d01434",
-      "bytes": 85382
+      "sha256": "6a37854eb1aa58f013556f332897e94f93917b5ee16442e54f4c8a9fc41144e3",
+      "bytes": 86069
     },
     {
       "path": "docs/development/backend-plan.md",
@@ -698,6 +704,11 @@
       "path": "docs/development/repository-layout.md",
       "sha256": "d2f41a331fc12ae6605c8ffa5a908c7864d15f075aff3417b3ead89efc79e79e",
       "bytes": 3201
+    },
+    {
+      "path": "docs/development/segmented-fact-workflow.md",
+      "sha256": "1fa0aaedc41fd4f41a0c7e0672611feb0a1b87ca7648bf676294e0796a573a1d",
+      "bytes": 1641
     },
     {
       "path": "docs/development/source-bundle.md",
@@ -840,6 +851,11 @@
       "bytes": 4472
     },
     {
+      "path": "docs/reports/segmented-release-candidate-2026-10-18.md",
+      "sha256": "b24f312daf9bd50f7b076b44828bae2ffc4f4a14a1e27d9870054cdb12266a1e",
+      "bytes": 4658
+    },
+    {
       "path": "evals/README.md",
       "sha256": "13444747fed0158b0874564ae0d890a3cc662867018dedb79fc26f5412426f8f",
       "bytes": 2622
@@ -906,8 +922,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "15a40733556bfe7c640b7eaf8ca5aaf85a214ad14d870115e6115f5040793bc4",
-      "bytes": 2827
+      "sha256": "ff4d2701093e2946db4f9432a1d133a003ce695d2d6b13bdfdf762b925e698be",
+      "bytes": 2877
     },
     {
       "path": "packages/contracts/README.md",
@@ -1351,8 +1367,8 @@
     },
     {
       "path": "scripts/pi-dev-budget-proxy.mjs",
-      "sha256": "0d26746cf919e112dccb2c39c0ebb930d5147d58f918ff084b7a96705836845a",
-      "bytes": 15578
+      "sha256": "745d8c327aca365b3ec40e14e6b65c16ad3234934d92be44adf66dc420907152",
+      "bytes": 17865
     },
     {
       "path": "scripts/prepare-local.sh",
@@ -1546,18 +1562,18 @@
     },
     {
       "path": "status.md",
-      "sha256": "63010a31cf89802bd97fc09e7429f607bbd1efd60b56fb74eaf53972ab64b07d",
-      "bytes": 2673
+      "sha256": "6acd21c184a81574badaaea2744552725ea3967da9ae648d8466f2b40ceb1806",
+      "bytes": 2191
     },
     {
       "path": "tests/README.md",
-      "sha256": "54c4a82b231a0075c481d3fb372eeee3920598ab9d3035085ac719b49a7f309e",
-      "bytes": 9544
+      "sha256": "ba0ccb7184a99aac8c825d5402ba9bc560d185b1648f3a374dd5cb1d26c547bc",
+      "bytes": 10042
     },
     {
       "path": "tests/dev-tools/pi-dev-budget-proxy.test.mjs",
-      "sha256": "c3c0e79851ebb4e36a3ffce8880f83ed1b8af20845840e9a140d46c1e309b024",
-      "bytes": 25875
+      "sha256": "ebee695a1aa1e4c45d13e515325c6c9d9a74c675c2f9e8c13a326fbd8ce874d7",
+      "bytes": 33383
     },
     {
       "path": "tests/dev-tools/pi-rmb-cost.test.mjs",
@@ -1911,8 +1927,8 @@
     },
     {
       "path": "tests/integration/fact-workflow.test.ts",
-      "sha256": "13648a787f49258f1da2ed97af86eca353a1384abcd438be8c6f407f88a1fccd",
-      "bytes": 60521
+      "sha256": "1cc9278d0f6b410cbefb46dd8df72ff5f91e6d8d0b90bcde156ec7444eb70f59",
+      "bytes": 65298
     },
     {
       "path": "tests/integration/fixtures/evidence-quality.ts",
@@ -1941,8 +1957,8 @@
     },
     {
       "path": "tests/integration/pi-session.test.ts",
-      "sha256": "98bcfd413181f9c87177421eebb3a32d55cff261cfa6bcc233b864f81cfb40ee",
-      "bytes": 18966
+      "sha256": "25f7fd1900e743dd934580e31400d20cac3dd7cf50f7bc9f15000e86597ca135",
+      "bytes": 28241
     },
     {
       "path": "tests/integration/read-source.test.ts",
@@ -1971,8 +1987,8 @@
     },
     {
       "path": "tests/integration/review-runtime.test.ts",
-      "sha256": "1d1d7875b8315247fb5c225c7eb8d8b035d5c9a4836616367deddf82dadacccb",
-      "bytes": 19435
+      "sha256": "1ad8ae7c590ca6908e308689789ea5ab81a614237429d10498b099c3573352ef",
+      "bytes": 19921
     },
     {
       "path": "tests/integration/review-source.test.ts",
@@ -1983,6 +1999,11 @@
       "path": "tests/integration/review-validator.test.ts",
       "sha256": "619a40ba81a9150a4cd16779236be19e0ebb358937c9d3c1af1407ed1ee9be75",
       "bytes": 33171
+    },
+    {
+      "path": "tests/integration/segmented-fact-workflow.test.ts",
+      "sha256": "6b28f19e5067254b1f43ad16d15fb168632388fb80c10cf2fd80948397c1ba16",
+      "bytes": 29945
     },
     {
       "path": "tests/integration/source-bundle.test.ts",
@@ -2006,8 +2027,8 @@
     },
     {
       "path": "tsconfig.b4-tests.json",
-      "sha256": "5c4bc559936a78d5ed8aa2001202d61dd124e126f4f1e4ec525f5853116bc71a",
-      "bytes": 365
+      "sha256": "467dd5ecf33a4413be96d1bc2ac0a0bf9ce2471de228b90f9251f709228ccf7d",
+      "bytes": 422
     },
     {
       "path": "tsconfig.json",

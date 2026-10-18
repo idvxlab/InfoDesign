@@ -9,7 +9,7 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { readModelConfig, readModelConfigFromModels } from '../../apps/server/src/config/env.ts';
 import { createDiagnosticFetch, type TransportDiagnostics } from '../../apps/server/src/runtime/pi/transport-diagnostics.ts';
-import { B2_LIMITS, ExecutionBudget, validateLimits } from '../../apps/server/src/runtime/pi/execution-limits.ts';
+import { B2_LIMITS, EVIDENCE_LIMITS, REVIEW_LIMITS, ExecutionBudget, validateLimits } from '../../apps/server/src/runtime/pi/execution-limits.ts';
 import { createBusinessSession } from '../../apps/server/src/runtime/pi/session-factory.ts';
 import { createDocumentReader, createReadDocumentTool, type DocumentAccess } from '../../apps/server/src/runtime/pi/read-document-tool.ts';
 import { runReadProbe } from '../../apps/server/src/runtime/pi/read-probe.ts';
@@ -326,5 +326,152 @@ test('B2 保留拒绝与限流 HTTP 状态但不泄漏响应内容，不自动�
     assert.equal(outcome.reason, 'provider_failed');
     assert.equal(requests.length, 1);
     assert.deepEqual(outcome.transport, { attempts: 1, httpStatuses: [status], failureCodes: [] });
+  }
+});
+
+
+// --- 输出上限 16384 的独立验证：validateLimits、真实 SDK 经本地预算代理端到端 ---
+
+const SESSION_ROLE_CASES = [
+  { role: 'probe', limits: B2_LIMITS, contextWindow: 16_384, maxTokens: 1024 },
+  { role: 'evidence', limits: EVIDENCE_LIMITS, contextWindow: 32_768, maxTokens: 16384 },
+  { role: 'review', limits: REVIEW_LIMITS, contextWindow: 16_384, maxTokens: 8192 },
+] as const;
+
+for (const { role, limits: roleLimits, contextWindow, maxTokens } of SESSION_ROLE_CASES) {
+  test(`角色 ${role} 会话元数据与输出预算：contextWindow ${contextWindow}，maxTokens ${maxTokens}`, async () => {
+    const mock = await gateway((_body, res) => complete(res, {}));
+    const budget = new ExecutionBudget(roleLimits, undefined, role);
+    let created: Awaited<ReturnType<typeof createBusinessSession>> | undefined;
+    try {
+      created = await createBusinessSession(mock.config, createReadDocumentTool(access, registry, budget).tool, budget, role);
+      // 仅创建会话（未 prompt）不得产生任何 HTTP 请求。
+      assert.equal(mock.requests.length, 0);
+      assert.ok(created.session.model, 'session.model 必须定义');
+      assert.equal(created.session.model.contextWindow, contextWindow);
+      assert.equal(created.session.model.maxTokens, maxTokens);
+    } finally {
+      try {
+        if (created) await created.dispose();
+      } finally {
+        budget.dispose();
+        await mock.close();
+      }
+    }
+  });
+}
+
+test('EVIDENCE 输出上限 16384 被接受，probe/review 上限保持且非法值被拒绝', () => {
+  assert.equal(EVIDENCE_LIMITS.maxOutputTokens, 16384);
+  assert.equal(B2_LIMITS.maxOutputTokens, 1024);
+  assert.equal(REVIEW_LIMITS.maxOutputTokens, 8192);
+  const evidence: Parameters<typeof validateLimits>[0] = { ...EVIDENCE_LIMITS, timeoutMs: 5000 };
+  assert.doesNotThrow(() => validateLimits(evidence, 'evidence'));
+  assert.equal(evidence.maxOutputTokens, 16384);
+  for (const bad of [0, -1, 1.5, NaN, Infinity, undefined, EVIDENCE_LIMITS.maxOutputTokens + 1]) {
+    assert.throws(() => validateLimits({ ...evidence, maxOutputTokens: bad as number }, 'evidence'));
+  }
+  assert.doesNotThrow(() => validateLimits({ ...limits, maxOutputTokens: B2_LIMITS.maxOutputTokens }, 'probe'));
+  assert.throws(() => validateLimits({ ...limits, maxOutputTokens: B2_LIMITS.maxOutputTokens + 1 }, 'probe'));
+  assert.doesNotThrow(() => validateLimits({ ...limits, maxOutputTokens: REVIEW_LIMITS.maxOutputTokens }, 'review'));
+  assert.throws(() => validateLimits({ ...limits, maxOutputTokens: REVIEW_LIMITS.maxOutputTokens + 1 }, 'review'));
+});
+
+test('真实 SDK 经本地预算代理端到端：两种 token 字段兼容，EVIDENCE 16384 到达上游且预留 16384', async () => {
+  const { pathToFileURL } = await import('node:url');
+  // 直接解构动态 import，避免 as typeof import 再次触发 TS7016；
+  // 运行时由下方真实 HTTP 断言保护。
+  const { startBudgetProxy } = await import(pathToFileURL(join(process.cwd(), 'scripts/pi-dev-budget-proxy.mjs')).href);
+
+  // 对 max_tokens 与 max_completion_tokens 两种兼容字段各自跑一轮全新 proxy + SDK。
+  for (const field of ['max_tokens', 'max_completion_tokens'] as const) {
+    let upstreamBodies: Array<Record<string, unknown>> = [];
+    let calls = 0;
+    let fetchBeforeReserved: number[] = [];
+    let ledger: { reservedMicros?: number; records?: Array<{ reservedMicros: number }> } = {};
+    const upstreamGate = await startBudgetProxy({
+      upstreamUrl: 'https://mock.invalid/v1/chat/completions', model: 'synthetic-model',
+      apiKey: 'upstream-secret', clientToken: 'client-token',
+      toolProfile: 'business',
+      persist: (s: { reservedMicros?: number }) => { ledger = s; },
+      maxOutputTokens: 16384, maxTokensField: field,
+      fetchImpl: async (_url: string, init: { body: string }) => {
+        calls++;
+        fetchBeforeReserved.push(ledger.reservedMicros ?? 0);
+        const sent = JSON.parse(init.body) as Record<string, unknown>;
+        upstreamBodies.push(sent);
+        if (calls === 1) {
+          const chunk = { id: 's', object: 'chat.completion.chunk', model: 'synthetic-model', choices: [{ index: 0, delta: { role: 'assistant', tool_calls: [{ index: 0, id: 'call_synthetic', type: 'function', function: { name: 'read_document', arguments: JSON.stringify(request) } }] }, finish_reason: null }] };
+          const end = { ...chunk, choices: [{ index: 0, delta: {}, finish_reason: 'tool_calls' }] };
+          return new Response(`data: ${JSON.stringify(chunk)}\n\ndata: ${JSON.stringify(end)}\n\ndata: [DONE]\n\n`, { headers: { 'content-type': 'text/event-stream' } });
+        }
+        const chunk = { id: 's', object: 'chat.completion.chunk', model: 'synthetic-model', choices: [{ index: 0, delta: { role: 'assistant', content: JSON.stringify(expected) }, finish_reason: null }] };
+        const end = { ...chunk, choices: [{ index: 0, delta: {}, finish_reason: 'stop' }], usage: { prompt_tokens: 100, completion_tokens: 20, total_tokens: 120 } };
+        return new Response(`data: ${JSON.stringify(chunk)}\n\ndata: ${JSON.stringify(end)}\n\ndata: [DONE]\n\n`, { headers: { 'content-type': 'text/event-stream' } });
+      },
+    });
+    const evidenceLimits = { ...EVIDENCE_LIMITS, timeoutMs: 5000 };
+    const config = readModelConfigFromModels(
+      { APP_MODEL_PROVIDER: 'budget-smoke', APP_MODEL_ID: 'synthetic-model', APP_MODEL_API_KEY: 'client-token', APP_MODEL_MAX_TOKENS_FIELD: field },
+      { providers: { 'budget-smoke': { baseUrl: upstreamGate.address.replace(/\/chat\/completions$/, ''), api: 'openai-completions', compat: { maxTokensField: field }, models: [{ id: 'synthetic-model', maxTokens: EVIDENCE_LIMITS.maxOutputTokens }] } } },
+      { allowLoopbackHttp: true },
+    );
+    const budget = new ExecutionBudget(evidenceLimits, undefined, 'evidence');
+    let session: Awaited<ReturnType<typeof createBusinessSession>> | undefined;
+    try {
+      const created = await createBusinessSession(config, createReadDocumentTool(access, registry, budget).tool, budget, 'evidence');
+      session = created;
+      assert.ok(created.session.model, 'session.model 必须定义');
+      assert.equal(created.session.model.maxTokens, EVIDENCE_LIMITS.maxOutputTokens);
+      // 注册模型上下文窗口必须为 32768，使 16384 占位值下的 SDK 夹断不再发生。
+      assert.equal(created.session.model.contextWindow, 32_768);
+      // 约 30000 个 ASCII 字符的确定性长合成提示，足以让旧 16384 上下文把 16384 输出夹低。
+      const longPrompt = Array.from({ length: 600 }, (_, i) => `synthetic-context-line-${i}-padding-padding-padding-padding`).join('\n');
+      assert.ok(longPrompt.length >= 29_000 && Buffer.byteLength(longPrompt, 'utf8') < 128_000, `longPrompt length=${longPrompt.length}`);
+      // prompt 返回 void，不得断言返回值；改为检查最终会话状态。
+      await created.session.prompt(longPrompt);
+      assert.equal(calls, 2);
+      assert.equal(budget.modelCalls, 2);
+      assert.equal(budget.toolCalls, 1);
+      for (const sent of upstreamBodies) {
+        const value = (sent[field] ?? undefined) as number | undefined;
+        // 上游实际收到的 maxTokens 必须是 16384，而不是被 SDK 夹低后的值。
+        assert.equal(value, EVIDENCE_LIMITS.maxOutputTokens);
+        const other = field === 'max_tokens' ? 'max_completion_tokens' : 'max_tokens';
+        assert.equal(sent[other], undefined);
+      }
+      const records = upstreamGate.state().records;
+      assert.equal(records.length, 2);
+      let expectedReservedMicros = 0;
+      for (const record of records) {
+        assert.equal(record.requestedOutputTokens, EVIDENCE_LIMITS.maxOutputTokens);
+        // 每次预留 = 输入 token 计费 ×2 + 16384 输出 token ×8，覆盖输入开销。
+        assert.equal(record.reservedMicros, record.reservedInputTokens * 2 + EVIDENCE_LIMITS.maxOutputTokens * 8);
+        expectedReservedMicros += record.reservedMicros;
+      }
+      // 上游 fetch 前代理已持久预留（同时校验预留先于 fetch）。
+      assert.equal(fetchBeforeReserved.length, 2);
+      for (const before of fetchBeforeReserved) assert.ok(before > 0);
+      // ledger.reservedMicros 是两次请求（含输入开销）的总和。
+      assert.equal(ledger.reservedMicros, expectedReservedMicros);
+      const finalMessage = created.session.state.messages.at(-1);
+      assert.equal(finalMessage?.role, 'assistant');
+      assert.equal(finalMessage?.stopReason, 'stop');
+      const blocks = finalMessage?.content;
+      assert.ok(Array.isArray(blocks), 'finalMessage.content 必须是文本/工具块数组');
+      const text = (blocks as Array<{ type?: string; text?: string }>)
+        .filter((block) => block.type === 'text')
+        .map((block) => block.text ?? '')
+        .join('');
+      assert.deepEqual(JSON.parse(text), expected);
+    } finally {
+      // 嵌套 try/finally：即使 session.dispose() 抛错，也保证 budget 与 proxy 清理，且不吞掉错误。
+      try {
+        if (session) await session.dispose();
+      } finally {
+        budget.dispose();
+        await upstreamGate.close();
+      }
+    }
   }
 });

@@ -10,6 +10,7 @@
 | [容器开发](development/dev-container.md) | 准备环境、配置模型、运行 Pi、排查连接问题 |
 | [代码目录说明](development/repository-layout.md) | 查找模块职责和已有代码入口 |
 | [后端实施指南](development/backend-plan.md) | 实施 B0—B6，核对完成条件、测试案例和团队分工 |
+| [分段事实核心](development/segmented-fact-workflow.md) | 查输入、严格合并与未接线边界 |
 | [设计交付接口](development/design-handoff.md) | 查ready／blocked、可信版本与来源、模拟消费者和调用示例 |
 
 测试命令和覆盖范围见 [tests/README.md](../tests/README.md)；协议用法见 [contracts/README.md](../packages/contracts/README.md)。
@@ -26,6 +27,7 @@
 
 | 日期 | 报告 | 记录内容 |
 | --- | --- | --- |
+| 2026-10-18 | [分段核心发布](reports/segmented-release-candidate-2026-10-18.md) | 504＋7 项通过，保留官方设计端既有 45 条类型错误 |
 | 2026-10-12 | [官方源码交接](reports/official-handoff-2026-10-12.md) | 发布副本446＋7项离线测试、隐私排除、同历史交接与CI边界 |
 | 2026-10-12 | [整份真实PDF测试](reports/real-pdf-test-2026-10-12.md) | 客户端4096输出限制截断，未进入审查或返修 |
 | 2026-10-12 | [提取／审查侧交付](reports/design-handoff-2026-10-12.md) | 只读交付、待联调边界、446项主仓库回归、原B5历史消费与保护回写 |

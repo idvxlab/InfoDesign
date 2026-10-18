@@ -177,7 +177,8 @@ test('trusted business profile permits only controlled source tools; default cod
   for (const [profile, name, accepted] of [['coding', 'read_source', false], ['business', 'read_source', true], ['business', 'read_document', true], ['business', 'bash', false]]) {
     let calls = 0;
     const gate = await startBudgetProxy(options({ toolProfile: profile, fetchImpl: async () => { calls++; return ok(); } }));
-    try { const response = await send(gate, { ...payload, tools: [{ type: 'function', function: { name, parameters: {} } }] });
+    const body = { ...payload, max_tokens: 4096, tools: [{ type: 'function', function: { name, parameters: {} } }] };
+    try { const response = await send(gate, body);
       await response.text(); assert.equal(response.status === 200, accepted); assert.equal(calls, accepted ? 1 : 0);
     } finally { await gate.close(); }
   }
@@ -231,8 +232,8 @@ const realRecords = (policy, requests, persistCapture) => {
 };
 
 test('resolveAuthorizedPolicy maps allowed caps to exact frozen safeties', () => {
-  assert.deepEqual(AUTHORIZED_LIMITS, { 2000000: 200000, 10000000: 1000000, 100000000: 10000000, 200000000: 10000000, 300000000: 10000000, 400000000: 10000000 });
-  assert.deepEqual(CUMULATIVE_LIMITS, [100000000, 200000000, 300000000, 400000000]);
+  assert.deepEqual(AUTHORIZED_LIMITS, { 2000000: 200000, 10000000: 1000000, 100000000: 10000000, 200000000: 10000000, 300000000: 10000000, 400000000: 10000000, 450000000: 10000000, 550000000: 10000000 });
+  assert.deepEqual(CUMULATIVE_LIMITS, [100000000, 200000000, 300000000, 400000000, 450000000, 550000000]);
   for (const [limitMicros, safetyMicros] of Object.entries(AUTHORIZED_LIMITS)) {
     const policy = resolveAuthorizedPolicy(Number(limitMicros));
     assert.equal(policy.limitMicros, Number(limitMicros));
@@ -248,7 +249,7 @@ test('resolveAuthorizedPolicy rejects unlisted and non-integer caps', () => {
   assert.throws(() => resolveAuthorizedPolicy(Number.NaN), /invalid_authorized_limit/);
 });
 
-test('cumulative caps 100m, 200m, 300m and 400m all require a configured ledger', () => {
+test('cumulative caps 100m, 200m, 300m, 400m, 450m and 550m all require a configured ledger', () => {
   for (const limitMicros of CUMULATIVE_LIMITS) {
     const policy = resolveAuthorizedPolicy(limitMicros);
     assert.throws(() => validateCumulativeConfig({}, policy, null), /cumulative_ledger_required/);
@@ -266,6 +267,22 @@ test('saved 100m ledger is refused under a new 200m task without reset', () => {
   // Same records under the matching authorizationId still validate and are preserved exactly.
   const same = validateCumulativeConfig({ totalLedgerPath: '/l.json', authorizationId: 'task-100' }, oldPolicy, stored);
   assert.deepEqual(same.previousReservations, records);
+});
+
+test('550 授权仍拒绝旧策略，受信调整仅提高额度且保留全部历史预留', () => {
+  const oldPolicy = resolveAuthorizedPolicy(450000000);
+  const policy = resolveAuthorizedPolicy(550000000);
+  const records = realRecords(oldPolicy, [[100, 16384], [200, 8192]]);
+  const stored = { authorizationId: 'same-authority', policy: oldPolicy, records,
+    reservedMicros: records.reduce((sum, r) => sum + r.reservedMicros, 0) };
+  const config = { totalLedgerPath: '/original/spend.json', authorizationId: stored.authorizationId };
+  assert.throws(() => validateCumulativeConfig(config, policy, stored), /cumulative_authorization_mismatch/);
+  const updated = { ...stored, policy };
+  assert.deepEqual(validateCumulativeConfig(config, policy, updated).previousReservations, records);
+  assert.equal(updated.reservedMicros, stored.reservedMicros);
+  assert.deepEqual({ ...policy, limitMicros: 450000000 }, oldPolicy);
+  assert.equal(policy.safetyMicros, 10000000);
+  assert.throws(() => resolveAuthorizedPolicy(550000001), /invalid_authorized_limit/);
 });
 
 test('malformed records and wrong saved totals are refused', () => {
@@ -347,8 +364,9 @@ test('proxy still rejects intermediate caps above 100m that are not 200m, 300m o
 
 // --- New tests for 400m cumulative authorization (only400CNY) ---
 
-test('proxy accepts a 400m task and preserves prior records after a successful forward', async () => {
-  const policy = resolveAuthorizedPolicy(400000000);
+for (const limitMicros of [400000000, 450000000, 550000000]) {
+test(`proxy accepts a ${limitMicros} task and preserves prior records after a successful forward`, async () => {
+  const policy = resolveAuthorizedPolicy(limitMicros);
   const previous = realRecords(policy, [[10, 100], [20, 200]]);
   const snapshots = [];
   let calls = 0;
@@ -363,6 +381,7 @@ test('proxy accepts a 400m task and preserves prior records after a successful f
     assert.equal(saved.reservedMicros, saved.records.reduce((n, r) => n + r.reservedMicros, 0));
   } finally { await gate.close(); }
 });
+}
 
 test('real near-390m history denies before fetch and keeps all records', async () => {
   const policy = resolveAuthorizedPolicy(400000000);
@@ -376,4 +395,135 @@ test('real near-390m history denies before fetch and keeps all records', async (
     assert.equal(calls, 0);
     assert.deepEqual(gate.state().records, previous);
   } finally { await gate.close(); }
+});
+// --- 显式输出上限：唯一可信 cap 就是 maxOutputTokens；business 只保留 SDK 声明的合法值 ---
+
+test('business cap 16384 保留显式 16384 并在 fetch 前持久为 16384', async () => {
+  let calls = 0, saved;
+  const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384,
+    persist: s => { saved = structuredClone(s); }, fetchImpl: async (_url, init) => {
+      calls++; assert.equal(JSON.parse(init.body).max_tokens, 16384); return ok(); } }));
+  try {
+    const response = await send(gate, { ...payload, max_tokens: 16384 });
+    await response.text();
+    assert.equal(response.status, 200); assert.equal(calls, 1);
+    assert.equal(saved.records[0].requestedOutputTokens, 16384);
+    assert.equal(saved.maxOutputTokens, 16384);
+    assert.equal(gate.state().maxOutputTokens, 16384);
+  } finally { await gate.close(); }
+});
+
+test('business review 8192 与 probe 1024 都不会被抬升为 16384', async () => {
+  for (const declared of [8192, 1024]) {
+    let calls = 0;
+    const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384,
+      fetchImpl: async (_url, init) => { calls++; assert.equal(JSON.parse(init.body).max_tokens, declared); return ok(); } }));
+    try {
+      const response = await send(gate, { ...payload, max_tokens: declared });
+      await response.text();
+      assert.equal(response.status, 200); assert.equal(calls, 1);
+      assert.equal(gate.state().records[0].requestedOutputTokens, declared);
+    } finally { await gate.close(); }
+  }
+});
+
+test('business 显式 max_tokens 会被转换成配置的上游字段名', async () => {
+  const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384,
+    maxTokensField: 'max_completion_tokens', fetchImpl: async (_url, init) => {
+      const sent = JSON.parse(init.body);
+      assert.equal(sent.max_completion_tokens, 8192);
+      assert.equal(sent.max_tokens, undefined);
+      return ok();
+    } }));
+  try {
+    const response = await send(gate, { ...payload, max_tokens: 8192 });
+    await response.text();
+    assert.equal(response.status, 200);
+  } finally { await gate.close(); }
+});
+
+test('business max_completion_tokens 输入会被转换成配置的上游字段名 max_tokens', async () => {
+  const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384,
+    maxTokensField: 'max_tokens', fetchImpl: async (_url, init) => {
+      const sent = JSON.parse(init.body);
+      assert.equal(sent.max_tokens, 4096);
+      assert.equal(sent.max_completion_tokens, undefined);
+      return ok();
+    } }));
+  try {
+    const { max_tokens: _drop, ...rest } = payload;
+    const response = await send(gate, { ...rest, max_completion_tokens: 4096 });
+    await response.text();
+    assert.equal(response.status, 200);
+  } finally { await gate.close(); }
+});
+
+test('business cap 4096 拒绝声明 16384，不 fetch 也不预留', async () => {
+  let calls = 0, saved;
+  const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 4096,
+    persist: s => { saved = structuredClone(s); }, fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate, { ...payload, max_tokens: 16384 });
+    assert.equal(response.status, 502);
+    assert.equal(calls, 0);
+    assert.equal(gate.state().records.length, 0);
+    assert.equal(gate.state().reservedMicros, 0);
+    assert.equal(saved.reservedMicros, 0);
+  } finally { await gate.close(); }
+});
+
+test('business 缺失、零、负数、小数、null、字符串、超 cap 与双字段都在预留/上游前拒绝', async () => {
+  const cases = [
+    (() => { const { max_tokens: _drop, ...rest } = payload; return rest; })(),
+    { ...payload, max_tokens: 0 },
+    { ...payload, max_tokens: -1 },
+    { ...payload, max_tokens: 1.2 },
+    { ...payload, max_tokens: null },
+    { ...payload, max_tokens: '4096' },
+    { ...payload, max_tokens: 16385 },
+    { ...payload, max_tokens: 4096, max_completion_tokens: 4096 },
+  ];
+  for (const body of cases) {
+    let calls = 0, saved;
+    const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384,
+      persist: s => { saved = structuredClone(s); }, fetchImpl: async () => { calls++; return ok(); } }));
+    try {
+      const response = await send(gate, body);
+      assert.notEqual(response.status, 200);
+      assert.equal(calls, 0);
+      assert.equal(gate.state().records.length, 0);
+      assert.equal(gate.state().reservedMicros, 0);
+      assert.equal(saved.reservedMicros, 0);
+    } finally { await gate.close(); }
+  }
+});
+
+test('预算仅够 4096 但不足 16384 时 16384 请求零 fetch 且不预留', async () => {
+  // 用真实 quote 预留获取 4096 的费用，再据此构造容纳 4096 但拒绝 16384 的策略。
+  const contextBytes = Buffer.byteLength(JSON.stringify({ ...payload, max_tokens: 16384 }));
+  const fourK = new RequestSpendBudget({ ...DEV_POLICY, limitMicros: 1_000_000, safetyMicros: 0 }, () => {});
+  fourK.reserve(contextBytes, 4096);
+  const capMicros = fourK.list()[0].reservedMicros;
+  const tight = { ...DEV_POLICY, limitMicros: capMicros, safetyMicros: 0 };
+  let calls = 0;
+  const gate = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384, policy: tight,
+    fetchImpl: async () => { calls++; return ok(); } }));
+  try {
+    const response = await send(gate, { ...payload, max_tokens: 16384 });
+    assert.equal(response.status, 429);
+    assert.equal(calls, 0);
+    assert.equal(gate.state().records.length, 0);
+    assert.equal(gate.state().reservedMicros, 0);
+    assert.equal(gate.state().stopReason, 'spend_budget');
+  } finally { await gate.close(); }
+  // 该 cap 下 4096 仍可成功，证明拒绝确实由 16384 引起。
+  let okCalls = 0;
+  const gate2 = await startBudgetProxy(options({ toolProfile: 'business', maxOutputTokens: 16384, policy: tight,
+    fetchImpl: async () => { okCalls++; return ok(); } }));
+  try {
+    const response = await send(gate2, { ...payload, max_tokens: 4096 });
+    await response.text();
+    assert.equal(response.status, 200);
+    assert.equal(okCalls, 1);
+  } finally { await gate2.close(); }
 });

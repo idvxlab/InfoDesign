@@ -201,3 +201,7 @@ page-renderer/bindings.ts、api/routes/evidence.ts、web/features/evidence/。
 ### 当前交付边界（2026-10-12）
 
 B5已提供[只读设计交付适配](../development/design-handoff.md)，复用事实、审查报告及来源版本／定位。程序区分ready与blocked并验证可信上下文，所有候选仍pending；它不执行正式采纳，也未实现设计端。DesignInput继续拒绝全部输入，设计团队待联调。该进展不代表上文完整生成流程已贯通，证据见[验收报告](../reports/design-handoff-2026-10-12.md)。
+
+## 分段事实实现边界（2026-10-18）
+
+已提供受信分段输入的顺序执行与严格合并核心，各段保留独立 Pi 上下文、候选、审查及来源；聚合不是正式采纳。PDF 切分、原区域映射、失败段恢复和真实全文验收尚未接线。详见[核心说明](../development/segmented-fact-workflow.md)；当前整仓类型阻塞见[状态](../../status.md)。

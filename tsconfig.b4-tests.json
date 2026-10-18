@@ -8,6 +8,7 @@
     "tests/integration/design-handoff.test.ts",
     "tests/helpers/fact-workflow-harness.ts",
     "evals/fixtures/b4-cases.ts",
-    "evals/run-b4.ts"
+    "evals/run-b4.ts",
+    "tests/integration/segmented-fact-workflow.test.ts"
   ]
 }
