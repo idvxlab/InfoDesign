@@ -15,6 +15,8 @@
 
 ## 设计规范
 
+[PageSpec 1.1 输出要素](design/page-spec-v1.1.md)：版本协商、节点/绑定、布局/视觉、交互、计算、检查要求及当前限制；附[完整合成示例](examples/design-contracts-v1.1/README.md)。
+
 先读 [设计概览](design/overview.md)：[需求](design/overview.md#requirements)、[架构](design/overview.md#architecture)、[Agent 协议](design/overview.md#agent-contracts)、[流程](design/overview.md#workflows)、[溯源](design/overview.md#provenance)、[组件扩展](design/overview.md#component-branch)、[验收](design/overview.md#acceptance)。
 
 [项目总方案](design/project-spec.md) 包含完整设计、示例和参考来源，是实施依据。首次接手实现或调整方案时通读；后续按章节查阅。概览用于快速定位，不另设一套协议。

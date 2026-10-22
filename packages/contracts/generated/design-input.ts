@@ -32,7 +32,7 @@ export interface DesignInput {
   version: string;
   contentHash: CommonContentHash;
   components: Array<{
-  id: "page" | "fact_text" | "comparison_matrix" | "disclosure";
+  id: "page" | "fact_text" | "comparison_matrix" | "disclosure" | "section" | "narrative" | "asset_image" | "timeline" | "relation_graph" | "bar_chart" | "tabs" | "derived_value";
   version: "0.1.0";
 }>;
 };
@@ -43,4 +43,16 @@ export interface DesignInput {
   tokens: Array<CommonIdentifier>;
 };
   reviewRef?: DesignReviewRef;
+  pageSpecVersion?: "1.0" | "1.1";
+  resources?: {
+  assets: Array<{
+  assetId: CommonIdentifier;
+  documentId: CommonDocumentId;
+  documentVersionId: CommonIdentifier;
+  blockId: CommonBlockId;
+  resourceId: CommonIdentifier;
+  mediaType: "image/png" | "image/jpeg" | "image/webp";
+  contentHash: CommonContentHash;
+}>;
+};
 }

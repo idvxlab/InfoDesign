@@ -5,7 +5,11 @@ description: "将内容设计编写为受限 PageSpec 主体并保留事实绑�
 
 # 页面规格编写 v1
 
-输出 design-draft 的 informationPlan 和 pageSpec 主体，严格遵守给定 Schema。页面主体只含 state、root、actions、checks，服务补齐引用版本与指纹。
+输出 design-draft 的 informationPlan 和 pageSpec 主体，严格遵守给定 Schema。1.0 主体只含 state、root、actions、checks；服务指定的 1.1 增加 calculations。服务补齐引用版本与指纹，模型不能自行升级协议。
+
+1.1 根节点必须声明 style、accessibility、responsiveLayout.small/large。样式和布局只用授权主题 token，不写 CSS/HTML/JS。section 可分组；narrative 每段有 sourceRefs；asset_image 引用受控素材；timeline、relation_graph、bar_chart 分别绑定事件、关系、逐点事实。tabs 的枚举状态、初始值、选项、直接子节点与 selectValue 动作必须一一对应。derived_value 只引用 percentChange 计算声明，不输出计算值；当前只支持同主体、同属性、同单位和明确相同口径的两个不同年份输入。
+
+这些扩展节点的来源动作使用 eventBoundSource 与对应绑定槽位，实际点击的来源只能从该节点绑定中解析。每个节点声明 responsiveLayout 检查，有事件的节点声明 keyboardAccess；有来源内容声明 evidenceResolvable，并按组件声明 semanticFidelity、assetAvailable、timelineOrder、relationIntegrity、chartComparability、selectionRoundTrip 或 derivedInputs。检查项不代表检查已执行。无法满足目录、证据或资源条件时返回明确停止原因。
 
 节点 ID 唯一，planSectionId 对应计划分区，阅读顺序一致。每个选中的 claim 都应在对应分区展示；claimRef 携带工具返回的 claimVersionId。比较单元格必须同时匹配行 entityId 和列 predicate，不自行抄写数值。
 

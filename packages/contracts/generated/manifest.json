@@ -542,7 +542,9 @@
           "constraints",
           "catalog",
           "theme",
-          "reviewRef"
+          "reviewRef",
+          "pageSpecVersion",
+          "resources"
         ],
         "required": [
           "protocolVersion",
@@ -1121,6 +1123,66 @@
         "required": []
       },
       {
+        "name": "PageSpecLegacyNode",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/legacyNode",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "PageSpecSourceRef",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/sourceRef",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "PageSpecLayout",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/layout",
+        "kind": "def",
+        "properties": [],
+        "required": []
+      },
+      {
+        "name": "PageSpecStyle",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/style",
+        "kind": "def",
+        "properties": [
+          "colorToken",
+          "backgroundToken",
+          "typographyToken",
+          "paddingToken",
+          "borderToken",
+          "radiusToken"
+        ],
+        "required": []
+      },
+      {
+        "name": "PageSpecAccessibility",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/accessibility",
+        "kind": "def",
+        "properties": [
+          "label",
+          "description",
+          "role",
+          "headingLevel"
+        ],
+        "required": []
+      },
+      {
+        "name": "PageSpecResponsiveLayout",
+        "pointer": "urn:tju-mas:contracts:page-spec#/$defs/responsiveLayout",
+        "kind": "def",
+        "properties": [
+          "small",
+          "large"
+        ],
+        "required": [
+          "small",
+          "large"
+        ]
+      },
+      {
         "name": "PageSpec",
         "pointer": "urn:tju-mas:contracts:page-spec",
         "kind": "root",
@@ -1141,7 +1203,8 @@
           "root",
           "actions",
           "checks",
-          "reviewRef"
+          "reviewRef",
+          "calculations"
         ],
         "required": [
           "protocolVersion",

@@ -9,9 +9,10 @@ import type { DesignTaskContext } from '../../../../../packages/contracts/src/de
 export const DRAFT_ID = 'urn:tju-mas:runtime:design-draft';
 const base = 'urn:tju-mas:contracts:';
 type Obj = Record<string, any>;
-export function designDraftProtocol(registry: SchemaRegistry) {
+export function designDraftProtocol(registry: SchemaRegistry, pageSpecVersion: '1.0' | '1.1' = '1.0') {
   const pickBody = (name: string, fields: string[]) => {
     const original = structuredClone(registry.get(base + name)) as Obj;
+    if (name === 'page-spec' && pageSpecVersion === '1.0') Object.assign(original.properties, original.allOf[0].then.properties);
     const properties = Object.fromEntries(fields.map(key => [key, original.properties[key]]));
     function absolute(node: any): void {
       if (!node || typeof node !== 'object') return;
@@ -27,7 +28,11 @@ export function designDraftProtocol(registry: SchemaRegistry) {
   for (const field of ['protocolVersion', 'projectId', 'taskId', 'attemptId', 'inputHash', 'producedBy', 'reviewRef']) delete schema.properties[field];
   schema.required = ['status'];
   schema.properties.informationPlan = pickBody('information-plan', ['audience', 'goal', 'readerQuestions', 'sections', 'omissions', 'openIssues']);
-  schema.properties.pageSpec = pickBody('page-spec', ['state', 'root', 'actions', 'checks']);
+  schema.properties.pageSpec = pickBody('page-spec', ['state', 'root', 'actions', 'checks', ...(pageSpecVersion === '1.1' ? ['calculations'] : [])]);
+  if (pageSpecVersion === '1.1') {
+    schema.properties.pageSpec.required.push('calculations');
+    schema.properties.pageSpec.properties.root.required.push('responsiveLayout', 'style', 'accessibility');
+  }
   const validator = new SchemaRegistry();
   for (const entry of registry.entries()) validator.addSchema(entry.file, structuredClone(entry.schema));
   validator.addSchema('trusted-derived-design-draft', schema); validator.compile();
@@ -63,12 +68,16 @@ export function designPrompt(input: DesignInput, registry: SchemaRegistry, draft
   authoringSchema.$defs = definitions;
   return JSON.stringify({
     instruction: '先 read_design catalog，再按需读取 claim。仅返回符合 design-draft 的 JSON。不要提交身份、版本、指纹或完整快照；程序负责封装。引用事实前必须实际读取。',
-    task: { audience: input.audience, goal: input.goal, constraints: input.constraints, visualGuidance: input.visualGuidance },
+    task: { audience: input.audience, goal: input.goal, constraints: input.constraints, visualGuidance: input.visualGuidance,
+      pageSpecVersion: input.pageSpecVersion ?? '1.0', resources: input.resources },
     index: {
       entities: input.snapshot.entities.map(e => ({ entityId: e.entityId, entityType: e.entityType, label: e.label })),
       claims: input.snapshot.claims.map(c => ({ claimId: c.claimId, entityId: c.entityId, predicate: c.predicate, supportStatus: c.supportStatus, reviewStatus: c.reviewStatus })),
       missing: input.snapshot.missing, conflicts: input.snapshot.conflicts, coverage: input.snapshot.coverage,
       relationCount: input.snapshot.relations?.length ?? 0, eventCount: input.snapshot.events?.length ?? 0, assetCount: input.snapshot.assets?.length ?? 0,
+      relations: input.snapshot.relations?.map(r => ({ relationId: r.relationId, fromEntityId: r.fromEntityId, toEntityId: r.toEntityId, relationType: r.relationType })),
+      events: input.snapshot.events?.map(e => ({ eventId: e.eventId, entityId: e.entityId, eventType: e.eventType })),
+      assets: input.snapshot.assets?.map(a => ({ assetId: a.assetId, documentId: a.documentId })),
     },
     schemas: [authoringSchema],
   });
@@ -88,6 +97,7 @@ export function materializeDesign(raw: unknown, input: DesignInput, trusted: Des
     const plan = { ...body.informationPlan, ...envelope, planId: 'plan_' + suffix, planVersionId: 'planv_' + suffix };
     output.informationPlan = plan;
     output.pageSpec = { ...body.pageSpec, ...envelope, pageSpecId: 'spec_' + suffix, pageSpecVersionId: 'specv_' + suffix,
+      protocolVersion: input.pageSpecVersion ?? '1.0',
       informationPlanRef: { planId: plan.planId, planVersionId: plan.planVersionId, contentHash: fingerprint(plan) },
       componentCatalogRef: { catalogId: input.catalog.catalogId, version: input.catalog.version, contentHash: input.catalog.contentHash },
       themeRef: { themeId: input.theme.themeId, version: input.theme.version, contentHash: input.theme.contentHash } };

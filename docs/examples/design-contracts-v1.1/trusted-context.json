@@ -1,0 +1,139 @@
+{
+  "inputHash": "sha256:4b4a655f81bc45a4c8b3a3f506680d2a06a2b6daa90da51ae81d910513c69888",
+  "design": {
+    "projectId": "project_tju_demo",
+    "taskId": "task_design_test",
+    "attemptId": "attempt_design_test",
+    "snapshotHash": "sha256:892a499d3a4094dd3b739b4d8fc734d3d3ad89fbe203c347763fe3f57ece579d",
+    "allowedSources": [
+      {
+        "kind": "entity",
+        "id": "entity_company_test"
+      },
+      {
+        "kind": "entity",
+        "id": "entity_product_a_placeholder"
+      },
+      {
+        "kind": "entity",
+        "id": "entity_product_b_placeholder"
+      },
+      {
+        "kind": "claim",
+        "id": "claim_business_placeholder"
+      },
+      {
+        "kind": "claim",
+        "id": "claim_parameter_a_placeholder"
+      },
+      {
+        "kind": "claim",
+        "id": "claim_parameter_b_placeholder"
+      },
+      {
+        "kind": "claim",
+        "id": "claim_service_placeholder"
+      },
+      {
+        "kind": "event",
+        "id": "event_start"
+      },
+      {
+        "kind": "relation",
+        "id": "relation_test"
+      },
+      {
+        "kind": "asset",
+        "id": "asset_test"
+      },
+      {
+        "kind": "claim",
+        "id": "claim_old"
+      },
+      {
+        "kind": "claim",
+        "id": "claim_new"
+      }
+    ],
+    "catalog": {
+      "catalogId": "catalog_proposed",
+      "version": "0.1.0",
+      "contentHash": "sha256:149f20f85d18a17adfed378f588844d9d8dd9bd5228c888b0848ded2bdc6ac9f",
+      "components": [
+        {
+          "id": "page",
+          "version": "0.1.0"
+        },
+        {
+          "id": "fact_text",
+          "version": "0.1.0"
+        },
+        {
+          "id": "comparison_matrix",
+          "version": "0.1.0"
+        },
+        {
+          "id": "disclosure",
+          "version": "0.1.0"
+        },
+        {
+          "id": "section",
+          "version": "0.1.0"
+        },
+        {
+          "id": "narrative",
+          "version": "0.1.0"
+        },
+        {
+          "id": "asset_image",
+          "version": "0.1.0"
+        },
+        {
+          "id": "timeline",
+          "version": "0.1.0"
+        },
+        {
+          "id": "relation_graph",
+          "version": "0.1.0"
+        },
+        {
+          "id": "bar_chart",
+          "version": "0.1.0"
+        },
+        {
+          "id": "tabs",
+          "version": "0.1.0"
+        },
+        {
+          "id": "derived_value",
+          "version": "0.1.0"
+        }
+      ]
+    },
+    "theme": {
+      "themeId": "theme_proposed",
+      "version": "0.1.0",
+      "contentHash": "sha256:cdb4297219d8b6c16d671dca5ba2ab59787bbbbd7aa7a0b7383b62c926121e38",
+      "tokens": [
+        "space_section",
+        "width_content",
+        "color_text",
+        "type_body"
+      ]
+    },
+    "pageSpecVersion": "1.1",
+    "resources": {
+      "assets": [
+        {
+          "assetId": "asset_test",
+          "documentId": "doc_profile",
+          "documentVersionId": "docv_profile_1",
+          "blockId": "b002",
+          "resourceId": "resource_test",
+          "mediaType": "image/png",
+          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    }
+  }
+}

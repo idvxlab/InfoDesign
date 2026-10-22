@@ -4,4 +4,4 @@
  * 状态：仅注释占位，尚未实现；不提供模拟成功结果。
  */
 
-export {};
+export { renderPageHtml, type HtmlRenderOptions } from './render-html.ts';

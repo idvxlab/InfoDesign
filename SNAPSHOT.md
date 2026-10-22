@@ -1,29 +1,37 @@
-# 官方源码交接 — 2026-10-12
+# 阶段源码快照 — 2026-10-10
 
-本次交接承接官方仓库`idvxlab/InfoDesign`已有提交`02cb140e257fd481fe1495bf7da8cf7328d06eaa`，不导入私人开发仓库的Git历史。用户确认将原快照分支通过GitHub分支改名机制迁至`main`。当前认证有代码推送权限、无管理员权限，改名仍待管理员完成；本次先向原快照分支沿同一历史追加当前代码。原Mac开发目录、`initial_test_zjt`及其origin保持独立。
+面向 `idvxlab/InfoDesign` 的独立开发分支快照。源码由当前本地工作树中的明确文件清单复制；不包含原仓库 Git 历史。业务实现、测试与锁文件保持源文件字节一致；首页、文档索引和进度说明针对公开快照更新。该快照不会自动同步回原开发目录。
 
 ## 上传范围
 
-受控来源读取及信息提取、独立审查、程序编排的有限返修、本地历史与只读设计交付适配；协议Schema及生成类型、源码、锁文件、合成夹具、容器配置模板、测试和开发／设计文档。通用Pi费用显示扩展及其7项测试一并保留，费率仅为显式标注的估算配置。
+后端／前端源码与占位模块、协议 Schema 和生成类型、PDF 解析器源码、合成测试数据、测试、锁定依赖清单、容器配置模板、设计和开发说明。`snapshot-manifest.json` 记录上传文件的 SHA-256。
 
-业务实现、测试与锁文件逐文件保持当前开发源的字节一致；发布差异只涉及文档清理、导航和阶段说明。`snapshot-manifest.json`记录发布文件SHA-256，清单自身除外。
+排除：所有原 Git 历史、真实文档与 PDF／图片、`.env`（空值模板 `.env.example` 除外）、模型凭据与本地模型配置、`.local-data/`、Pi 会话和日志、账单、历史运行报告、缓存、依赖目录、二进制产物，以及个人 Pi 费用显示扩展及其专用测试。包含的原始文本均为虚构测试夹具；没有从原始企业资料复制内容。
 
-排除真实PDF／图片及其提取结果、私有HTML、凭据、非空`.env`、持久认证与模型配置、`.local-data/`、会话日志、原始账本、依赖、缓存和运行产物。历史报告只保留工程结论与统计，真实文件名称、私人交付标识和来源指纹已移除；完整私有证据不随仓库发布。
+## verification
 
-## 本次复验
+即将上传的精确快照已在隔离、无外网的本地容器中一次运行通过 245/245 项测试，并通过类型、生成一致性和协议检查。覆盖：
 
-在隔离、断网、无凭据、只读源码容器中执行：
+- 既有 175 项回归。
+- SourceBundle 33 项与 `read_source` 22 项，共 55 项。
+- 审查运行时 15 项。
+- 严格项目 TypeScript、生成类型一致性及协议检查。
+- 真实本地解析器生成的纯合成来源包读取：4 页、11 块、1 表、2 处图片引用。
 
-```text
-pnpm test                                      # 446/446
-pnpm check:types                               # 三组通过
-pnpm check:generated                           # 22文件一致
-pnpm check:contracts                           # 20 Schema、217引用、9正例／16负例
-node --test tests/dev-tools/pi-rmb-cost.test.mjs # 7/7
+以下为仓库开发容器准备完成后的复现命令，不触发真实模型：
+
+```bash
+bash scripts/dev-container.sh exec pnpm test
+bash scripts/dev-container.sh exec pnpm check:types
+bash scripts/dev-container.sh exec pnpm check:generated
+bash scripts/dev-container.sh exec pnpm check:contracts
+bash scripts/dev-container.sh exec node --test tests/integration/source-bundle.test.ts tests/integration/read-source.test.ts tests/integration/review-runtime.test.ts
 ```
 
-Node.js 24.11.1、pnpm 11.3.0、Pi SDK 0.99.1、TypeScript 5.9.3。使用既有完整依赖镜像，未安装新依赖或启动真实模型。解析器源码相对已有官方快照未改动，本次没有重跑其历史Python验证。项目尚无完整产品build；GitHub工作流仅为手动触发且明确失败的占位，不能称为CI通过。详细验证见[交接记录](docs/reports/official-handoff-2026-10-12.md)。
+Pi SDK 0.99.1、Node.js 24.11.1、pnpm 11.3.0、TypeScript 5.9.3。HTTPS 代理回归需要 OpenSSL 与系统中存在的容器用户；标准开发镜像提供该环境。本轮没有运行新的完整产品构建；根脚本尚无可用的产品 `build` 命令。解析器已有历史独立验证，本次快照准备未重跑其 Python 测试或安装依赖。GitHub 工作流仅为手动触发、明确失败的占位，不自动部署或调用模型。
 
-## 当前边界
+## 未完成与边界
 
-设计交付仍待设计团队联调，ready不等于事实采纳；设计Agent、正式设计协议、HTTP、生产保存与完整页面尚未完成。最新14页真实PDF任务因本项目客户端4096输出Token配置截断，未生成有效候选、未进入独立审查或返修；模型实际最大输出能力未知。历史B4 v12七类验收不能当作当前v14同版七类通过。详见[当前状态](status.md)、[交付接口](docs/development/design-handoff.md)与[真实PDF记录](docs/reports/real-pdf-test-2026-10-12.md)。
+`read_source` 已校验身份、来源完整性、授权范围和输出结构，返回原文、物理位置、候选表格及图像引用；它没有 OCR 或图像语义能力。图片保持 `not_run`，表格保持 `candidate_not_reviewed`。它尚未接入 EvidenceAgent。独立审查仅具备运行时基础，完整 B4 Agent 与语义验收仍待实现。B3 的程序检查与历史合成实测不能替代独立审查，也不能证明完整多模态产品可用。设计、页面、持久化及完整工作流仍未完成。
+
+原始运行日志、真实材料和账单未随公开快照上传。文档中的历史报告链接统一指向本说明，避免将私有运行记录作为公开文件引用。公开快照上传不新增任何真实模型或资料出站授权。

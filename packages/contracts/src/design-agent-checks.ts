@@ -29,6 +29,14 @@ export function checkDesignInput(value: unknown, registry: SchemaRegistry, trust
     return { ok: false, issues: [{ code: 'design.context_invalid', message: 'Missing trusted design task context' }] };
   }
   const context = trusted.design;
+  if ((input.pageSpecVersion ?? '1.0') !== (context.pageSpecVersion ?? '1.0')) fail('design.page_protocol', 'pageSpecVersion');
+  if (fingerprint(input.resources ?? null) !== fingerprint(context.resources ?? null)) fail('design.resources_mismatch', 'resources');
+  const assets = input.resources?.assets ?? [];
+  if (new Set(assets.map(a => a.assetId)).size !== assets.length || new Set(assets.map(a => a.resourceId)).size !== assets.length) fail('design.duplicate_asset_resource', 'resources');
+  for (const resource of assets) {
+    const asset = input.snapshot.assets?.find(a => a.assetId === resource.assetId);
+    if (!asset || asset.documentId !== resource.documentId || asset.documentVersionId !== resource.documentVersionId || asset.blockId !== resource.blockId) fail('design.asset_unavailable', resource.assetId);
+  }
   if (fingerprint(input) !== trusted.inputHash) fail('design.input_hash', 'input');
   for (const field of ['projectId', 'taskId', 'attemptId'] as const)
     if (input[field] !== context[field]) fail('design.context_mismatch', field);

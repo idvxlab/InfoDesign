@@ -1,0 +1,410 @@
+{
+  "protocolVersion": "1.0",
+  "projectId": "project_tju_demo",
+  "taskId": "task_design_test",
+  "attemptId": "attempt_design_test",
+  "taskType": "generate",
+  "snapshot": {
+    "protocolVersion": "1.0",
+    "snapshotId": "snap_facts_001",
+    "snapshotVersionId": "snapv_facts_001",
+    "projectId": "project_tju_demo",
+    "taskId": "task_facts_001",
+    "attemptId": "attempt_facts_001",
+    "entities": [
+      {
+        "entityId": "entity_company_test",
+        "entityType": "organization",
+        "label": "协议测试主体"
+      },
+      {
+        "entityId": "entity_product_a_placeholder",
+        "entityType": "product",
+        "label": "测试对象 A"
+      },
+      {
+        "entityId": "entity_product_b_placeholder",
+        "entityType": "product",
+        "label": "测试对象 B"
+      }
+    ],
+    "claims": [
+      {
+        "claimId": "claim_business_placeholder",
+        "claimVersionId": "claim_business_placeholder_v1",
+        "entityId": "entity_company_test",
+        "predicate": "business",
+        "value": {
+          "type": "text",
+          "text": "仅用于协议校验的测试文本"
+        },
+        "qualifiers": {
+          "basis": "纯合成测试，不代表客户事实"
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ],
+        "supportStatus": "supported",
+        "reviewStatus": "passed"
+      },
+      {
+        "claimId": "claim_parameter_a_placeholder",
+        "claimVersionId": "claim_parameter_a_placeholder_v1",
+        "entityId": "entity_product_a_placeholder",
+        "predicate": "test_parameter",
+        "value": {
+          "type": "quantity",
+          "normalized": 10,
+          "unit": "mm"
+        },
+        "qualifiers": {
+          "basis": "纯合成测试，不代表客户事实"
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ],
+        "supportStatus": "supported",
+        "reviewStatus": "passed"
+      },
+      {
+        "claimId": "claim_parameter_b_placeholder",
+        "claimVersionId": "claim_parameter_b_placeholder_v1",
+        "entityId": "entity_product_b_placeholder",
+        "predicate": "test_parameter",
+        "value": {
+          "type": "quantity",
+          "normalized": 20,
+          "unit": "mm"
+        },
+        "qualifiers": {
+          "basis": "纯合成测试，不代表客户事实"
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ],
+        "supportStatus": "supported",
+        "reviewStatus": "passed"
+      },
+      {
+        "claimId": "claim_service_placeholder",
+        "claimVersionId": "claim_service_placeholder_v1",
+        "entityId": "entity_company_test",
+        "predicate": "service",
+        "value": {
+          "type": "text",
+          "text": "仅用于协议校验的测试服务"
+        },
+        "qualifiers": {
+          "basis": "纯合成测试，不代表客户事实"
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ],
+        "supportStatus": "supported",
+        "reviewStatus": "passed"
+      },
+      {
+        "claimId": "claim_old",
+        "claimVersionId": "claim_old_v1",
+        "entityId": "entity_product_a_placeholder",
+        "predicate": "test_parameter",
+        "value": {
+          "type": "quantity",
+          "normalized": 10,
+          "unit": "mm"
+        },
+        "qualifiers": {
+          "basis": "年度末同口径",
+          "time": {
+            "year": 2020
+          }
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ],
+        "supportStatus": "supported",
+        "reviewStatus": "passed"
+      },
+      {
+        "claimId": "claim_new",
+        "claimVersionId": "claim_new_v1",
+        "entityId": "entity_product_a_placeholder",
+        "predicate": "test_parameter",
+        "value": {
+          "type": "quantity",
+          "normalized": 15,
+          "unit": "mm"
+        },
+        "qualifiers": {
+          "basis": "年度末同口径",
+          "time": {
+            "year": 2021
+          }
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ],
+        "supportStatus": "supported",
+        "reviewStatus": "passed"
+      }
+    ],
+    "evidence": [
+      {
+        "evidenceId": "ev_founded",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "成立于 2018 年",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_registered",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "注册地为天津市滨海新区",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_product",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b003",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 2
+        },
+        "excerpt": "智检云",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_rd_60",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b004",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 3
+        },
+        "excerpt": "研发人员 60 人",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_revenue",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b004",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 3
+        },
+        "excerpt": "营业收入 1200 万元",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_rd_55",
+        "documentId": "doc_update",
+        "documentVersionId": "docv_update_1",
+        "blockId": "b002",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "excerpt": "研发人员 55 人",
+        "confidence": "high"
+      },
+      {
+        "evidenceId": "ev_office",
+        "documentId": "doc_update",
+        "documentVersionId": "docv_update_1",
+        "blockId": "b003",
+        "locator": {
+          "kind": "paragraph",
+          "paragraphIndex": 2
+        },
+        "excerpt": "海河教育园区",
+        "confidence": "high"
+      }
+    ],
+    "conflicts": [],
+    "missing": [],
+    "coverage": {
+      "documentsProcessed": [
+        {
+          "documentId": "doc_profile",
+          "documentVersionId": "docv_profile_1",
+          "blockIds": [
+            "b001",
+            "b002",
+            "b003",
+            "b004"
+          ]
+        },
+        {
+          "documentId": "doc_update",
+          "documentVersionId": "docv_update_1",
+          "blockIds": [
+            "b001",
+            "b002",
+            "b003"
+          ]
+        }
+      ]
+    },
+    "reviewStatus": "passed",
+    "producedBy": {
+      "role": "evidence",
+      "model": "synthetic-fixture",
+      "sessionId": "session_fixture",
+      "protocolVersion": "1.0",
+      "promptVersion": "fixture-v1"
+    },
+    "createdAt": "2025-01-10T08:00:00Z",
+    "relations": [
+      {
+        "relationId": "relation_test",
+        "fromEntityId": "entity_company_test",
+        "toEntityId": "entity_product_a_placeholder",
+        "relationType": "provides",
+        "evidenceRefs": [
+          "ev_founded"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "eventId": "event_start",
+        "entityId": "entity_company_test",
+        "eventType": "established",
+        "description": "合成事件",
+        "time": {
+          "year": 2020
+        },
+        "evidenceRefs": [
+          "ev_founded"
+        ]
+      }
+    ],
+    "assets": [
+      {
+        "assetId": "asset_test",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b002",
+        "location": {
+          "kind": "paragraph",
+          "paragraphIndex": 1
+        },
+        "description": "合成图片"
+      }
+    ]
+  },
+  "snapshotRef": {
+    "snapshotId": "snap_facts_001",
+    "snapshotVersionId": "snapv_facts_001",
+    "contentHash": "sha256:892a499d3a4094dd3b739b4d8fc734d3d3ad89fbe203c347763fe3f57ece579d"
+  },
+  "audience": {
+    "role": "潜在客户与技术选型人员",
+    "needs": [
+      "了解企业提供什么",
+      "比较产品参数",
+      "了解可提供的技术服务"
+    ]
+  },
+  "goal": "帮助读者建立业务全景，并找到适合继续了解的产品或服务",
+  "visualGuidance": [],
+  "constraints": {
+    "language": "zh-CN",
+    "maxSections": 10,
+    "maxNodes": 50
+  },
+  "catalog": {
+    "catalogId": "catalog_proposed",
+    "version": "0.1.0",
+    "contentHash": "sha256:149f20f85d18a17adfed378f588844d9d8dd9bd5228c888b0848ded2bdc6ac9f",
+    "components": [
+      {
+        "id": "page",
+        "version": "0.1.0"
+      },
+      {
+        "id": "fact_text",
+        "version": "0.1.0"
+      },
+      {
+        "id": "comparison_matrix",
+        "version": "0.1.0"
+      },
+      {
+        "id": "disclosure",
+        "version": "0.1.0"
+      },
+      {
+        "id": "section",
+        "version": "0.1.0"
+      },
+      {
+        "id": "narrative",
+        "version": "0.1.0"
+      },
+      {
+        "id": "asset_image",
+        "version": "0.1.0"
+      },
+      {
+        "id": "timeline",
+        "version": "0.1.0"
+      },
+      {
+        "id": "relation_graph",
+        "version": "0.1.0"
+      },
+      {
+        "id": "bar_chart",
+        "version": "0.1.0"
+      },
+      {
+        "id": "tabs",
+        "version": "0.1.0"
+      },
+      {
+        "id": "derived_value",
+        "version": "0.1.0"
+      }
+    ]
+  },
+  "theme": {
+    "themeId": "theme_proposed",
+    "version": "0.1.0",
+    "contentHash": "sha256:cdb4297219d8b6c16d671dca5ba2ab59787bbbbd7aa7a0b7383b62c926121e38",
+    "tokens": [
+      "space_section",
+      "width_content",
+      "color_text",
+      "type_body"
+    ]
+  },
+  "resources": {
+    "assets": [
+      {
+        "assetId": "asset_test",
+        "documentId": "doc_profile",
+        "documentVersionId": "docv_profile_1",
+        "blockId": "b002",
+        "resourceId": "resource_test",
+        "mediaType": "image/png",
+        "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ]
+  },
+  "pageSpecVersion": "1.1"
+}

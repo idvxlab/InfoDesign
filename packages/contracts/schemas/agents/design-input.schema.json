@@ -133,7 +133,15 @@
                   "page",
                   "fact_text",
                   "comparison_matrix",
-                  "disclosure"
+                  "disclosure",
+                  "section",
+                  "narrative",
+                  "asset_image",
+                  "timeline",
+                  "relation_graph",
+                  "bar_chart",
+                  "tabs",
+                  "derived_value"
                 ]
               },
               "version": {
@@ -147,7 +155,7 @@
             "additionalProperties": false
           },
           "minItems": 0,
-          "maxItems": 4
+          "maxItems": 12
         }
       },
       "required": [
@@ -190,6 +198,66 @@
     },
     "reviewRef": {
       "$ref": "urn:tju-mas:contracts:design-review-ref"
+    },
+    "pageSpecVersion": {
+      "enum": [
+        "1.0",
+        "1.1"
+      ]
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "assetId": {
+                "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+              },
+              "documentId": {
+                "$ref": "urn:tju-mas:contracts:common#/$defs/documentId"
+              },
+              "documentVersionId": {
+                "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+              },
+              "blockId": {
+                "$ref": "urn:tju-mas:contracts:common#/$defs/blockId"
+              },
+              "resourceId": {
+                "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+              },
+              "mediaType": {
+                "enum": [
+                  "image/png",
+                  "image/jpeg",
+                  "image/webp"
+                ]
+              },
+              "contentHash": {
+                "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+              }
+            },
+            "required": [
+              "assetId",
+              "documentId",
+              "documentVersionId",
+              "blockId",
+              "resourceId",
+              "mediaType",
+              "contentHash"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "assets"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [

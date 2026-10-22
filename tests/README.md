@@ -23,6 +23,8 @@ pnpm check:contracts
 
 `integration/lineage.test.ts`、`workflows.test.ts` 仍为注释占位。
 普通测试不访问外部模型，也不启动业务 API；合成资料见 `fixtures/synthetic/`。
+
+2026-10-20：`integration/pagespec-extensions.test.ts` 新增 40 项 PageSpec 1.1 正反例及完整示例验证；设计 SDK 现为 20 项（模拟网关）。默认回归实际 320/320 通过。`pnpm check:types:design` 提供设计范围类型检查，不替代因上游缺文件而失败的完整服务端检查。实际容器命令、环境问题和限制见 [1.1 验证报告](../docs/reports/page-spec-v1.1-2026-10-20.md)。
 真实验收的独立显式入口与本轮结果见 `../docs/reports/b2-runtime-2026-10-10.md`。
 
 模拟输出测试与真实模型接入测试分别验证，不能互相替代。真实模型验证需要明确授权，失败不自动重跑。

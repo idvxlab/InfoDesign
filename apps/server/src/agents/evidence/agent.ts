@@ -10,15 +10,8 @@ import type { TransportDiagnostics } from '../../runtime/pi/transport-diagnostic
 import { createBusinessSession } from '../../runtime/pi/session-factory.ts';
 import { createEvidenceTools } from '../../tools/evidence.tools.ts';
 import { validateEvidenceCandidate } from '../../domain/result-validator.ts';
-import { validateRepairPreservation } from '../../domain/repair-validator.ts';
-import type { SourceBundle } from '../../domain/source-bundle.ts';
-import { verifyPdfSources } from '../../domain/evidence-source-policy.ts';
 import type { CandidateStore } from '../../domain/evidence.service.ts';
-import {
-  prepareEvidenceInput, newCandidateEnvelope, nextCandidateEnvelope, evidenceTaskPrompt,
-  repairCandidateEnvelope, evidenceRepairPrompt,
-  type CandidateEnvelope, type EvidenceRepairRequest,
-} from './context.ts';
+import { prepareEvidenceInput, newCandidateEnvelope, nextCandidateEnvelope, evidenceTaskPrompt } from './context.ts';
 
 export interface EvidenceOutcome {
   status: EvidenceOutput['status'];
@@ -51,13 +44,9 @@ export async function runEvidenceAgent(options: {
   maxRepairRounds?: 0 | 1;
   /** 可信验收／服务调用方提供；模型输入无法设置或扩大费用授权。 */
   spendBudget?: RequestSpendBudget;
-  /** 可信服务提供的已验证 SourceBundle；模型无法伪造或借此扩权。缺省时保持 legacy read_document。 */
-  sourceBundles?: SourceBundle[];
-  /** 语义返修请求；提供时本轮不执行结构自修正，且不计入结构修复额度。 */
-  repair?: EvidenceRepairRequest;
   signal?: AbortSignal;
 }): Promise<EvidenceOutcome> {
-  const maxRepairRounds = options.repair ? 0 : (options.maxRepairRounds ?? 1);
+  const maxRepairRounds = options.maxRepairRounds ?? 1;
   if (maxRepairRounds !== 0 && maxRepairRounds !== 1) throw new Error('invalid_repair_budget');
   const started = Date.now(), trace = new RuntimeTrace();
   const budget = new ExecutionBudget(options.limits ?? EVIDENCE_LIMITS, options.signal, 'evidence', options.spendBudget);
@@ -72,12 +61,8 @@ export async function runEvidenceAgent(options: {
   let unsubscribe: (() => void) | undefined;
   try {
     budget.check();
-    const input = prepareEvidenceInput(options.input, options.registry, options.sourceBundles);
-    // 已验证源仅用于目录模态/prompt 与候选校验；不泄漏原文。
-    const verified = options.sourceBundles && options.sourceBundles.length
-      ? verifyPdfSources(options.sourceBundles, input.documents)
-      : undefined;
-    reader = createEvidenceTools({ scope: input.scope, documents: input.documents, bundles: options.sourceBundles }, options.registry, budget);
+    const input = prepareEvidenceInput(options.input, options.registry);
+    reader = createEvidenceTools({ scope: input.scope, documents: input.documents }, options.registry, budget);
     outcome.reason = 'initialization_failed';
     handle = await createBusinessSession(options.config, reader.tool, budget, 'evidence');
     outcome.transport = handle.transport;
@@ -86,29 +71,11 @@ export async function runEvidenceAgent(options: {
       trace.observe(event);
       if (event.type === 'message_end' && event.message.role === 'assistant') budget.observeModelUsage(event.message.usage);
     });
-    let envelope: CandidateEnvelope;
-    const repair = options.repair;
-    if (repair) {
-      // 语义返修运行在本次真实 Pi 会话中，provenance 必须记录当前会话与当前模型，
-      // 不得沿用旧候选快照的 producedBy（旧 artifact 的 provenance 保持不变）。
-      envelope = repairCandidateEnvelope({
-        snapshotId: repair.previous.candidateSnapshot.snapshotId,
-        snapshotVersionId: repair.previous.candidateSnapshot.snapshotVersionId,
-        createdAt: repair.previous.candidateSnapshot.createdAt,
-        producedBy: {
-          role: 'evidence', protocolVersion: '1.0', model: options.config.modelId,
-          sessionId: 'session_' + handle.session.sessionId.replaceAll('-', ''), promptVersion: 'evidence_repair_v1',
-        },
-      }, repair.parentVersionId);
-    } else {
-      envelope = newCandidateEnvelope({
-        role: 'evidence', protocolVersion: '1.0', model: options.config.modelId,
-        sessionId: 'session_' + handle.session.sessionId.replaceAll('-', ''), promptVersion: 'evidence_b3_v4',
-      });
-    }
-    let prompt = repair
-      ? evidenceRepairPrompt(input, repair, envelope, options.registry, budget.limits, verified)
-      : evidenceTaskPrompt(input, envelope, options.registry, budget.limits, verified);
+    let envelope = newCandidateEnvelope({
+      role: 'evidence', protocolVersion: '1.0', model: options.config.modelId,
+      sessionId: 'session_' + handle.session.sessionId.replaceAll('-', ''), promptVersion: 'evidence_b3_v4',
+    });
+    let prompt = evidenceTaskPrompt(input, envelope, options.registry, budget.limits);
     let previous: unknown;
     const saveCandidate = (rawOutput: string, issues: CheckIssue[], parsed?: unknown): boolean => {
       try {
@@ -160,10 +127,7 @@ export async function runEvidenceAgent(options: {
       }
       if (parsed !== undefined) {
         outcome.reason = 'validation_failed';
-        issues = validateEvidenceCandidate(parsed, input, envelope, reader.receipts, options.registry, repair ? undefined : previous, options.sourceBundles, repair ? { allowUpdate: true } : undefined).issues;
-        if (repair) {
-          issues = issues.concat(validateRepairPreservation(parsed, repair.previous, repair.parentVersionId, repair.allowedChangeClaimIds, repair.withdrawalPermits ?? []).issues);
-        }
+        issues = validateEvidenceCandidate(parsed, input, envelope, reader.receipts, options.registry, previous).issues;
       }
       budget.check();
       if (!saveCandidate(rawOutput, issues, parsed)) break;

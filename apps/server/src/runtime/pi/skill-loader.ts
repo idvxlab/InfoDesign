@@ -13,6 +13,7 @@ export async function loadDesignResources(workspace: string, settingsManager: Se
     new URL('../../agents/design/prompt.md', import.meta.url),
     new URL('../../../../../skills/information-planning/SKILL.md', import.meta.url),
     new URL('../../../../../skills/visual-design/SKILL.md', import.meta.url),
+    new URL('../../../../../design-references/visual-presets/DESIGN.md', import.meta.url),
     new URL('../../../../../skills/page-spec-authoring/SKILL.md', import.meta.url),
   ];
   const instructions = await Promise.all(files.map(file => readFile(file, 'utf8')));

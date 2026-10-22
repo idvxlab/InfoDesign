@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "skipLibCheck": true },
+  "include": ["../packages/page-renderer/src/**/*.ts", "../scripts/render-preview*.ts", "integration/page-renderer.test.ts"]
+}

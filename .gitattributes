@@ -1,0 +1,4 @@
+# These synthetic source bytes are covered by committed SHA-256 fixtures.
+tests/fixtures/synthetic/raw/*.txt text eol=lf
+# The generator emits LF; exact-byte --check must behave the same on Windows.
+packages/contracts/generated/* text eol=lf

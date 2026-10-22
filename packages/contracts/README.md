@@ -75,6 +75,8 @@ Schema 或服务层检查（例如日期格式、非空列表和引用关系）�
 
 ## 常用命令
 
+PageSpec 1.1 已补充布局/视觉、来源内容、状态/动作与检查要求，兼容 1.0；说明见 [输出协议](../../docs/design/page-spec-v1.1.md)。`src/page-spec-extensions.ts` 实施新增服务检查；生成类型不能代替服务检查或实际页面验收。
+
 ```bash
 pnpm generate:types     # 生成 packages/contracts/generated/
 pnpm check:generated    # 只比较生成类型是否与 Schema 一致

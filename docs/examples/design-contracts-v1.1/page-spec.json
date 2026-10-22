@@ -1,0 +1,672 @@
+{
+  "snapshotRef": {
+    "snapshotId": "snap_facts_001",
+    "snapshotVersionId": "snapv_facts_001",
+    "contentHash": "sha256:892a499d3a4094dd3b739b4d8fc734d3d3ad89fbe203c347763fe3f57ece579d"
+  },
+  "informationPlanRef": {
+    "planId": "plan_test",
+    "planVersionId": "plan_test_v1",
+    "contentHash": "sha256:ec037955d8b9dab793d40f6e5c53731de4d30c2fd5f291596a80a681541f1b99"
+  },
+  "componentCatalogRef": {
+    "catalogId": "catalog_proposed",
+    "version": "0.1.0",
+    "contentHash": "sha256:149f20f85d18a17adfed378f588844d9d8dd9bd5228c888b0848ded2bdc6ac9f"
+  },
+  "themeRef": {
+    "themeId": "theme_proposed",
+    "version": "0.1.0",
+    "contentHash": "sha256:cdb4297219d8b6c16d671dca5ba2ab59787bbbbd7aa7a0b7383b62c926121e38"
+  },
+  "state": [
+    {
+      "stateId": "state_service_expanded",
+      "type": "boolean",
+      "initialValue": false
+    },
+    {
+      "stateId": "state_tab",
+      "type": "enum",
+      "allowedValues": [
+        "tab_service"
+      ],
+      "initialValue": "tab_service"
+    }
+  ],
+  "root": {
+    "nodeId": "node_page",
+    "componentRef": {
+      "id": "page",
+      "version": "0.1.0"
+    },
+    "props": {
+      "lang": "zh-CN"
+    },
+    "layout": {
+      "type": "stack",
+      "gapToken": "space_section",
+      "widthToken": "width_content"
+    },
+    "children": [
+      {
+        "nodeId": "node_section",
+        "planSectionId": "section_overview",
+        "componentRef": {
+          "id": "section",
+          "version": "0.1.0"
+        },
+        "props": {
+          "title": "合成内容",
+          "headingLevel": 2
+        },
+        "bindings": {},
+        "layout": {
+          "type": "grid",
+          "columns": 2,
+          "gapToken": "space_section",
+          "widthToken": "width_content"
+        },
+        "children": [
+          {
+            "nodeId": "node_overview",
+            "planSectionId": "section_overview",
+            "componentRef": {
+              "id": "fact_text",
+              "version": "0.1.0"
+            },
+            "props": {
+              "title": "业务概览",
+              "headingLevel": 1
+            },
+            "bindings": {
+              "body": {
+                "kind": "claimValue",
+                "claimRef": {
+                  "kind": "claim",
+                  "id": "claim_business_placeholder",
+                  "claimVersionId": "claim_business_placeholder_v1"
+                },
+                "format": {
+                  "unit": "source",
+                  "qualifiers": "visible"
+                }
+              }
+            },
+            "events": {
+              "sourceRequested": "action_overview_source"
+            }
+          },
+          {
+            "nodeId": "node_summary",
+            "planSectionId": "section_overview",
+            "componentRef": {
+              "id": "narrative",
+              "version": "0.1.0"
+            },
+            "props": {
+              "title": "合成内容",
+              "headingLevel": 2
+            },
+            "bindings": {
+              "paragraphs": [
+                {
+                  "paragraphId": "paragraph_test",
+                  "text": "仅用于测试的资料概括",
+                  "sourceRefs": [
+                    {
+                      "kind": "claim",
+                      "id": "claim_business_placeholder",
+                      "claimVersionId": "claim_business_placeholder_v1"
+                    }
+                  ]
+                }
+              ]
+            },
+            "events": {
+              "sourceRequested": "action_node_summary"
+            }
+          },
+          {
+            "nodeId": "node_image",
+            "planSectionId": "section_overview",
+            "componentRef": {
+              "id": "asset_image",
+              "version": "0.1.0"
+            },
+            "props": {
+              "alt": "合成图片",
+              "fit": "contain"
+            },
+            "bindings": {
+              "asset": {
+                "kind": "asset",
+                "id": "asset_test"
+              }
+            },
+            "events": {
+              "sourceRequested": "action_node_image"
+            }
+          },
+          {
+            "nodeId": "node_timeline",
+            "planSectionId": "section_overview",
+            "componentRef": {
+              "id": "timeline",
+              "version": "0.1.0"
+            },
+            "props": {
+              "title": "合成内容",
+              "headingLevel": 2,
+              "order": "ascending",
+              "missingTime": "separate"
+            },
+            "bindings": {
+              "items": [
+                {
+                  "itemId": "item_start",
+                  "eventRef": {
+                    "kind": "event",
+                    "id": "event_start"
+                  }
+                }
+              ]
+            },
+            "events": {
+              "sourceRequested": "action_node_timeline"
+            }
+          },
+          {
+            "nodeId": "node_relations",
+            "planSectionId": "section_overview",
+            "componentRef": {
+              "id": "relation_graph",
+              "version": "0.1.0"
+            },
+            "props": {
+              "title": "合成内容",
+              "headingLevel": 2,
+              "direction": "leftToRight"
+            },
+            "bindings": {
+              "edges": [
+                {
+                  "edgeId": "edge_test",
+                  "relationRef": {
+                    "kind": "relation",
+                    "id": "relation_test"
+                  }
+                }
+              ]
+            },
+            "events": {
+              "sourceRequested": "action_node_relations"
+            }
+          },
+          {
+            "nodeId": "node_derived",
+            "planSectionId": "section_overview",
+            "componentRef": {
+              "id": "derived_value",
+              "version": "0.1.0"
+            },
+            "props": {
+              "label": "相对变化率"
+            },
+            "bindings": {
+              "derived": {
+                "calculationId": "calc_growth",
+                "showInputs": true
+              }
+            },
+            "events": {
+              "sourceRequested": "action_node_derived"
+            }
+          }
+        ]
+      },
+      {
+        "nodeId": "node_products",
+        "planSectionId": "section_products",
+        "componentRef": {
+          "id": "comparison_matrix",
+          "version": "0.1.0"
+        },
+        "props": {
+          "title": "产品比较",
+          "headingLevel": 2,
+          "missingValueLabel": "资料未提供",
+          "ranking": "none"
+        },
+        "bindings": {
+          "rows": {
+            "kind": "comparisonRows",
+            "columns": [
+              {
+                "columnId": "column_parameter",
+                "label": "待选定的同类参数",
+                "predicate": "test_parameter"
+              }
+            ],
+            "items": [
+              {
+                "rowId": "row_product_a",
+                "entityRef": {
+                  "kind": "entity",
+                  "id": "entity_product_a_placeholder"
+                },
+                "cells": [
+                  {
+                    "columnId": "column_parameter",
+                    "claimRef": {
+                      "kind": "claim",
+                      "id": "claim_parameter_a_placeholder",
+                      "claimVersionId": "claim_parameter_a_placeholder_v1"
+                    },
+                    "format": {
+                      "unit": "source",
+                      "qualifiers": "visible"
+                    }
+                  }
+                ]
+              },
+              {
+                "rowId": "row_product_b",
+                "entityRef": {
+                  "kind": "entity",
+                  "id": "entity_product_b_placeholder"
+                },
+                "cells": [
+                  {
+                    "columnId": "column_parameter",
+                    "claimRef": {
+                      "kind": "claim",
+                      "id": "claim_parameter_b_placeholder",
+                      "claimVersionId": "claim_parameter_b_placeholder_v1"
+                    },
+                    "format": {
+                      "unit": "source",
+                      "qualifiers": "visible"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "responsive": {
+          "small": {
+            "mode": "cards"
+          },
+          "large": {
+            "mode": "table"
+          }
+        },
+        "events": {
+          "sourceRequested": "action_parameter_source"
+        }
+      },
+      {
+        "nodeId": "node_chart",
+        "planSectionId": "section_products",
+        "componentRef": {
+          "id": "bar_chart",
+          "version": "0.1.0"
+        },
+        "props": {
+          "title": "合成内容",
+          "headingLevel": 2,
+          "baseline": "zero",
+          "missingValue": "omit"
+        },
+        "bindings": {
+          "points": [
+            {
+              "pointId": "point_a",
+              "claimRef": {
+                "kind": "claim",
+                "id": "claim_parameter_a_placeholder",
+                "claimVersionId": "claim_parameter_a_placeholder_v1"
+              }
+            },
+            {
+              "pointId": "point_b",
+              "claimRef": {
+                "kind": "claim",
+                "id": "claim_parameter_b_placeholder",
+                "claimVersionId": "claim_parameter_b_placeholder_v1"
+              }
+            }
+          ]
+        },
+        "events": {
+          "sourceRequested": "action_node_chart"
+        }
+      },
+      {
+        "nodeId": "node_tabs",
+        "planSectionId": "section_services",
+        "componentRef": {
+          "id": "tabs",
+          "version": "0.1.0"
+        },
+        "props": {
+          "title": "合成内容",
+          "headingLevel": 2
+        },
+        "bindings": {
+          "selected": {
+            "kind": "state",
+            "stateId": "state_tab"
+          },
+          "items": [
+            {
+              "value": "tab_service",
+              "label": "服务",
+              "childNodeId": "node_services"
+            }
+          ]
+        },
+        "events": {
+          "selectionRequested": "action_select"
+        },
+        "children": [
+          {
+            "nodeId": "node_services",
+            "planSectionId": "section_services",
+            "componentRef": {
+              "id": "disclosure",
+              "version": "0.1.0"
+            },
+            "props": {
+              "title": "技术服务",
+              "headingLevel": 2,
+              "expandLabel": "展开服务详情",
+              "collapseLabel": "收起服务详情"
+            },
+            "bindings": {
+              "expanded": {
+                "kind": "state",
+                "stateId": "state_service_expanded"
+              }
+            },
+            "events": {
+              "toggleRequested": "action_toggle_service"
+            },
+            "children": [
+              {
+                "nodeId": "node_service_detail",
+                "planSectionId": "section_services",
+                "componentRef": {
+                  "id": "fact_text",
+                  "version": "0.1.0"
+                },
+                "props": {},
+                "bindings": {
+                  "body": {
+                    "kind": "claimValue",
+                    "claimRef": {
+                      "kind": "claim",
+                      "id": "claim_service_placeholder",
+                      "claimVersionId": "claim_service_placeholder_v1"
+                    },
+                    "format": {
+                      "unit": "source",
+                      "qualifiers": "visible"
+                    }
+                  }
+                },
+                "events": {
+                  "sourceRequested": "action_service_source"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "style": {
+      "colorToken": "color_text",
+      "typographyToken": "type_body"
+    },
+    "accessibility": {
+      "label": "合成页面"
+    },
+    "responsiveLayout": {
+      "small": {
+        "type": "stack",
+        "gapToken": "space_section",
+        "widthToken": "width_content"
+      },
+      "large": {
+        "type": "split",
+        "ratio": "1:2",
+        "gapToken": "space_section",
+        "widthToken": "width_content"
+      }
+    }
+  },
+  "actions": [
+    {
+      "actionId": "action_toggle_service",
+      "type": "toggleBoolean",
+      "sourceNodeId": "node_services",
+      "targetStateId": "state_service_expanded"
+    },
+    {
+      "actionId": "action_overview_source",
+      "type": "openEvidence",
+      "sourceNodeId": "node_overview",
+      "target": {
+        "kind": "claim",
+        "id": "claim_business_placeholder",
+        "claimVersionId": "claim_business_placeholder_v1"
+      }
+    },
+    {
+      "actionId": "action_parameter_source",
+      "type": "openEvidence",
+      "sourceNodeId": "node_products",
+      "target": {
+        "kind": "eventBoundClaim",
+        "bindingSlot": "rows"
+      }
+    },
+    {
+      "actionId": "action_service_source",
+      "type": "openEvidence",
+      "sourceNodeId": "node_service_detail",
+      "target": {
+        "kind": "claim",
+        "id": "claim_service_placeholder",
+        "claimVersionId": "claim_service_placeholder_v1"
+      }
+    },
+    {
+      "actionId": "action_node_summary",
+      "type": "openEvidence",
+      "sourceNodeId": "node_summary",
+      "target": {
+        "kind": "eventBoundSource",
+        "bindingSlot": "paragraphs"
+      }
+    },
+    {
+      "actionId": "action_node_image",
+      "type": "openEvidence",
+      "sourceNodeId": "node_image",
+      "target": {
+        "kind": "eventBoundSource",
+        "bindingSlot": "asset"
+      }
+    },
+    {
+      "actionId": "action_node_timeline",
+      "type": "openEvidence",
+      "sourceNodeId": "node_timeline",
+      "target": {
+        "kind": "eventBoundSource",
+        "bindingSlot": "items"
+      }
+    },
+    {
+      "actionId": "action_node_relations",
+      "type": "openEvidence",
+      "sourceNodeId": "node_relations",
+      "target": {
+        "kind": "eventBoundSource",
+        "bindingSlot": "edges"
+      }
+    },
+    {
+      "actionId": "action_node_derived",
+      "type": "openEvidence",
+      "sourceNodeId": "node_derived",
+      "target": {
+        "kind": "eventBoundSource",
+        "bindingSlot": "derived"
+      }
+    },
+    {
+      "actionId": "action_node_chart",
+      "type": "openEvidence",
+      "sourceNodeId": "node_chart",
+      "target": {
+        "kind": "eventBoundSource",
+        "bindingSlot": "points"
+      }
+    },
+    {
+      "actionId": "action_select",
+      "type": "selectValue",
+      "sourceNodeId": "node_tabs",
+      "targetStateId": "state_tab",
+      "valueFrom": "event.value"
+    }
+  ],
+  "checks": [
+    {
+      "type": "visibleQualifiers",
+      "nodeId": "node_products",
+      "bindingSlot": "rows"
+    },
+    {
+      "type": "evidenceResolvable",
+      "nodeIds": [
+        "node_overview",
+        "node_products",
+        "node_service_detail"
+      ]
+    },
+    {
+      "type": "toggleRoundTrip",
+      "nodeId": "node_services",
+      "stateId": "state_service_expanded"
+    },
+    {
+      "type": "semanticFidelity",
+      "nodeId": "node_summary"
+    },
+    {
+      "type": "assetAvailable",
+      "nodeId": "node_image"
+    },
+    {
+      "type": "timelineOrder",
+      "nodeId": "node_timeline"
+    },
+    {
+      "type": "relationIntegrity",
+      "nodeId": "node_relations"
+    },
+    {
+      "type": "derivedInputs",
+      "nodeId": "node_derived"
+    },
+    {
+      "type": "chartComparability",
+      "nodeId": "node_chart"
+    },
+    {
+      "type": "selectionRoundTrip",
+      "nodeId": "node_tabs"
+    },
+    {
+      "type": "evidenceResolvable",
+      "nodeIds": [
+        "node_summary",
+        "node_image",
+        "node_timeline",
+        "node_relations",
+        "node_derived",
+        "node_chart"
+      ]
+    },
+    {
+      "type": "responsiveLayout",
+      "nodeIds": [
+        "node_page",
+        "node_section",
+        "node_overview",
+        "node_summary",
+        "node_image",
+        "node_timeline",
+        "node_relations",
+        "node_derived",
+        "node_products",
+        "node_chart",
+        "node_tabs",
+        "node_services",
+        "node_service_detail"
+      ],
+      "viewports": [
+        "small",
+        "large"
+      ]
+    },
+    {
+      "type": "keyboardAccess",
+      "nodeIds": [
+        "node_overview",
+        "node_summary",
+        "node_image",
+        "node_timeline",
+        "node_relations",
+        "node_derived",
+        "node_products",
+        "node_chart",
+        "node_tabs",
+        "node_services",
+        "node_service_detail"
+      ]
+    }
+  ],
+  "protocolVersion": "1.1",
+  "projectId": "project_tju_demo",
+  "taskId": "task_design_test",
+  "attemptId": "attempt_design_test",
+  "producedBy": {
+    "role": "design",
+    "protocolVersion": "1.0"
+  },
+  "createdAt": "2026-10-11T12:00:00Z",
+  "pageSpecId": "spec_test",
+  "pageSpecVersionId": "spec_test_v1",
+  "calculations": [
+    {
+      "calculationId": "calc_growth",
+      "method": "percentChange",
+      "base": {
+        "kind": "claim",
+        "id": "claim_old",
+        "claimVersionId": "claim_old_v1"
+      },
+      "current": {
+        "kind": "claim",
+        "id": "claim_new",
+        "claimVersionId": "claim_new_v1"
+      },
+      "unit": "%"
+    }
+  ]
+}

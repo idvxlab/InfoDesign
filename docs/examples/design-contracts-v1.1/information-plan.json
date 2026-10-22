@@ -1,0 +1,128 @@
+{
+  "audience": {
+    "role": "潜在客户与技术选型人员",
+    "needs": [
+      "了解企业提供什么",
+      "比较产品参数",
+      "了解可提供的技术服务"
+    ]
+  },
+  "goal": "帮助读者建立业务全景，并找到适合继续了解的产品或服务",
+  "readerQuestions": [
+    {
+      "questionId": "question_business",
+      "text": "企业提供哪些业务？"
+    },
+    {
+      "questionId": "question_products",
+      "text": "产品有哪些差异，参数适用于什么条件？"
+    },
+    {
+      "questionId": "question_services",
+      "text": "能够提供哪些技术服务？"
+    }
+  ],
+  "sections": [
+    {
+      "sectionId": "section_overview",
+      "title": "业务概览",
+      "purpose": "先让读者理解企业的主要业务",
+      "questionIds": [
+        "question_business"
+      ],
+      "sourceRefs": [
+        {
+          "kind": "claim",
+          "id": "claim_business_placeholder"
+        },
+        {
+          "kind": "event",
+          "id": "event_start"
+        },
+        {
+          "kind": "relation",
+          "id": "relation_test"
+        },
+        {
+          "kind": "asset",
+          "id": "asset_test"
+        },
+        {
+          "kind": "claim",
+          "id": "claim_old"
+        },
+        {
+          "kind": "claim",
+          "id": "claim_new"
+        }
+      ],
+      "priority": "primary",
+      "presentationIntent": "用简洁的业务说明建立整体认识",
+      "selectionReason": "作为后续产品和服务内容的阅读背景"
+    },
+    {
+      "sectionId": "section_products",
+      "title": "产品比较",
+      "purpose": "让读者并列查看产品参数及适用条件",
+      "questionIds": [
+        "question_products"
+      ],
+      "sourceRefs": [
+        {
+          "kind": "entity",
+          "id": "entity_product_a_placeholder"
+        },
+        {
+          "kind": "entity",
+          "id": "entity_product_b_placeholder"
+        },
+        {
+          "kind": "claim",
+          "id": "claim_parameter_a_placeholder"
+        },
+        {
+          "kind": "claim",
+          "id": "claim_parameter_b_placeholder"
+        }
+      ],
+      "priority": "primary",
+      "presentationIntent": "同类参数并列呈现，工况始终可见，可逐项查看来源",
+      "selectionReason": "比较能直接回应技术选型需求，不对不同工况的数值进行排名"
+    },
+    {
+      "sectionId": "section_services",
+      "title": "技术服务",
+      "purpose": "补充产品之外的服务内容",
+      "questionIds": [
+        "question_services"
+      ],
+      "sourceRefs": [
+        {
+          "kind": "claim",
+          "id": "claim_service_placeholder"
+        }
+      ],
+      "priority": "secondary",
+      "presentationIntent": "展示服务说明，展开后查看补充细节",
+      "selectionReason": "供有进一步合作需求的读者继续阅读"
+    }
+  ],
+  "omissions": [],
+  "openIssues": [],
+  "protocolVersion": "1.0",
+  "projectId": "project_tju_demo",
+  "taskId": "task_design_test",
+  "attemptId": "attempt_design_test",
+  "snapshotRef": {
+    "snapshotId": "snap_facts_001",
+    "snapshotVersionId": "snapv_facts_001",
+    "contentHash": "sha256:892a499d3a4094dd3b739b4d8fc734d3d3ad89fbe203c347763fe3f57ece579d"
+  },
+  "producedBy": {
+    "role": "design",
+    "protocolVersion": "1.0"
+  },
+  "createdAt": "2026-10-11T12:00:00Z",
+  "planId": "plan_test",
+  "planVersionId": "plan_test_v1"
+}

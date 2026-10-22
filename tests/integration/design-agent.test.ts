@@ -6,6 +6,7 @@ import { once } from 'node:events';
 import { readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { designTaskFixture } from '../helpers/design-fixtures.ts';
+import { extendedDesignTaskFixture } from '../helpers/pagespec-fixtures.ts';
 import { registry, loadFixture } from '../helpers/fixtures.ts';
 import { runDesignAgent } from '../../apps/server/src/agents/design/agent.ts';
 import { designDraftProtocol, designPrompt, materializeDesign } from '../../apps/server/src/agents/design/context.ts';
@@ -63,9 +64,28 @@ test('design SDK: reads claims, produces a candidate, service assigns hashes and
   assert.equal(outcome.output!.pageSpec!.informationPlanRef.contentHash, fingerprint(outcome.output!.informationPlan));
   assert.deepEqual(requests[0].tools.map((t: any) => t.function.name), ['read_design']);
   assert.equal(JSON.stringify(requests[0]).includes('仅用于协议校验的测试文本'), false);
+  assert.ok(JSON.stringify(requests[0]).includes('Impeccable 原则适配'));
+  assert.ok(JSON.stringify(requests[0]).includes('内容驱动的阅读型展示'));
+  assert.equal(JSON.stringify(requests[0]).includes('concept-seed'), false);
   assert.equal(JSON.stringify(requests[1]).includes('仅用于协议校验的测试文本'), true);
   assert.ok(outcome.events.some(e => e.type === 'tool_end' && e.toolName === 'read_design' && e.ok));
   assert.equal(outcome.billedAmount, null);
+});
+test('design SDK 1.1: extended body survives tool execution and service materialization', async () => {
+  const f=extendedDesignTaskFixture();
+  const extendedReads=[{kind:'catalog'},...f.snapshot.claims.map((c:any)=>({kind:'claim',id:c.claimId})),
+    {kind:'event',id:'event_start'},{kind:'relation',id:'relation_test'},{kind:'asset',id:'asset_test'}];
+  const {outcome}=await scenario((_b,res,i)=>complete(res,i===1?extendedReads:f.draft),{input:f.input as DesignInput,trusted:f.trusted});
+  assert.equal(outcome.status,'completed',JSON.stringify(outcome));
+  assert.equal(outcome.output!.pageSpec!.protocolVersion,'1.1');
+  assert.deepEqual(outcome.output!.pageSpec!.calculations,f.page.calculations);
+  assert.equal(outcome.output!.pageSpec!.root.responsiveLayout!.large.type,'split');
+});
+test('design SDK 1.1: unqueried event and asset records cannot be submitted', async () => {
+  const f=extendedDesignTaskFixture();
+  const claimReads=[{kind:'catalog'},...f.snapshot.claims.map((c:any)=>({kind:'claim',id:c.claimId}))];
+  const {outcome}=await scenario((_b,res,i)=>complete(res,i===1?claimReads:f.draft),{input:f.input as DesignInput,trusted:f.trusted,maxRepairRounds:0});
+  assert.equal(outcome.status,'failed');assert.ok(outcome.attempts[0].issues.some(i=>i.code==='design.source_not_read'));
 });
 test('design SDK: independent sessions and candidate IDs', async () => {
   const a = await scenario(), b = await scenario();

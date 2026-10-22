@@ -3,9 +3,10 @@ import type { SchemaRegistry } from './schema-registry.ts';
 import { fingerprint } from './fingerprint.ts';
 import type { CheckResult, CheckIssue } from './service-checks.ts';
 import type { DesignReviewRef } from '../generated/design-review-ref.ts';
+import { checkPageExtensions, sourcedComponents, sourceSlots, type PageExtensionContext } from './page-spec-extensions.ts';
 
 type RecordValue = Record<string, any>;
-export interface DesignContext {
+export interface DesignContext extends PageExtensionContext {
   projectId: string;
   taskId: string;
   attemptId: string;
@@ -19,6 +20,7 @@ export interface DesignContext {
     components: Array<{ id: string; version: string }>;
   };
   theme: { themeId: string; version: string; contentHash: string; tokens: string[] };
+  pageSpecVersion?: '1.0' | '1.1';
 }
 
 const base = 'urn:tju-mas:contracts:';
@@ -72,8 +74,14 @@ export function checkDesign(
     || context.theme.tokens.some(x => typeof x !== 'string')) {
     return { ok: false, issues: [{ code: 'design.context_invalid', message: 'Missing trusted context' }] };
   }
+  if (context.resources !== undefined && (!Array.isArray(context.resources?.assets) || context.resources.assets.length > 100
+    || context.resources.assets.some(a => !a || ['assetId','documentId','documentVersionId','blockId','resourceId'].some(k => typeof (a as RecordValue)[k] !== 'string' || !/^[a-z][a-z0-9_]{1,127}$/.test((a as RecordValue)[k]))
+      || !['image/png','image/jpeg','image/webp'].includes(a.mediaType) || !/^sha256:[0-9a-f]{64}$/.test(a.contentHash)))) {
+    return { ok: false, issues: [{ code: 'design.context_invalid', message: 'Invalid trusted asset resources' }] };
+  }
   // Schema-validated data only below this point.
   const plan = planInput as RecordValue, page = pageInput as RecordValue, snapshot = snapshotInput as RecordValue;
+  if (page.protocolVersion !== (context.pageSpecVersion ?? '1.0')) fail('design.page_protocol', 'page.protocolVersion');
   const key = (ref: RecordValue) => `${ref.kind}:${ref.id}`;
   const allowed = new Set(context.allowedSources.map(key));
   const sources = new Map<string, RecordValue>();
@@ -122,6 +130,11 @@ export function checkDesign(
       if (ref.claimVersionId !== undefined && ref.claimVersionId !== record.claimVersionId) fail('design.claim_version', path);
       if (!record.evidenceRefs.length || record.evidenceRefs.some((e: string) => !evidence.has(e))) fail('design.evidence_missing', path);
       if (!sources.has('entity:' + record.entityId) || !allowed.has('entity:' + record.entityId)) fail('design.entity_forbidden', path);
+    }
+    if (forDisplay && ['relation', 'event'].includes(ref.kind)) {
+      if (!record.evidenceRefs?.length || record.evidenceRefs.some((e: string) => !evidence.has(e))) fail('design.evidence_missing', path);
+      const entityIds = ref.kind === 'relation' ? [record.fromEntityId, record.toEntityId] : [record.entityId];
+      for (const id of entityIds) if (!sources.has('entity:' + id) || !allowed.has('entity:' + id)) fail('design.entity_forbidden', path);
     }
     return record;
   }
@@ -172,6 +185,7 @@ export function checkDesign(
     sectionClaims.add(node.planSectionId + ':' + key(ref));
     return record;
   }
+  checkPageExtensions(page, flat, states, context, bind, fail);
   for (const node of flat) {
     const kind = node.componentRef.id;
     if (!components.has(`${kind}@${node.componentRef.version}`)) fail('design.component_unavailable', node.nodeId);
@@ -198,16 +212,20 @@ export function checkDesign(
         }
       }
     }
-    if (kind === 'disclosure' && !states.has(node.bindings.expanded.stateId)) fail('design.state_missing', node.nodeId);
+    if (kind === 'disclosure' && states.get(node.bindings.expanded.stateId)?.type !== 'boolean') fail('design.state_missing', node.nodeId);
     for (const [event, actionId] of Object.entries(node.events ?? {})) {
       const action = actions.get(actionId as string);
       usedActions.add(actionId as string);
       if (!action || action.sourceNodeId !== node.nodeId) { fail('design.action_binding', node.nodeId); continue; }
       if (event === 'toggleRequested') {
         if (action.type !== 'toggleBoolean' || action.targetStateId !== node.bindings.expanded.stateId || !states.has(action.targetStateId)) fail('design.toggle_binding', node.nodeId);
+      } else if (event === 'selectionRequested') {
+        if (action.type !== 'selectValue' || action.targetStateId !== node.bindings.selected.stateId || states.get(action.targetStateId)?.type !== 'enum') fail('design.selection_action', node.nodeId);
       } else if (action.type !== 'openEvidence') fail('design.source_action', node.nodeId);
       else if (kind === 'comparison_matrix') {
         if (action.target.kind !== 'eventBoundClaim') fail('design.source_target', node.nodeId);
+      } else if (sourceSlots[kind]) {
+        if (action.target.kind !== 'eventBoundSource' || action.target.bindingSlot !== sourceSlots[kind]) fail('design.source_target', node.nodeId);
       } else if (fingerprint(action.target) !== fingerprint(node.bindings.body.claimRef)) fail('design.source_target', node.nodeId);
     }
   }
@@ -222,7 +240,7 @@ export function checkDesign(
   for (const token of [page.root.layout.gapToken, page.root.layout.widthToken]) if (!context.theme.tokens.includes(token)) fail('design.theme_token', token);
   for (const check of page.checks) {
     if (check.type === 'evidenceResolvable') {
-      for (const nodeId of check.nodeIds) if (!['fact_text', 'comparison_matrix'].includes(nodes.get(nodeId)?.componentRef.id)) fail('design.check_target', nodeId);
+      for (const nodeId of check.nodeIds) if (!sourcedComponents.includes(nodes.get(nodeId)?.componentRef.id)) fail('design.check_target', nodeId);
     } else {
       const node = nodes.get(check.nodeId);
       if (check.type === 'visibleQualifiers' && node?.componentRef.id !== 'comparison_matrix') fail('design.check_target', check.nodeId);
@@ -232,7 +250,7 @@ export function checkDesign(
   // Required checks are derived from component usage, never solely from model requests.
   for (const node of flat) {
     const kind = node.componentRef.id;
-    if (['fact_text', 'comparison_matrix'].includes(kind) && !page.checks.some((c: RecordValue) => c.type === 'evidenceResolvable' && c.nodeIds.includes(node.nodeId))) fail('design.required_check', node.nodeId);
+    if (sourcedComponents.includes(kind) && !page.checks.some((c: RecordValue) => c.type === 'evidenceResolvable' && c.nodeIds.includes(node.nodeId))) fail('design.required_check', node.nodeId);
     if (kind === 'comparison_matrix' && !page.checks.some((c: RecordValue) => c.type === 'visibleQualifiers' && c.nodeId === node.nodeId)) fail('design.required_check', node.nodeId);
     if (kind === 'disclosure' && !page.checks.some((c: RecordValue) => c.type === 'toggleRoundTrip' && c.nodeId === node.nodeId && c.stateId === node.bindings.expanded.stateId)) fail('design.required_check', node.nodeId);
   }

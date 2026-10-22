@@ -12,14 +12,18 @@
     "generate:types": "node scripts/generate-types.mjs",
     "check:types": "tsc --noEmit && tsc --noEmit -p tsconfig.server.json",
     "check:contracts": "bash scripts/check-contracts.sh",
-    "test": "node --test tests/integration/contracts-validator.test.ts tests/integration/contracts.test.ts tests/integration/contracts-service.test.ts tests/integration/contracts-regressions.test.ts tests/integration/contracts-design.test.ts tests/integration/design-agent.test.ts tests/integration/design-review-binding.test.ts tests/integration/generated-types.test.ts tests/integration/pi-session.test.ts tests/integration/pi-proxy.test.ts tests/integration/evidence-agent.test.ts tests/integration/evidence-replay.test.ts tests/integration/spend-budget.test.ts tests/integration/evidence-quality.test.ts",
-    "test:design": "node --test tests/integration/contracts-design.test.ts tests/integration/design-agent.test.ts tests/integration/design-review-binding.test.ts",
+    "test": "node --test tests/integration/contracts-validator.test.ts tests/integration/contracts.test.ts tests/integration/contracts-service.test.ts tests/integration/contracts-regressions.test.ts tests/integration/contracts-design.test.ts tests/integration/design-agent.test.ts tests/integration/design-review-binding.test.ts tests/integration/generated-types.test.ts tests/integration/pi-session.test.ts tests/integration/pi-proxy.test.ts tests/integration/evidence-agent.test.ts tests/integration/evidence-replay.test.ts tests/integration/spend-budget.test.ts tests/integration/evidence-quality.test.ts tests/integration/pagespec-extensions.test.ts tests/integration/page-renderer.test.ts",
+    "test:design": "node --test tests/integration/contracts-design.test.ts tests/integration/design-agent.test.ts tests/integration/design-review-binding.test.ts tests/integration/pagespec-extensions.test.ts",
     "check:generated": "node scripts/generate-types.mjs --check",
     "test:design-handoff": "node --test tests/integration/design-handoff-consumer.test.ts",
     "test:b2": "node --test tests/integration/pi-session.test.ts tests/integration/pi-proxy.test.ts",
     "eval:b2": "node apps/server/src/entrypoints/b2-probe.ts",
     "test:b3": "node --test tests/integration/evidence-agent.test.ts tests/integration/evidence-replay.test.ts tests/integration/spend-budget.test.ts tests/integration/evidence-quality.test.ts",
-    "eval:b3": "node apps/server/src/entrypoints/b3-evidence.ts"
+    "eval:b3": "node apps/server/src/entrypoints/b3-evidence.ts",
+    "check:types:design": "tsc --noEmit -p tests/tsconfig.design.json",
+    "test:renderer": "node --test tests/integration/page-renderer.test.ts",
+    "preview:render": "node scripts/render-preview.ts",
+    "check:types:renderer": "tsc --noEmit -p tests/tsconfig.renderer.json"
   },
   "devDependencies": {
     "@types/node": "24.10.1",

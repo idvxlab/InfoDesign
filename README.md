@@ -1,16 +1,10 @@
-# InfoDesign
+# InfoDesign — development snapshot
 
 企业智能信息展示系统：把企业的文档、表格和图片整理成可交互的展示页面，让读者能从页面内容回查原始资料。
 
 项目的目标是从资料生成页面，让用户用自然语言调整展示，并在补充资料后更新相关内容。信息与证据、信息设计、独立审查三个 Agent 分工协作，由程序控制流程和版本；页面组织随内容与目标变化。
 
-> **开发中，尚无可用的完整页面产品。** 已完成协议、真实Pi受控提取与独立事实审查，以及本地事实工作流的最低验收。B5可在独立会话间执行有限返修、保留版本与运行历史；页面设计、HTTP与生产保存仍待开发。
-
-提取／审查侧已增加[只读设计交付接口](docs/development/design-handoff.md)，含ready／blocked与模拟消费者；设计团队待联调，主仓库当前446项及类型／协议通过，见[交付报告](docs/reports/design-handoff-2026-10-12.md)。DesignInput继续拒绝全部输入，未实现设计端。
-
-B5最终同版两条虚构真实路径通过，主仓库422项离线回归及类型／协议通过。人工错误候选的返修验收与真实提取后的缺证等待分别记录，全部候选仍为pending。历史B4七类验收为v12，当前v14未重跑七类；详见[B5报告](docs/reports/b5-fact-workflow-2026-10-12.md)与[当前状态](status.md)。
-
-2026-10-12整份真实PDF测试因本项目客户端4096输出Token配置截断，未进入独立审查或返修；模型最大输出能力尚未核实。见[真实测试记录](docs/reports/real-pdf-test-2026-10-12.md)。本次代码交接范围与离线复验见[交接说明](SNAPSHOT.md)。
+> **开发中，尚无可用的完整产品。** 事实协议与校验、Pi 最小真实工具验收已完成；信息与证据 Agent 已实现首次生成候选快照的本地流程，单段与代表性合成案例已有分版本通过证据，关系问题的v4补验通过；前两组仍为v3证据，v4完整三组真实回归未执行。本地 PDF 来源检查预览已实现，文字／图片区域／表格候选及限制见解析报告；页面生成等完整业务能力尚待开发。本快照的范围与验证见 [SNAPSHOT.md](SNAPSHOT.md)，当前状态见 [status.md](status.md)。
 
 ## Get Started
 
@@ -29,6 +23,8 @@ bash scripts/dev-container.sh exec pnpm test
 这些命令准备开发环境并运行协议与运行层测试，不调用真实模型。目前没有完整业务启动命令；已有独立本地 PDF 检查预览，运行方式见 [解析模块](services/parser/README.md)。`up` 会重建容器；已有 Pi 任务时请先结束会话。模型配置和日常操作见 [容器开发指南](docs/development/dev-container.md)。
 
 ## 项目结构
+
+2026-10-21 新增本地 HTML 预览：在开发容器执行 `node scripts/render-preview.ts --demo /output/preview.html`（`/output` 需挂载宿主输出目录），生成可双击打开的合成页面。实际 PageSpec 输入格式和边界见 [渲染器说明](packages/page-renderer/README.md)。这尚不是完整业务系统或已独立审查的页面。
 
 ```text
 apps/                前端、后端与 Pi 运行层
@@ -50,7 +46,7 @@ docs/                开发指南、设计规范、验证报告
 | [设计概览](docs/design/overview.md)、[项目总方案](docs/design/project-spec.md)、[后端实施指南](docs/development/backend-plan.md) | 设计与实现负责人、编程 Agent | 先读概览；接手实现时细读总方案及本轮阶段。 |
 | [AGENTS.md](AGENTS.md)、`skills/*/SKILL.md`、`apps/server/src/agents/*/prompt.md` | 编程／业务 Agent | 普通读者无需细读；维护规则或对应 Agent 时再看。 |
 
-完整索引和历史验证报告见 [docs/README.md](docs/README.md)，各模块的用法见各自的 README。
+完整索引见 [docs/README.md](docs/README.md)，各模块的用法见各自的 README。
 
 ## 参与协作
 

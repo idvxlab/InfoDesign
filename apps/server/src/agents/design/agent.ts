@@ -37,7 +37,7 @@ export async function runDesignAgent(options: {
     else {
       const input = structuredClone(options.input), trusted = structuredClone(options.trusted);
       reader = createDesignTools(input, trusted, options.registry, budget, options.evidenceAccess);
-      const draft = designDraftProtocol(options.registry);
+      const draft = designDraftProtocol(options.registry, input.pageSpecVersion ?? '1.0');
       let prompt = designPrompt(input, options.registry, draft.schema);
       reason = 'initialization_failed';
       handle = await createBusinessSession(options.config, reader.tool, budget, 'design');
@@ -75,6 +75,8 @@ export async function runDesignAgent(options: {
             const readClaims = new Set(reader.receipts.filter(r => r.kind === 'claim').map(r => r.id));
             for (const section of candidate.informationPlan!.sections) for (const ref of section.sourceRefs)
               if (ref.kind === 'claim' && !readClaims.has(ref.id)) issues.push({ code: 'design.claim_not_read', path: ref.id, message: 'Selected claim was not read' });
+            if (input.pageSpecVersion === '1.1') for (const section of candidate.informationPlan!.sections) for (const ref of section.sourceRefs)
+              if (['event','relation','asset'].includes(ref.kind) && !reader.receipts.some(r => r.kind === ref.kind && r.id === ref.id)) issues.push({ code: 'design.source_not_read', path: ref.id, message: 'Selected source was not read' });
           }
         }
         budget.check();

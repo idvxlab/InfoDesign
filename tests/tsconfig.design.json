@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "skipLibCheck": true },
+  "include": [
+    "../apps/server/src/agents/design/**/*.ts",
+    "../apps/server/src/tools/design.tools.ts",
+    "../packages/contracts/src/**/*.ts",
+    "../packages/contracts/generated/**/*.ts",
+    "helpers/**/*.ts",
+    "integration/contracts-design.test.ts",
+    "integration/pagespec-extensions.test.ts",
+    "integration/design-agent.test.ts",
+    "integration/design-review-binding.test.ts"
+  ]
+}

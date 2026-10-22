@@ -8,15 +8,17 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "packages/contracts/src/**/*.ts",
     "packages/contracts/generated/**/*.ts",
-    "tests/helpers/fixtures.ts",
-    "tests/helpers/source-bundle-fixture.ts",
+    "tests/helpers/**/*.ts",
     "tests/integration/contracts*.test.ts",
     "tests/integration/generated-types.test.ts",
-    "tests/types/**/*.ts"
+    "tests/types/**/*.ts",
+    "tests/integration/pagespec-extensions.test.ts"
   ]
 }

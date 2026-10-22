@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:tju-mas:contracts:design-review-ref",
+  "title": "设计复核关联引用（上游事实审查/可信交底的关联，非权限令牌，不表示正式采纳）",
+  "description": "上游事实审查已核验的候选/报告绑定引用。它不是权限令牌、不表示正式采纳，也不构成下游页面审查结论；结构合法不代表已经核验。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "packageVersion",
+    "runId",
+    "projectId",
+    "taskId",
+    "attemptId",
+    "candidateVersionId",
+    "reportVersionId",
+    "candidateFingerprint",
+    "reportFingerprint",
+    "bindingFingerprint",
+    "reviewVerdict",
+    "stopReason",
+    "checksRequired"
+  ],
+  "properties": {
+    "packageVersion": {
+      "const": "1.0",
+      "description": "交接包/协议版本；仅支持常量 1.0，不接受 99.99 或任何未知版本。"
+    },
+    "runId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+    },
+    "projectId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/projectId"
+    },
+    "taskId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/taskId"
+    },
+    "attemptId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/attemptId"
+    },
+    "candidateVersionId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+    },
+    "reportVersionId": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/identifier"
+    },
+    "candidateFingerprint": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+    },
+    "reportFingerprint": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+    },
+    "bindingFingerprint": {
+      "$ref": "urn:tju-mas:contracts:common#/$defs/contentHash"
+    },
+    "reviewVerdict": {
+      "enum": ["pass"],
+      "description": "仅接受事实审查的合法通过结论 pass；revise/needs_input 不构成可关联的就绪结论。"
+    },
+    "stopReason": {
+      "const": "passed_all_checks",
+      "description": "上游要求 stopReason 必须为 passed_all_checks（不是 passed）。"
+    },
+    "checksRequired": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:tju-mas:contracts:common#/$defs/checkType"
+      },
+      "description": "要求核验的检查类别集合，必须非空且无重复。"
+    }
+  }
+}
